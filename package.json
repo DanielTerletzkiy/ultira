@@ -6,7 +6,7 @@
     "build": "vite build",
     "dev": "SET APP_ENV=development && vite",
     "electron:start": "SET APP_ENV=production && npm run build && electron .",
-    "electron:package": "npx electron-packager . --overwrite",
+    "electron:package": "SET APP_ENV=production && npx electron-packager . --overwrite",
     "preview": "vite preview"
   },
   "main": "main.js",
