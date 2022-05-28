@@ -37,7 +37,7 @@ const props = defineProps({
 
 const status = computed(() => {
   const payload = {
-    color: 'success',
+    color: '#62c62f',
     icon: 'check',
   };
   switch (props.item.task.fields.status.name) {

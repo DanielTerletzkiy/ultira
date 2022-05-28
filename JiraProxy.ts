@@ -1,4 +1,4 @@
-const {createProxyMiddleware} = require("http-proxy-middleware");
+const {createProxyMiddleware, fixRequestBody} = require("http-proxy-middleware");
 
 const express = require('express');
 const app = express();
@@ -7,6 +7,12 @@ const cors = require('cors')
 app.use(cors())
 
 app.use(express.json())
+
+app.use((req: any, res: any, next: any) => {
+    //delete api hindering headers
+    delete req.headers['user-agent']
+    next()
+})
 
 let targetInstance: string;
 
@@ -20,6 +26,7 @@ app.post("/url", function (req: any, res: any) {
             changeOrigin: true,
             protocolRewrite: "https",
             secure: false,
+            onProxyReq: fixRequestBody,
         }));
     } catch (e) {
         res.status(400).json({url: targetInstance});

@@ -1,7 +1,7 @@
 <template>
-  <d-card class="jira-info" elevation="1" block height="100%">
-    <d-column gap>
-      <d-row class="px-1" gap>
+  <d-card class="jira-info" elevation="1" block>
+    <d-column gap block :wrap="false">
+      <d-row class="px-1" gap :wrap="false">
         <d-tooltip position="right" filled color="primary">
           <d-avatar size="64" :style="{
             backgroundImage: `url(${item.task.fields.project.avatarUrls['48x48']})`,
@@ -24,43 +24,54 @@
           </template>
         </d-tooltip>
         <d-column>
-          <d-card-title class="pt-0">
+          <d-card-title class="pt-0 font-size-medium">
             {{ item.task.fields.summary }}
           </d-card-title>
-          <d-card-subtitle color="secondary">
+          <d-card-subtitle>
             <d-icon-button rounded="md" :size="20" color="inherit" @click="copy(item.task.key)">
               <d-icon name="clipboard" :size="20"/>
             </d-icon-button>
-            {{ item.task.key }}
+            <d-button width="max-content" root-tag="a" target="_blank"
+                      :href="issueLink">{{ item.task.key }}
+            </d-button>
           </d-card-subtitle>
         </d-column>
       </d-row>
-      <div v-if="item.task.fields.description">
-        <d-row>
-          <d-card-subtitle class="pa-0">
-            Description
-          </d-card-subtitle>
-          <d-divider class="mx-3" block/>
-        </d-row>
-        <d-card-subtitle class="description"
-                         v-html="jira2md.jira_to_html(item.task.fields.description)"/>
-      </div>
+      <d-row class="info-row" gap block :wrap="false" align="start">
+        <d-column v-if="item.task.fields.description" class="description-column" :wrap="false" block>
+          <d-row>
+            <d-card-subtitle class="pa-0 font-weight-bold">
+              Description
+            </d-card-subtitle>
+            <d-divider class="mx-3" block elevation="6"/>
+          </d-row>
+          <d-card-subtitle class="description"
+                           v-html="jira2md.jira_to_html(item.task.fields.description)"/>
+        </d-column>
+        <d-spacer v-else/>
+        <JiraInfoViewSidebar :item="item"/>
+      </d-row>
     </d-column>
   </d-card>
 </template>
 
 <script setup lang="ts">
-import {inject, PropType} from "vue";
+import {computed, inject, PropType} from "vue";
 import JiraTask from "../controller/JiraTask";
 import {State} from "vuelize/src/types/Vuelize";
 //@ts-ignore
 import jira2md from "jira2md";
+import JiraController from "../controller/JiraController";
+import JiraInfoViewSidebar from "./JiraInfoViewSidebar.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
+const jiraController = inject('JiraController') as { value: JiraController };
 
 const props = defineProps({
   item: Object as PropType<JiraTask>
 })
+
+const issueLink = computed(() => `${jiraController.value.controller.url}/browse/${props.item?.task.key}`)
 
 function copy(text: string) {
   navigator.clipboard.writeText(text).then(function () {
@@ -73,12 +84,27 @@ function copy(text: string) {
 
 <style lang="scss">
 .jira-info {
-  .description {
-    display: block;
-    text-align-last: left;
+  display: flex;
+  max-height: inherit;
+  overflow: hidden;
 
-    ul {
-      margin-left: 20px;
+  .info-row {
+    max-height: calc(100% - 78px - 8px);
+
+    .description-column {
+      max-height: 100%;
+      overflow: auto;
+
+      .description {
+        display: block;
+        text-align-last: left;
+        max-height: inherit;
+        overflow: auto;
+
+        ul, ol {
+          margin-left: 20px;
+        }
+      }
     }
   }
 }

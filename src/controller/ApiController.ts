@@ -17,7 +17,9 @@ export default class ApiController {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Authorization', 'Basic ' + btoa(basicCredentials.username + ':' + basicCredentials.password))
+        headers.append('X-Atlassian-Token', 'no-check');
         headers.append('Jira-Host', jiraHost);
+        headers.append('User-Agent', 'XXX');
         const response = await this.generic('http://localhost:2343/' + path, method, headers, body);
         return response.json();
     }

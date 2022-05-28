@@ -17,7 +17,7 @@ export default class JiraController extends ApiController {
     async getAllIssues(): Promise<any> {
         const searchResult = await ApiController.fetchJira(
             this.controller.url,
-            `rest/api/latest/search?jql=assignee=currentuser() ORDER BY updated desc`,
+            `rest/api/latest/search?jql=assignee=currentuser() OR reporter=currentuser() ORDER BY updated desc`,
             'GET',
             this.controller.credentials);
         this.issues = searchResult.issues.map((issue: Task) => new JiraTask(issue, this.controller));

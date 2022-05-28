@@ -15,28 +15,10 @@
 import {computed} from "vue";
 import {useStore} from "vuex";
 import JiraCredentialsDialog from "./JiraCredentialsDialog.vue";
+import {credentialsOpen, currentJiraConfig} from "../store/jira.store";
 
 const store = useStore()
 const jiraConfigs = computed(() => store.getters.jiraConfigs)
-const currentJiraConfig = computed(
-    {
-      get() {
-        return store.getters.currentJiraConfig
-      },
-      set(value) {
-        store.dispatch('setCurrentJiraConfig', value)
-      },
-    }
-);
-
-const credentialsOpen = computed({
-  get() {
-    return store.getters.credentialsDialogOpen
-  },
-  set(value) {
-    store.dispatch('setCredentialsDialogOpen', value)
-  }
-});
 
 function openCredentials() {
   credentialsOpen.value = true;

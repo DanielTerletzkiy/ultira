@@ -2,25 +2,25 @@
   <d-column gap block>
     <d-card block style="max-height: calc(100vh - 86px); overflow: hidden" v-if="currentJiraConfig">
       <d-column gap>
-        <d-row gap style="flex: 1; min-height: 450px">
-          <d-column block v-if="currentIssue" style="min-height: inherit;">
+        <d-row gap style="flex: 1; max-height: 500px; min-height: 500px;">
+          <d-column block v-if="currentIssue" style="min-height: inherit; max-height: inherit">
             <JiraInfoView :item="currentIssue"/>
           </d-column>
-          <d-column style="flex: 1">
-
+          <d-column block style="min-height: inherit;">
+            <JiraBranchView/>
           </d-column>
         </d-row>
-        <d-row gap style="flex: 1;">
+        <d-row gap style="flex: 1;" align="stretch">
           <d-column elevation="n1" v-if="currentJiraConfig && jiraController"
                     style="flex: 1;
-                     max-height: calc(100vh - 86px - 16px - 450px);
+                     max-height: calc(100vh - 86px - 16px - 500px);
                      overflow: overlay;
                      overflow-x: hidden;
                      min-width: fit-content;">
             <JiraList v-model="selectedIssue"/>
           </d-column>
-          <d-column style="flex: 2">
-
+          <d-column block style="flex: 2;">
+            <JiraPullrequestView/>
           </d-column>
         </d-row>
       </d-column>
@@ -36,35 +36,17 @@ import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 import JiraList from "../components/JiraList.vue";
 import JiraInfoView from "../components/JiraInfoView.vue";
+import {credentialsOpen, currentJiraConfig, selectedIssue} from "../store/jira.store";
+import JiraBranchView from "../components/JiraBranchView.vue";
+import JiraPullrequestView from "../components/JiraPullrequestView.vue";
 
 const store = useStore()
 const jiraConfigs = computed(() => store.getters.jiraConfigs)
-const currentJiraConfig = computed(
-    {
-      get() {
-        return store.getters.currentJiraConfig
-      },
-      set(value) {
-        store.dispatch('setCurrentJiraConfig', value)
-      },
-    }
-);
 
-const selectedIssue = ref<string>();
-
-const currentIssue = computed<JiraTask | undefined>(() => jiraController.value && jiraController.value?.issues?.find((issue: JiraTask) => issue.task.id === selectedIssue.value) as JiraTask | undefined)
+const currentIssue = computed<JiraTask | undefined>(() => jiraController.value && jiraController.value?.issues?.find((issue: JiraTask) => issue.task.key === selectedIssue.value) as JiraTask | undefined)
 
 const jiraController = ref<JiraController>();
 provide('JiraController', jiraController);
-
-const credentialsOpen = computed({
-  get() {
-    return store.getters.credentialsDialogOpen
-  },
-  set(value) {
-    store.dispatch('setCredentialsDialogOpen', value)
-  }
-});
 
 watch(() => currentJiraConfig.value, setJiraBase);
 

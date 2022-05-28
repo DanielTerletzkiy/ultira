@@ -19,6 +19,12 @@
             <input id="color" type="color" v-model="$vuelize.theme.themes[currentTheme].primary"/>
             Primary color
           </d-card-subtitle>
+          <d-textfield v-model="refreshTime" full-width color="primary" filled label="Refresh Interval" type="number"
+                       min="15">
+            <template v-slot:suffix>
+              seconds
+            </template>
+          </d-textfield>
         </d-column>
         <d-divider/>
         <d-column gap>
@@ -45,6 +51,7 @@ import {computed, inject, onBeforeMount, watch} from "vue";
 import {useStore} from "vuex";
 import JiraSettingsConfig from "./JiraSettingsConfig.vue";
 import {FadeTransition} from "v3-transitions"
+import {jiraConfigs, refreshTime} from "../store/jira.store";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 
@@ -54,15 +61,6 @@ const props = defineProps({
 });
 
 const store = useStore()
-const jiraConfigs = computed<Array<{ name: string, url: string }>>({
-  get() {
-    return store.getters.jiraConfigs
-  },
-  set(value) {
-    console.log(value)
-    store.dispatch('setJiraConfigs', value)
-  }
-})
 watch(jiraConfigs, (value) => {
   store.dispatch('setJiraConfigs', value)
 }, {deep: true})
@@ -94,7 +92,7 @@ watch(() => vuelize.theme.dark, (dark) => {
 onBeforeMount(() => {
   vuelize.theme.dark = JSON.parse(localStorage.getItem('theme:dark') || '{}');
   ['dark', 'light'].forEach((theme) => {
-    const primary = localStorage.getItem(`${theme}:primary`)
+    const primary = localStorage.getItem(`${theme}:primary`) || '#9FCDFF'
     if (primary) {
       //@ts-ignore
       vuelize.theme.themes[theme].primary = primary;
