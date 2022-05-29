@@ -3,8 +3,8 @@
     <d-card-title class="font-size-medium">
       Branches
     </d-card-title>
-    <d-column gap class="mx-2">
-      <d-card v-for="repository in item.commitData.detail[0].repositories" outlined block
+    <d-column gap class="mx-2 pb-3" style="max-height: calc(500px - 47px - 8px); overflow: overlay">
+      <d-card v-for="repository in item.commitData.detail[0].repositories" elevation="2" block
               background-color="transparent">
         <d-row>
           <d-column>
@@ -35,15 +35,17 @@
             <template v-slot:default>
               <d-card v-for="file in commit.files" block background-color="transparent">
                 <d-row block gap justify="start">
-                  <d-card-subtitle>
+                  <d-label color="primary">
                     {{ file.changeType }}
-                  </d-card-subtitle>
+                  </d-label>
                   <d-column class="pa-0">
                     <d-card-subtitle class="pa-0" style="font-size: 0.8rem" color="success">
-                      <d-icon name="plus" :size="14"/>{{ file.linesAdded }}
+                      <d-icon name="plus" :size="14"/>
+                      {{ file.linesAdded }}
                     </d-card-subtitle>
                     <d-card-subtitle class="pa-0" style="font-size: 0.8rem" color="error">
-                      <d-icon name="minus" :size="14"/>{{ file.linesRemoved }}
+                      <d-icon name="minus" :size="14"/>
+                      {{ file.linesRemoved }}
                     </d-card-subtitle>
                   </d-column>
                   <d-card-subtitle glow v-ripple root-tag="a" target="_blank" :href="file.url">

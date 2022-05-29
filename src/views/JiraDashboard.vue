@@ -6,7 +6,7 @@
           <d-column block v-if="currentIssue" style="min-height: inherit; max-height: inherit">
             <JiraInfoView :item="currentIssue"/>
           </d-column>
-          <d-column block v-if="currentIssue && !!currentIssue.commitData" style="min-height: inherit;">
+          <d-column block v-if="currentIssue && !!currentIssue.commitData" style="flex: 1; max-height: 500px; min-height: 500px;">
             <JiraBranchView :item="currentIssue"/>
           </d-column>
         </d-row>
@@ -20,7 +20,7 @@
             <JiraList v-model="selectedIssue"/>
           </d-column>
           <d-column block style="flex: 2;">
-            <JiraPullrequestView/>
+            <JiraPullRequestView/>
           </d-column>
         </d-row>
       </d-column>
@@ -38,7 +38,7 @@ import JiraList from "../components/JiraList.vue";
 import JiraInfoView from "../components/JiraInfoView.vue";
 import {credentialsOpen, currentJiraConfig, selectedIssue} from "../store/jira.store";
 import JiraBranchView from "../components/JiraBranchView.vue";
-import JiraPullrequestView from "../components/JiraPullrequestView.vue";
+import JiraPullRequestView from "../components/JiraPullRequestView.vue";
 
 const store = useStore()
 const jiraConfigs = computed(() => store.getters.jiraConfigs)
