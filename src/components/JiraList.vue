@@ -62,7 +62,6 @@ function scrollIntoView(id: string) {
 }
 
 async function intersectObserver([{isIntersecting}]: any) {
-  console.log(isIntersecting)
   if (!isIntersecting && props.modelValue) {
     setTimeout(() => {
       if (props.modelValue) {
