@@ -28,9 +28,22 @@
             {{ item.task.fields.summary }}
           </d-card-title>
           <d-card-subtitle>
-            <d-icon-button rounded="md" :size="20" color="inherit" @click="copy(item.task.key)">
-              <d-icon name="clipboard" :size="20"/>
-            </d-icon-button>
+            <d-tooltip>
+              <d-icon-button rounded="md" :size="24" color="inherit" @click="copy(item.task.key)">
+                <d-icon name="key-skeleton" :size="20"/>
+              </d-icon-button>
+              <template v-slot:tooltip>
+                Copy Key
+              </template>
+            </d-tooltip>
+            <d-tooltip>
+              <d-icon-button rounded="md" :size="24" color="inherit" @click="copy(`[${item.task.key}](${issueLink})`)">
+                <d-icon name="link-alt" :size="20"/>
+              </d-icon-button>
+              <template v-slot:tooltip>
+                Copy Issue Link
+              </template>
+            </d-tooltip>
             <d-button width="max-content" root-tag="a" target="_blank" :href="issueLink">
               {{ item.task.key }}
             </d-button>
