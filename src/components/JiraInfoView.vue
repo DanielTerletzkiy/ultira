@@ -31,8 +31,8 @@
             <d-icon-button rounded="md" :size="20" color="inherit" @click="copy(item.task.key)">
               <d-icon name="clipboard" :size="20"/>
             </d-icon-button>
-            <d-button width="max-content" root-tag="a" target="_blank"
-                      :href="issueLink">{{ item.task.key }}
+            <d-button width="max-content" root-tag="a" target="_blank" :href="issueLink">
+              {{ item.task.key }}
             </d-button>
           </d-card-subtitle>
         </d-column>

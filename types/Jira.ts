@@ -232,6 +232,8 @@ export namespace JiraCommits {
         path: string
         url: string
         changeType: string
+        linesAdded: number
+        linesRemoved: number
     }
 
     interface Instance {

@@ -9,16 +9,16 @@
     <JiraUserItem :user="item.task.fields.reporter" type="Reporter"/>
     <JiraUserItem :user="item.task.fields.assignee" type="Assignee"/>
     <d-card-subtitle>
-      <d-icon name="plus" :size="20"/>
+      <d-icon name="plus" :size="20" color="primary"/>
       {{ new Date(item.task.fields.created).toLocaleString('DE-de') }}
     </d-card-subtitle>
     <d-card-subtitle>
-      <d-icon name="edit-alt" :size="20"/>
+      <d-icon name="edit-alt" :size="20" color="primary"/>
       {{ new Date(item.task.fields.updated).toLocaleString('DE-de') }}
     </d-card-subtitle>
-    <d-divider class="mx-3" elevation="6"/>
+    <d-divider class="mx-3" elevation="10"/>
     <d-card-subtitle class="pb-0">
-      <d-icon name="clock" :size="20"/>
+      <d-icon name="clock" :size="20" color="primary"/>
       {{ secondsToTime(item.task.fields.timespent) }}
     </d-card-subtitle>
     <d-row :wrap="false" gap justify="space-between" :disabled="loadingWorkLog">
@@ -27,7 +27,19 @@
         +{{ i }}
       </d-icon-button>
     </d-row>
-    <d-divider class="mx-3" elevation="6"/>
+    <d-tooltip :key="item.task.key" color="primary">
+      <DProgressbar class="mx-2" v-model="item.task.fields.timespent" :max="item.task.fields.timeoriginalestimate"
+                    color="primary" :show-label="false">
+        <template v-slot:progress>
+          <!--TODO fix progressbar in vuelize-->
+          {{ item.task.fields.timespent / 3600 }}h / {{ item.task.fields.timeoriginalestimate / 3600 }}h
+        </template>
+      </DProgressbar>
+      <template v-slot:tooltip>
+        {{ secondsToTime(item.task.fields.timespent) }} / {{ secondsToTime(item.task.fields.timeoriginalestimate) }}
+      </template>
+    </d-tooltip>
+    <d-divider class="mx-3" elevation="10"/>
   </d-column>
 </template>
 
@@ -35,6 +47,8 @@
 import JiraUserItem from "./JiraUserItem.vue";
 import {PropType, ref} from "vue";
 import JiraTask from "../controller/JiraTask";
+//TODO WTH? not registered with vite?
+import DProgressbar from "vuelize/src/components/progress/DProgressbar.vue"
 
 const props = defineProps({
   item: Object as PropType<JiraTask>

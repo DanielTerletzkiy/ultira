@@ -6,14 +6,15 @@ import Commits = JiraCommits.Commits;
 import Task = JiraIssue.Task;
 import PullRequests = JiraPullRequests.PullRequests;
 import WorkLogRoot = JiraWorkLog.WorkLogRoot;
+import {Ref, ref} from "vue";
 
 export default class JiraTask extends ApiController {
     private _task: Task;
     private readonly _controller: JiraBaseController;
 
-    private _commitData: Commits | undefined;
-    private _pullRequestData: PullRequests | undefined;
-    private _workLogData: WorkLogRoot | undefined;
+    private _commitData = ref<Commits | undefined>();
+    private _pullRequestData = ref<PullRequests | undefined>();
+    private _workLogData = ref<WorkLogRoot | undefined>();
 
     constructor(task: Task, controller: JiraBaseController) {
         super();
@@ -22,7 +23,7 @@ export default class JiraTask extends ApiController {
         this.getConnectedData();
     }
 
-    async _updateSelf() {
+    async updateSelf() {
         const url = new URL(this._task.self);
         [this._task] = await Promise.all([
             ApiController.fetchJira(
@@ -32,16 +33,17 @@ export default class JiraTask extends ApiController {
                 this._controller.credentials),
             this.getConnectedData()
         ])
+        return self;
     }
 
     async getConnectedData() {
         const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this._task.id}&applicationType=bitbucket&dataType`;
-        [this._workLogData, this._commitData, this._pullRequestData] = await Promise.all([
-            ApiController.fetchJira(
+        [/*this._workLogData.value,*/this._commitData.value, this._pullRequestData.value] = await Promise.all([
+            /*ApiController.fetchJira(
                 this._controller.url,
                 `rest/api/latest/issue/${this._task.key}/worklog`,
                 'GET',
-                this._controller.credentials),
+                this._controller.credentials),*/
             ApiController.fetchJira(
                 this._controller.url,
                 `${dataUrl}=repository`,
@@ -63,15 +65,15 @@ export default class JiraTask extends ApiController {
             this._controller.credentials, {
                 timeSpentSeconds: seconds
             });
-        await this._updateSelf();
+        await this.updateSelf();
         return result;
     }
 
-    get commitData(): JiraCommits.Commits | undefined {
+    get commitData(): Ref<JiraCommits.Commits | undefined> {
         return this._commitData;
     }
 
-    get pullRequestData(): JiraPullRequests.PullRequests | undefined {
+    get pullRequestData(): Ref<JiraPullRequests.PullRequests | undefined> {
         return this._pullRequestData;
     }
 

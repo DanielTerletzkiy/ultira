@@ -54,6 +54,8 @@ header, .d-toolbar {
   .action {
     -webkit-app-region: no-drag;
   }
-
+}
+.d-tooltip {
+  width: initial;
 }
 </style>

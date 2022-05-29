@@ -6,8 +6,8 @@
           <d-column block v-if="currentIssue" style="min-height: inherit; max-height: inherit">
             <JiraInfoView :item="currentIssue"/>
           </d-column>
-          <d-column block style="min-height: inherit;">
-            <JiraBranchView/>
+          <d-column block v-if="currentIssue && !!currentIssue.commitData" style="min-height: inherit;">
+            <JiraBranchView :item="currentIssue"/>
           </d-column>
         </d-row>
         <d-row gap style="flex: 1;" align="stretch">

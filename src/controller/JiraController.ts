@@ -6,7 +6,7 @@ import Task = JiraIssue.Task;
 
 export default class JiraController extends ApiController {
     controller: JiraBaseController;
-    issues: Array<JiraTask> | undefined;
+    issues: Array<JiraTask> = [];
     totalIssues: number = 0;
 
     constructor(baseController: JiraBaseController) {
@@ -20,7 +20,17 @@ export default class JiraController extends ApiController {
             `rest/api/latest/search?jql=assignee=currentuser() OR reporter=currentuser() ORDER BY updated desc`,
             'GET',
             this.controller.credentials);
-        this.issues = searchResult.issues.map((issue: Task) => new JiraTask(issue, this.controller));
+        //TODO make it better
+        if (this.issues) {
+            searchResult.issues.filter((issue: Task) => this.issues.find((e) => e.task.key === issue.key)?.updateSelf())
+        }
+        if (this.issues.length !== searchResult.issues.length) {
+            this.issues = searchResult.issues.map((issue: Task) => {
+                if (!this.issues.find((e) => e.task.key === issue.key)) {
+                    return new JiraTask(issue, this.controller)
+                }
+            });
+        }
         this.totalIssues = searchResult.total;
         return {issues: this.issues, total: this.totalIssues};
     }
