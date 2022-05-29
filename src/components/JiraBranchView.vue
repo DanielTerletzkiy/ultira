@@ -3,10 +3,10 @@
     <d-card-title class="font-size-medium">
       Branches
     </d-card-title>
-    <d-column gap class="mx-2 pb-3" style="max-height: calc(500px - 47px - 8px); overflow: overlay">
+    <d-column gap class="mx-2 pt-0" style="max-height: calc(500px - 47px - 8px); overflow: overlay">
       <d-card v-for="repository in item.commitData.detail[0].repositories" elevation="2" block
               background-color="transparent">
-        <d-row>
+        <d-row class="sticky" elevation="2">
           <d-column>
             <d-card-title class="font-size-medium">
               {{ repository.name }}
@@ -24,7 +24,6 @@
             </d-card-subtitle>
           </d-column>
         </d-row>
-        <d-divider/>
         <d-column class="pa-2" gap>
           <d-accordion v-for="commit in repository.commits" header-color="primary">
             <template v-slot:header>
@@ -78,5 +77,9 @@ const props = defineProps({
 </script>
 
 <style scoped lang="scss">
-
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
 </style>
