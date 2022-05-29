@@ -9,24 +9,25 @@
     <d-divider class="mx-3"/>
     <d-card class="sort-list mx-2" elevation-dark="2" elevation-light="">
       <d-tab-list class="font-weight-bold" show-indicator v-model="currentSort">
-        <d-tooltip position="right" color="secondary" filled>
-          <d-icon-button :size="40" @click="scrollIntoView(modelValue)">
-            <d-icon name="crosshair" :size="20"/>
-          </d-icon-button>
-          <template v-slot:tooltip>
-            Snipe into view
-          </template>
-        </d-tooltip>
         <d-list-item class="sort-list__item" v-for="option in sortOptions" :key="option.name" :color="option.color">
           <d-icon :name="option.icon" :size="20"/>
           {{ option.name }}
         </d-list-item>
+        <d-divider class="my-2" vertical elevation="6"/>
         <d-tooltip position="top" color="secondary" filled>
           <d-icon-button :size="40" @click="reload">
             <d-icon name="sync" :size="20"/>
           </d-icon-button>
           <template v-slot:tooltip>
             Reload
+          </template>
+        </d-tooltip>
+        <d-tooltip position="top" color="secondary" filled>
+          <d-icon-button :size="40" @click="scrollIntoView(modelValue)">
+            <d-icon name="crosshair" :size="20"/>
+          </d-icon-button>
+          <template v-slot:tooltip>
+            Snipe into view
           </template>
         </d-tooltip>
       </d-tab-list>
