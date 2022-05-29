@@ -231,9 +231,18 @@ export namespace JiraCommits {
     interface File {
         path: string
         url: string
-        changeType: string
+        changeType: ChangeType
         linesAdded: number
         linesRemoved: number
+    }
+
+    export enum ChangeType {
+        MODIFIED = 'MODIFIED',
+        DELETED = 'DELETED',
+        MOVED  = 'MOVED',
+        ADDED  = 'ADDED',
+        COPIED  = 'COPIED',
+        UNKNOWN  = 'UNKNOWN',
     }
 
     interface Instance {

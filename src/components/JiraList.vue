@@ -1,18 +1,27 @@
 <template>
   <d-column gap>
     <d-list v-model="modelValue" @update:modelValue="onChange" color="primary">
-      <d-list-item class="item" :key="issue.task.key" v-for="issue in jiraController.issues">
+      <d-list-item v-for="issue in jiraController.issues" :key="issue.task.key" :id="issue.task.key" class="item">
         <JiraListItem :item="issue"/>
+        <span v-if="issue.task.key === modelValue" class="observer" v-intersection-observer="intersectObserver"></span>
       </d-list-item>
     </d-list>
     <d-divider class="mx-3"/>
     <d-card class="sort-list mx-2" elevation-dark="2" elevation-light="">
       <d-tab-list class="font-weight-bold" show-indicator v-model="currentSort">
+        <d-tooltip position="right" color="secondary" filled>
+          <d-icon-button :size="40" @click="scrollIntoView(modelValue)">
+            <d-icon name="crosshair" :size="20"/>
+          </d-icon-button>
+          <template v-slot:tooltip>
+            Snipe into view
+          </template>
+        </d-tooltip>
         <d-list-item class="sort-list__item" v-for="option in sortOptions" :key="option.name" :color="option.color">
           <d-icon :name="option.icon" :size="20"/>
           {{ option.name }}
         </d-list-item>
-        <d-tooltip position="top">
+        <d-tooltip position="top" color="secondary" filled>
           <d-icon-button :size="40" @click="reload">
             <d-icon name="sync" :size="20"/>
           </d-icon-button>
@@ -30,6 +39,8 @@ import JiraListItem from "./JiraListItem.vue";
 import JiraController from "../controller/JiraController";
 import {inject, ref} from "vue";
 import {refreshTime} from "../store/jira.store";
+import {vIntersectionObserver} from "@vueuse/components";
+
 
 const jiraController = inject('JiraController') as { value: JiraController };
 
@@ -40,6 +51,25 @@ const props = defineProps({
 
 function onChange(selectedIssue: string) {
   emit('update:modelValue', selectedIssue)
+}
+
+function scrollIntoView(id: string) {
+  document?.getElementById(id)?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+    inline: 'center'
+  });
+}
+
+async function intersectObserver([{isIntersecting}]: any) {
+  console.log(isIntersecting)
+  if (!isIntersecting && props.modelValue) {
+    setTimeout(() => {
+      if (props.modelValue) {
+        scrollIntoView(props.modelValue)
+      }
+    }, 30000)
+  }
 }
 
 function reload() {
@@ -87,7 +117,14 @@ const sortOptions = [
 }
 
 .item {
+  position: relative;
   padding: 0 !important;
+
+  .observer {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 
   ::v-deep(.d-list__item__content) {
     padding: 6px 8px !important;

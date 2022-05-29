@@ -1,1 +1,1 @@
-{"version":3,"file":"Jira.js","sourceRoot":"","sources":["Jira.ts"],"names":[],"mappings":""}
+{"version":3,"file":"Jira.js","sourceRoot":"","sources":["Jira.ts"],"names":[],"mappings":"AA0LA,MAAM,KAAW,WAAW,CAuE3B;AAvED,WAAiB,WAAW;IAoDxB,IAAY,UAOX;IAPD,WAAY,UAAU;QAClB,mCAAqB,CAAA;QACrB,iCAAmB,CAAA;QACnB,6BAAgB,CAAA;QAChB,6BAAgB,CAAA;QAChB,+BAAkB,CAAA;QAClB,iCAAoB,CAAA;IACxB,CAAC,EAPW,UAAU,GAAV,sBAAU,KAAV,sBAAU,QAOrB;AAYL,CAAC,EAvEgB,WAAW,KAAX,WAAW,QAuE3B"}

@@ -1,6 +1,5 @@
 import ApiController from "./ApiController";
 import JiraBaseController from "./JiraBaseController";
-// @ts-ignore
 import {JiraCommits, JiraIssue, JiraPullRequests, JiraWorkLog} from "../../types/Jira";
 import Commits = JiraCommits.Commits;
 import Task = JiraIssue.Task;

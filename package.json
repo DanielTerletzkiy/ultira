@@ -6,13 +6,14 @@
     "build": "vite build",
     "dev": "SET APP_ENV=development && vite",
     "electron:start": "SET APP_ENV=production && npm run build && electron .",
-    "electron:package": "SET APP_ENV=production && npx electron-packager . --overwrite",
+    "electron:package": "SET APP_ENV=production && npm run build && npx electron-packager . --overwrite",
     "preview": "vite preview"
   },
   "main": "main.js",
   "dependencies": {
     "@nanogiants/vue3-longpress": "^1.0.8",
     "@vue/cli-service": "^5.0.4",
+    "@vueuse/components": "^8.5.0",
     "cors": "^2.8.5",
     "http-proxy-middleware": "^2.0.6",
     "jira2md": "^2.1.0",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
     "electron": "^19.0.1",
+    "electron-packager": "^15.5.1",
     "node-sass": "^7.0.1",
     "sass": "^1.50.0",
     "sass-loader": "^13.0.0",

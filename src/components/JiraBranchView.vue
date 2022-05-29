@@ -3,7 +3,8 @@
     <d-card-title class="font-size-medium">
       Branches
     </d-card-title>
-    <d-column gap class="mx-2 pt-0" style="max-height: calc(500px - 47px - 8px); overflow: overlay">
+    <d-column class="mx-2 pt-0" style="max-height: calc(500px - 47px - 8px); overflow: overlay"
+              gap :wrap="false">
       <d-card v-for="repository in item.commitData.detail[0].repositories" elevation="2" block
               background-color="transparent">
         <d-row class="sticky" elevation="2">
@@ -20,7 +21,7 @@
               {{ repository.commits.length }}
             </d-card-title>
             <d-card-subtitle>
-              Commit count
+              Commits
             </d-card-subtitle>
           </d-column>
         </d-row>
@@ -28,13 +29,13 @@
           <d-accordion v-for="commit in repository.commits" header-color="primary">
             <template v-slot:header>
               <d-icon color="currentColor" name="file-check-alt"/>
-              <d-card-subtitle class="font-size-small"
+              <d-card-subtitle class="pa-0 font-size-small"
                                v-html="jira2md.jira_to_html(commit.message)"/>
             </template>
             <template v-slot:default>
               <d-card v-for="file in commit.files" block background-color="transparent">
                 <d-row block gap justify="start">
-                  <d-label color="primary">
+                  <d-label :color="changeTypeColor(file.changeType)">
                     {{ file.changeType }}
                   </d-label>
                   <d-column class="pa-0">
@@ -51,7 +52,7 @@
                     {{ file.path }}
                   </d-card-subtitle>
                 </d-row>
-                <d-divider/>
+                <d-divider elevation="6"/>
               </d-card>
             </template>
           </d-accordion>
@@ -67,6 +68,8 @@ import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 //@ts-ignore
 import jira2md from "jira2md";
+import {JiraCommits} from "../../types/Jira";
+import ChangeType = JiraCommits.ChangeType;
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };
@@ -74,6 +77,27 @@ const jiraController = inject('JiraController') as { value: JiraController };
 const props = defineProps({
   item: Object as PropType<JiraTask>
 })
+
+function changeTypeColor(type: ChangeType) {
+  switch (type) {
+    case 'MODIFIED': {
+      return 'primary'
+    }
+    case 'ADDED': {
+      return 'success'
+    }
+    case 'DELETED': {
+      return 'error'
+    }
+    case 'MOVED':
+    case 'COPIED': {
+      return 'warning'
+    }
+    case 'UNKNOWN': {
+      return 'secondary'
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
