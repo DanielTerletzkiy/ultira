@@ -55,7 +55,7 @@ const props = defineProps({
 })
 
 function secondsToTime(seconds: number) {
-  return new Date(seconds * 1000).toISOString().substr(8, 8);
+  return new Date(seconds * 1000).toISOString().substr(5, 11);
 }
 
 const loadingWorkLog = ref(false);

@@ -13,7 +13,7 @@ function createWindow() {
         titleBarStyle: 'hidden',
         titleBarOverlay: {
             color: '#242832',
-            symbolColor: '#8e6bf3',
+            symbolColor: '#94cdff',
         }
     });
 

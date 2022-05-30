@@ -1,6 +1,6 @@
 <template>
   <d-column gap block>
-    <d-card block style="max-height: calc(100vh - 86px); overflow: hidden" v-if="currentJiraConfig">
+    <d-card v-if="currentJiraConfig" block style="max-height: calc(100vh - 86px); overflow: hidden">
       <d-column gap>
         <d-row gap style="flex: 1; max-height: 500px; min-height: 500px;">
           <d-column block v-if="currentIssue" style="min-height: inherit; max-height: inherit">
@@ -21,6 +21,9 @@
             <JiraList v-model="selectedIssue"/>
           </d-column>
           <d-column block style="flex: 2;">
+            <JiraCommentsView/>
+          </d-column>
+          <d-column block style="flex: 3;">
             <JiraPullRequestView/>
           </d-column>
         </d-row>
@@ -40,6 +43,7 @@ import JiraInfoView from "../components/JiraInfoView.vue";
 import {credentialsOpen, currentJiraConfig, selectedIssue} from "../store/jira.store";
 import JiraBranchView from "../components/JiraBranchView.vue";
 import JiraPullRequestView from "../components/JiraPullRequestView.vue";
+import JiraCommentsView from "../components/JiraCommentsView.vue";
 
 const store = useStore()
 const jiraConfigs = computed(() => store.getters.jiraConfigs)

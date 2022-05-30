@@ -3,7 +3,7 @@
     <d-card-title class="font-size-medium">
       Branches
     </d-card-title>
-    <FadeTransition>
+    <SlideXLeftTransition group>
       <d-column key="content" v-if="item?.commitData?.detail" class="mx-2 pt-0"
                 style="max-height: calc(500px - 47px - 8px); overflow: overlay"
                 gap :wrap="false">
@@ -62,9 +62,8 @@
         </d-card>
       </d-column>
       <d-elevation-loader key="loader" v-else :elevation="20" :columns="10" :amount="100" default-size="40"
-                          :speed="4000"
-                          color="red"/>
-    </FadeTransition>
+                          :speed="4000"/>
+    </SlideXLeftTransition>
   </d-card>
 </template>
 
@@ -74,7 +73,7 @@ import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 //@ts-ignore
 import jira2md from "jira2md";
-import {FadeTransition} from "v3-transitions";
+import {SlideXLeftTransition} from "v3-transitions";
 import {JiraCommits} from "../../types/Jira";
 import ChangeType = JiraCommits.ChangeType;
 

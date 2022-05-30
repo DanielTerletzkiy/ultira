@@ -1,9 +1,10 @@
 import ApiController from "./ApiController";
 import JiraBaseController from "./JiraBaseController";
-import {JiraCommits, JiraIssue, JiraPullRequests, JiraWorkLog} from "../../types/Jira";
+import {JiraComments, JiraCommits, JiraIssue, JiraPullRequests, JiraWorkLog} from "../../types/Jira";
 import Commits = JiraCommits.Commits;
 import Task = JiraIssue.Task;
 import PullRequests = JiraPullRequests.PullRequests;
+import CommentsRoot = JiraComments.CommentsRoot;
 
 export default class JiraTask extends ApiController {
     task: Task;
@@ -11,6 +12,7 @@ export default class JiraTask extends ApiController {
 
     commitData: Commits | undefined;
     pullRequestData: PullRequests | undefined;
+    commentsData: CommentsRoot | undefined;
 
     constructor(task: Task, controller: JiraBaseController) {
         super();
@@ -34,7 +36,7 @@ export default class JiraTask extends ApiController {
 
     async getConnectedData() {
         const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=bitbucket&dataType`;
-        [this.commitData, this.pullRequestData] = await Promise.all([
+        [this.commitData, this.pullRequestData, this.commentsData] = await Promise.all([
             ApiController.fetchJira(
                 this._controller.url,
                 `${dataUrl}=repository`,
@@ -43,6 +45,11 @@ export default class JiraTask extends ApiController {
             ApiController.fetchJira(
                 this._controller.url,
                 `${dataUrl}=pullrequest`,
+                'GET',
+                this._controller.credentials),
+            ApiController.fetchJira(
+                this._controller.url,
+                `rest/api/latest/issue/${this.task.key}/comment`,
                 'GET',
                 this._controller.credentials)
         ])
