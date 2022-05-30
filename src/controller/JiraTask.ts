@@ -4,15 +4,11 @@ import {JiraCommits, JiraIssue, JiraPullRequests, JiraWorkLog} from "../../types
 import Commits = JiraCommits.Commits;
 import Task = JiraIssue.Task;
 import PullRequests = JiraPullRequests.PullRequests;
-import WorkLogRoot = JiraWorkLog.WorkLogRoot;
-import {Ref, ref} from "vue";
 
 export default class JiraTask extends ApiController {
     task: Task;
     private readonly _controller: JiraBaseController;
 
-    //commitData = ref<Commits | null>(null);
-    //pullRequestData = ref<PullRequests | null>(null);
     commitData: Commits | undefined;
     pullRequestData: PullRequests | undefined;
 
@@ -50,7 +46,6 @@ export default class JiraTask extends ApiController {
                 'GET',
                 this._controller.credentials)
         ])
-        console.log(this.commitData)
     }
 
     async addWorkLog(seconds: number) {

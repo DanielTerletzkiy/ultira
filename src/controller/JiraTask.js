@@ -2,8 +2,6 @@ import ApiController from "./ApiController";
 export default class JiraTask extends ApiController {
     task;
     _controller;
-    //commitData = ref<Commits | null>(null);
-    //pullRequestData = ref<PullRequests | null>(null);
     commitData;
     pullRequestData;
     constructor(task, controller) {
@@ -26,7 +24,6 @@ export default class JiraTask extends ApiController {
             ApiController.fetchJira(this._controller.url, `${dataUrl}=repository`, 'GET', this._controller.credentials),
             ApiController.fetchJira(this._controller.url, `${dataUrl}=pullrequest`, 'GET', this._controller.credentials)
         ]);
-        console.log(this.commitData);
     }
     async addWorkLog(seconds) {
         const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/worklog`, 'POST', this._controller.credentials, {

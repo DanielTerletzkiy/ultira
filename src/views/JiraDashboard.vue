@@ -6,7 +6,7 @@
           <d-column block v-if="currentIssue" style="min-height: inherit; max-height: inherit">
             <JiraInfoView :item="currentIssue"/>
           </d-column>
-          <d-column block v-if="currentIssue && !!currentIssue.commitData"
+          <d-column block v-if="currentIssue"
                     style="flex: 1; max-height: 500px; min-height: 500px;">
             <JiraBranchView :item="currentIssue"/>
           </d-column>
@@ -66,9 +66,10 @@ async function setJiraBase(name: any) {
       credentialsOpen.value = true;
       return;
     }
+    await store.dispatch('setCurrentJiraConfig', name);
     jiraController.value = new JiraController(new JiraBaseController(selectedJiraBase.url, selectedJiraBase.name, cookieCredentials))
     jiraController.value?.getAllIssues();
-    await store.dispatch('setCurrentJiraConfig', name);
+    jiraController.value?.getAllIssues(); //TODO try to figure out how to get branch/pr to be reactive, setting ref in JiraTask is not working as expected
   } else {
     credentialsOpen.value = true;
   }
