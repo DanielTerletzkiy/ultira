@@ -6,7 +6,7 @@
           <d-column block v-if="currentIssue" style="min-height: inherit; max-height: inherit">
             <JiraInfoView :item="currentIssue"/>
           </d-column>
-          <d-column block v-if="currentIssue && !!currentIssue.commitData" :key="random"
+          <d-column block v-if="currentIssue && !!currentIssue.commitData"
                     style="flex: 1; max-height: 500px; min-height: 500px;">
             <JiraBranchView :item="currentIssue"/>
           </d-column>
@@ -73,15 +73,6 @@ async function setJiraBase(name: any) {
     credentialsOpen.value = true;
   }
 }
-
-const random = ref(0);
-watch(
-    () => currentIssue.value,
-    () => {
-      random.value = Math.random();
-    },
-    {deep: true}
-)
 
 onBeforeMount(() => {
   setJiraBase(currentJiraConfig.value)

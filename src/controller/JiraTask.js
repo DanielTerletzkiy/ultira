@@ -1,11 +1,11 @@
 import ApiController from "./ApiController";
-import { ref } from "vue";
 export default class JiraTask extends ApiController {
     task;
     _controller;
-    commitData = ref(null);
-    pullRequestData = ref(null);
-    //private _workLogData = ref<WorkLogRoot | undefined>();
+    //commitData = ref<Commits | null>(null);
+    //pullRequestData = ref<PullRequests | null>(null);
+    commitData;
+    pullRequestData;
     constructor(task, controller) {
         super();
         this.task = task;
@@ -22,10 +22,11 @@ export default class JiraTask extends ApiController {
     }
     async getConnectedData() {
         const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=bitbucket&dataType`;
-        [this.commitData.value, this.pullRequestData.value] = await Promise.all([
+        [this.commitData, this.pullRequestData] = await Promise.all([
             ApiController.fetchJira(this._controller.url, `${dataUrl}=repository`, 'GET', this._controller.credentials),
             ApiController.fetchJira(this._controller.url, `${dataUrl}=pullrequest`, 'GET', this._controller.credentials)
         ]);
+        console.log(this.commitData);
     }
     async addWorkLog(seconds) {
         const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/worklog`, 'POST', this._controller.credentials, {

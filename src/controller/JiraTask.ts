@@ -11,9 +11,10 @@ export default class JiraTask extends ApiController {
     task: Task;
     private readonly _controller: JiraBaseController;
 
-    commitData = ref<Commits | null>(null);
-    pullRequestData = ref<PullRequests | null>(null);
-    //private _workLogData = ref<WorkLogRoot | undefined>();
+    //commitData = ref<Commits | null>(null);
+    //pullRequestData = ref<PullRequests | null>(null);
+    commitData: Commits | undefined;
+    pullRequestData: PullRequests | undefined;
 
     constructor(task: Task, controller: JiraBaseController) {
         super();
@@ -37,7 +38,7 @@ export default class JiraTask extends ApiController {
 
     async getConnectedData() {
         const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=bitbucket&dataType`;
-        [this.commitData.value, this.pullRequestData.value] = await Promise.all([
+        [this.commitData, this.pullRequestData] = await Promise.all([
             ApiController.fetchJira(
                 this._controller.url,
                 `${dataUrl}=repository`,
@@ -49,6 +50,7 @@ export default class JiraTask extends ApiController {
                 'GET',
                 this._controller.credentials)
         ])
+        console.log(this.commitData)
     }
 
     async addWorkLog(seconds: number) {
