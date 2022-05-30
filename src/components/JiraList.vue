@@ -62,9 +62,14 @@ function scrollIntoView(id: string) {
   });
 }
 
+let timeout: NodeJS.Timeout | null | undefined = null;
+
 async function intersectObserver([{isIntersecting}]: any) {
+  if (timeout) {
+    clearTimeout(timeout)
+  }
   if (!isIntersecting && props.modelValue) {
-    setTimeout(() => {
+    timeout = setTimeout(() => {
       if (props.modelValue) {
         scrollIntoView(props.modelValue)
       }
