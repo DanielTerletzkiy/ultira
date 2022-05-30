@@ -1,5 +1,6 @@
 import ApiController from "./ApiController";
 import { ref } from "vue";
+import { getCurrentInstance } from "vue";
 export default class JiraTask extends ApiController {
     task;
     _controller;
@@ -27,6 +28,7 @@ export default class JiraTask extends ApiController {
             ApiController.fetchJira(this._controller.url, `${dataUrl}=pullrequest`, 'GET', this._controller.credentials)
         ]);
         console.log(this.commitData.value);
+        getCurrentInstance()?.proxy?.$forceUpdate();
     }
     async addWorkLog(seconds) {
         const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/worklog`, 'POST', this._controller.credentials, {

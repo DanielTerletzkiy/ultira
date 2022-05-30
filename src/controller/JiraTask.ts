@@ -6,6 +6,7 @@ import Task = JiraIssue.Task;
 import PullRequests = JiraPullRequests.PullRequests;
 import WorkLogRoot = JiraWorkLog.WorkLogRoot;
 import {Ref, ref} from "vue";
+import {getCurrentInstance} from "vue";
 
 export default class JiraTask extends ApiController {
     task: Task;
@@ -50,6 +51,7 @@ export default class JiraTask extends ApiController {
                 this._controller.credentials)
         ])
         console.log(this.commitData.value)
+        getCurrentInstance()?.proxy?.$forceUpdate();
     }
 
     async addWorkLog(seconds: number) {
