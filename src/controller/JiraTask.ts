@@ -6,14 +6,13 @@ import Task = JiraIssue.Task;
 import PullRequests = JiraPullRequests.PullRequests;
 import WorkLogRoot = JiraWorkLog.WorkLogRoot;
 import {Ref, ref} from "vue";
-import {getCurrentInstance} from "vue";
 
 export default class JiraTask extends ApiController {
     task: Task;
     private readonly _controller: JiraBaseController;
 
-    commitData = ref<Commits | undefined>(undefined);
-    pullRequestData = ref<PullRequests | undefined>(undefined);
+    commitData = ref<Commits | null>(null);
+    pullRequestData = ref<PullRequests | null>(null);
     //private _workLogData = ref<WorkLogRoot | undefined>();
 
     constructor(task: Task, controller: JiraBaseController) {
@@ -50,8 +49,6 @@ export default class JiraTask extends ApiController {
                 'GET',
                 this._controller.credentials)
         ])
-        console.log(this.commitData.value)
-        getCurrentInstance()?.proxy?.$forceUpdate();
     }
 
     async addWorkLog(seconds: number) {
