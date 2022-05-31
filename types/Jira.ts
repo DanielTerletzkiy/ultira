@@ -195,7 +195,7 @@ export namespace JiraCommits {
         _instance: Instance
     }
 
-    interface Repository {
+    export interface Repository {
         name: string
         avatar: string
         avatarDescription: string

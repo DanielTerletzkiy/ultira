@@ -6,8 +6,14 @@
       </d-card-subtitle>
       <d-divider class="mx-3" block elevation="8"/>
     </d-row>
-    <JiraUserItem :user="item.task.fields.reporter" type="Reporter"/>
-    <JiraUserItem :user="item.task.fields.assignee" type="Assignee"/>
+    <d-column gap class="px-2">
+      <JiraUserItem :user="item.task.fields.reporter">
+        Reporter
+      </JiraUserItem>
+      <JiraUserItem :user="item.task.fields.assignee">
+        Assignee
+      </JiraUserItem>
+    </d-column>
     <d-card-subtitle>
       <d-icon name="plus" :size="20" color="primary"/>
       {{ new Date(item.task.fields.created).toLocaleString('DE-de') }}
@@ -39,7 +45,6 @@
         {{ secondsToTime(item.task.fields.timespent) }} / {{ secondsToTime(item.task.fields.timeoriginalestimate) }}
       </template>
     </d-tooltip>
-    <d-divider class="mx-3" elevation="10"/>
   </d-column>
 </template>
 

@@ -13,15 +13,19 @@
         </d-row>
         <d-row gap style="flex: 1;" align="stretch">
           <d-column elevation="n1" v-if="currentJiraConfig && jiraController"
-                    style="flex: 1;
+                    style="flex: 4;
                      max-height: calc(100vh - 86px - 16px - 500px);
                      overflow: overlay;
                      overflow-x: hidden;
                      min-width: fit-content;">
             <JiraList v-model="selectedIssue"/>
           </d-column>
-          <d-column block style="flex: 2;">
-            <JiraCommentsView/>
+          <d-column block style="flex: 2;
+                      max-height: calc(100vh - 86px - 16px - 500px);
+                     overflow: overlay;
+                     overflow-x: hidden;
+                     min-width: fit-content;">
+            <JiraCommentsView :item="currentIssue"/>
           </d-column>
           <d-column block style="flex: 3;">
             <JiraPullRequestView/>

@@ -1,5 +1,5 @@
 <template>
-  <d-card rounded="pill" glow outlined background-color="transparent" v-ripple width="100%">
+  <d-card rounded="pill" glow background-color="transparent" v-ripple width="100%">
     <d-tooltip position="right" color="primary" filled>
       <d-avatar v-if="user" rounded="circle" :size="36" :style="{
             backgroundImage: `url(${user.avatarUrls['48x48']})`,
@@ -12,7 +12,7 @@
         <d-icon name="image-question" color="primary" :tint="-100"/>
       </d-avatar>
       <template v-slot:tooltip>
-        {{ type }}
+        <slot/>
       </template>
     </d-tooltip>
     <d-card-subtitle>
@@ -27,7 +27,6 @@ import {JiraIssue} from "../../types/Jira";
 
 const props = defineProps({
   user: Object as PropType<JiraIssue.User>,
-  type: String
 })
 </script>
 

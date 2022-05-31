@@ -1,7 +1,7 @@
 <template>
   <d-card class="jira-branch" elevation="1" block height="100%">
     <d-card-title class="font-size-medium">
-      Branches
+      Branches & Commits
     </d-card-title>
     <SlideXLeftTransition group>
       <d-column key="content" v-if="item?.commitData?.detail" class="mx-2 pt-0"
@@ -9,24 +9,26 @@
                 gap :wrap="false">
         <d-card v-for="repository in item.commitData.detail[0].repositories" elevation="2" block
                 background-color="transparent">
-          <d-row class="sticky" elevation="2">
-            <d-column>
-              <d-card-title class="font-size-medium">
-                {{ repository.name }}
-              </d-card-title>
-              <d-card-subtitle>
-                Repository
-              </d-card-subtitle>
-            </d-column>
-            <d-column>
-              <d-card-title class="font-size-medium">
-                {{ repository.commits.length }}
-              </d-card-title>
-              <d-card-subtitle>
-                Commits
-              </d-card-subtitle>
-            </d-column>
-          </d-row>
+          <d-card class="sticky" block elevation="4">
+            <d-row>
+              <d-column>
+                <d-card-title class="font-size-medium">
+                  {{ repository.name }}
+                </d-card-title>
+                <d-card-subtitle>
+                  Repository
+                </d-card-subtitle>
+              </d-column>
+              <d-column>
+                <d-card-title class="font-size-medium">
+                  {{ repository.commits.length }}
+                </d-card-title>
+                <d-card-subtitle>
+                  Commits
+                </d-card-subtitle>
+              </d-column>
+            </d-row>
+          </d-card>
           <d-column class="pa-2" gap>
             <d-accordion v-for="commit in repository.commits" header-color="primary">
               <template v-slot:header>
