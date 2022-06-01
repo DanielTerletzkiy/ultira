@@ -25,13 +25,16 @@
               seconds
             </template>
           </d-textfield>
-          <d-textfield v-model="zoomFactor" full-width
-                       color="primary" filled label="Zoom Factor" type="number"
-                       min="0.1" max="2" step="0.1">
-            <template v-slot:suffix>
-              %
-            </template>
-          </d-textfield>
+          <d-card-subtitle class="pl-0 pb-0 font-weight-bold">
+            Zoom
+          </d-card-subtitle>
+          <d-row gap block>
+            <d-icon-button :size="40" name="angle-left-b" type="button" @click="zoomFactor>0.1 ? zoomFactor-=0.1 : null"/>
+            <d-button outlined color="secondary" type="button" style="font-size: 1.5rem" @click="zoomFactor = 1">
+              {{ (Math.round(zoomFactor * 10) / 10).toString().padEnd(3, '.0') }}
+            </d-button>
+            <d-icon-button :size="40" name="angle-right-b" type="button" @click="zoomFactor<5 ? zoomFactor+=0.1 : null"/>
+          </d-row>
         </d-column>
         <d-divider/>
         <d-column gap>
