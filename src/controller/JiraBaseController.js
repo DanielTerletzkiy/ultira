@@ -1,23 +1,16 @@
 import ApiController from "./ApiController";
 export default class JiraBaseController extends ApiController {
-    _url = "";
-    _name = "";
-    _credentials;
-    constructor(url, name, credentials) {
+    url = "";
+    name = "";
+    credentials;
+    applicationType;
+    constructor(data) {
         super();
-        this._url = url;
-        this._name = name;
-        this._credentials = credentials;
-        ApiController.fetchJira(url, 'url', 'POST', credentials);
-    }
-    get url() {
-        return this._url;
-    }
-    get name() {
-        return this._name;
-    }
-    get credentials() {
-        return this._credentials;
+        this.url = data.url;
+        this.name = data.name;
+        this.credentials = data.credentials;
+        this.applicationType = data.applicationType;
+        ApiController.fetchJira(data.url, 'url', 'POST', data.credentials);
     }
 }
 //# sourceMappingURL=JiraBaseController.js.map

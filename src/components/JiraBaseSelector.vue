@@ -1,10 +1,10 @@
 <template>
   <div class="action">
-    <JiraCredentialsDialog class="dialog" v-model:open="credentialsOpen" :name="currentJiraConfig"
+    <JiraCredentialsDialog class="dialog" v-model:open="credentialsOpen" :name="selectedJiraConfig"
                            @submit="onCredentialsSubmit"/>
-    <d-tab-list color="primary" elevation="2" v-model="currentJiraConfig">
+    <d-tab-list color="primary" elevation="2" v-model="selectedJiraConfig">
       <d-list-item v-for="jira in jiraConfigs" :key="jira.name" v-use-longpress
-                   @longpress="()=>jira.name === currentJiraConfig ? openCredentials() : null">
+                   @longpress="()=>jira.name === selectedJiraConfig ? openCredentials() : null">
         {{ jira.name }}
       </d-list-item>
     </d-tab-list>
@@ -12,13 +12,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from "vue";
-import {useStore} from "vuex";
 import JiraCredentialsDialog from "./JiraCredentialsDialog.vue";
-import {credentialsOpen, currentJiraConfig} from "../store/jira.store";
-
-const store = useStore()
-const jiraConfigs = computed(() => store.getters.jiraConfigs)
+import {credentialsOpen, selectedJiraConfig, jiraConfigs} from "../store/jira.store";
 
 function openCredentials() {
   credentialsOpen.value = true;
@@ -26,7 +21,7 @@ function openCredentials() {
 
 function onCredentialsSubmit(credentials: { username: string, password: string }) {
   credentialsOpen.value = false
-  localStorage.setItem(`${currentJiraConfig.value}Cred`, JSON.stringify(credentials))
+  localStorage.setItem(`${selectedJiraConfig.value}Cred`, JSON.stringify(credentials))
 }
 
 </script>

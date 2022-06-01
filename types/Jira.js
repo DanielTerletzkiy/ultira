@@ -1,3 +1,12 @@
+export var JiraConfiguration;
+(function (JiraConfiguration) {
+    let ApplicationType;
+    (function (ApplicationType) {
+        ApplicationType["Bitbucket"] = "bitbucket";
+        ApplicationType["Stash"] = "stash";
+        ApplicationType["GitHub"] = "github";
+    })(ApplicationType = JiraConfiguration.ApplicationType || (JiraConfiguration.ApplicationType = {}));
+})(JiraConfiguration || (JiraConfiguration = {}));
 export var JiraCommits;
 (function (JiraCommits) {
     let ChangeType;

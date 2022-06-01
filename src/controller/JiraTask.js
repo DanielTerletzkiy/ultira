@@ -1,7 +1,7 @@
 import ApiController from "./ApiController";
 export default class JiraTask extends ApiController {
-    task;
     _controller;
+    task;
     commitData;
     pullRequestData;
     commentsData;
@@ -20,7 +20,7 @@ export default class JiraTask extends ApiController {
         return self;
     }
     async getConnectedData() {
-        const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=bitbucket&dataType`;
+        const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
         [this.commitData, this.pullRequestData, this.commentsData] = await Promise.all([
             ApiController.fetchJira(this._controller.url, `${dataUrl}=repository`, 'GET', this._controller.credentials),
             ApiController.fetchJira(this._controller.url, `${dataUrl}=pullrequest`, 'GET', this._controller.credentials),

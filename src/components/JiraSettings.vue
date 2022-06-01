@@ -25,6 +25,13 @@
               seconds
             </template>
           </d-textfield>
+          <d-textfield v-model="zoomFactor" full-width
+                       color="primary" filled label="Zoom Factor" type="number"
+                       min="0.1" max="2" step="0.1">
+            <template v-slot:suffix>
+              %
+            </template>
+          </d-textfield>
         </d-column>
         <d-divider/>
         <d-column gap>
@@ -51,7 +58,15 @@ import {computed, inject, onBeforeMount, watch} from "vue";
 import {useStore} from "vuex";
 import JiraSettingsConfig from "./JiraSettingsConfig.vue";
 import {FadeTransition} from "v3-transitions"
-import {jiraConfigs, refreshTime} from "../store/jira.store";
+import {jiraConfigs, refreshTime, zoomFactor} from "../store/jira.store";
+import {JiraConfiguration} from "../../types/Jira";
+import ApplicationType = JiraConfiguration.ApplicationType;
+import {useZoomFactor} from '@vueuse/electron'
+
+let factor: any;
+if (import.meta.env.MODE === 'production') {
+  factor = useZoomFactor()
+}
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 
@@ -68,7 +83,8 @@ watch(jiraConfigs, (value) => {
 function addConfig() {
   jiraConfigs.value.push({
     name: '',
-    url: ''
+    url: '',
+    applicationType: ApplicationType.Bitbucket
   })
 }
 
@@ -89,7 +105,22 @@ watch(() => vuelize.theme.dark, (dark) => {
   localStorage.setItem('theme:dark', JSON.stringify(dark));
 })
 
+watch(() => zoomFactor.value, (factor) => {
+  setElectronZoom(factor);
+})
+
+function setElectronZoom(value: string | number) {
+  if (import.meta.env.MODE === 'production') {
+    if (typeof value === "string") {
+      factor.value = parseFloat(value);
+    } else {
+      factor.value = value;
+    }
+  }
+}
+
 onBeforeMount(() => {
+  setElectronZoom(zoomFactor.value);
   vuelize.theme.dark = JSON.parse(localStorage.getItem('theme:dark') || '{}');
   ['dark', 'light'].forEach((theme) => {
     const primary = localStorage.getItem(`${theme}:primary`) || '#9FCDFF'

@@ -1,6 +1,8 @@
 import { createStore } from "vuex";
 import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
+import { JiraConfiguration } from "../../types/Jira";
+var ApplicationType = JiraConfiguration.ApplicationType;
 const store = createStore({
     plugins: [new VuexPersistence().plugin],
     state: {
@@ -8,10 +10,12 @@ const store = createStore({
         selectedJiraConfig: '',
         jiraConfigs: [{
                 name: "sample",
-                url: "https://"
+                url: "https://",
+                applicationType: ApplicationType.Bitbucket
             }],
         credentialsDialogOpen: false,
-        refreshTime: 30,
+        refreshTime: 60,
+        zoomFactor: 1,
     },
     getters: {
         selectedIssue(state) {
@@ -28,6 +32,9 @@ const store = createStore({
         },
         refreshTime(state) {
             return state.refreshTime;
+        },
+        zoomFactor(state) {
+            return state.zoomFactor;
         }
     },
     mutations: {
@@ -45,6 +52,9 @@ const store = createStore({
         },
         setRefreshTime(state, payload) {
             state.refreshTime = payload;
+        },
+        setZoomFactor(state, payload) {
+            state.zoomFactor = payload;
         }
     },
     actions: {
@@ -62,6 +72,9 @@ const store = createStore({
         },
         setRefreshTime(context, payload) {
             context.commit('setRefreshTime', payload);
+        },
+        setZoomFactor(context, payload) {
+            context.commit('setZoomFactor', payload);
         }
     },
 });
@@ -74,7 +87,7 @@ export const selectedIssue = computed({
         store.dispatch('setSelectedIssue', value);
     },
 });
-export const currentJiraConfig = computed({
+export const selectedJiraConfig = computed({
     get() {
         return store.getters.currentJiraConfig;
     },
@@ -104,6 +117,14 @@ export const refreshTime = computed({
     },
     set(value) {
         store.dispatch('setRefreshTime', value);
+    }
+});
+export const zoomFactor = computed({
+    get() {
+        return store.getters.zoomFactor;
+    },
+    set(value) {
+        store.dispatch('setZoomFactor', value);
     }
 });
 //# sourceMappingURL=jira.store.js.map

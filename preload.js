@@ -1,3 +1,6 @@
+const { ipcRenderer } = require('electron')
+window.ipcRenderer = ipcRenderer
+
 window.addEventListener("DOMContentLoaded", () => {
     const replaceText = (selector, text) => {
         const element = document.getElementById(selector);

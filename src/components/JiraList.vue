@@ -1,7 +1,7 @@
 <template>
   <d-column gap>
     <d-list v-model="modelValue" @update:modelValue="onChange" color="primary">
-      <d-list-item v-for="issue in jiraController.issues" :key="issue.task.key" :id="issue.task.key" class="item">
+      <d-list-item v-for="issue in issueList" :key="issue.task.key" :id="issue.task.key" class="item">
         <JiraListItem :item="issue"/>
         <span v-if="issue.task.key === modelValue" class="observer" v-intersection-observer="intersectObserver"></span>
       </d-list-item>
@@ -38,12 +38,12 @@
 <script setup lang="ts">
 import JiraListItem from "./JiraListItem.vue";
 import JiraController from "../controller/JiraController";
-import {inject, ref} from "vue";
+import JiraTask from "../controller/JiraTask";
+import {computed, inject, Ref, ref} from "vue";
 import {refreshTime} from "../store/jira.store";
 import {vIntersectionObserver} from "@vueuse/components";
 
-
-const jiraController = inject('JiraController') as { value: JiraController };
+const jiraController = inject('JiraController') as Ref<JiraController>;
 
 const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
@@ -53,6 +53,10 @@ const props = defineProps({
 function onChange(selectedIssue: string) {
   emit('update:modelValue', selectedIssue)
 }
+
+const issueList = computed(() => {
+  return jiraController.value.issues.sort((a: JiraTask, b: JiraTask) => new Date(b.task.fields.updated).getTime() - new Date(a.task.fields.updated).getTime());
+})
 
 function scrollIntoView(id: string) {
   document?.getElementById(id)?.scrollIntoView({

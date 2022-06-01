@@ -1,18 +1,18 @@
 <template>
   <d-column gap block>
-    <d-card v-if="currentJiraConfig" block style="max-height: calc(100vh - 86px); overflow: hidden">
-      <d-column gap>
-        <d-row gap style="flex: 1; max-height: 500px; min-height: 500px;">
-          <d-column block v-if="currentIssue" style="min-height: inherit; max-height: inherit">
+    <d-card v-if="selectedJiraConfig" block style="max-height: calc(100vh - 86px); overflow: hidden">
+      <d-column gap :wrap="false">
+        <d-row gap :wrap="false" style="flex: 1; max-height: 500px; min-height: 500px;">
+          <d-column block :wrap="false" v-if="currentIssue" style="flex: 1; min-height: inherit; max-height: inherit">
             <JiraInfoView :item="currentIssue"/>
           </d-column>
-          <d-column block v-if="currentIssue"
+          <d-column block :wrap="false" v-if="currentIssue"
                     style="flex: 1; max-height: 500px; min-height: 500px;">
             <JiraBranchView :item="currentIssue"/>
           </d-column>
         </d-row>
-        <d-row gap style="flex: 1;" align="stretch">
-          <d-column elevation="n1" v-if="currentJiraConfig && jiraController"
+        <d-row gap :wrap="false" style="flex: 1;" align="stretch">
+          <d-column :wrap="false" elevation="n1" v-if="selectedJiraConfig && jiraController"
                     style="flex: 4;
                      max-height: calc(100vh - 86px - 16px - 500px);
                      overflow: overlay;
@@ -20,14 +20,14 @@
                      min-width: fit-content;">
             <JiraList v-model="selectedIssue"/>
           </d-column>
-          <d-column block style="flex: 2;
+          <d-column block :wrap="false" style="flex: 2;
                       max-height: calc(100vh - 86px - 16px - 500px);
                      overflow: overlay;
                      overflow-x: hidden;
                      min-width: fit-content;">
             <JiraCommentsView :item="currentIssue"/>
           </d-column>
-          <d-column block style="flex: 3;">
+          <d-column block :wrap="false" style="flex: 3;">
             <JiraPullRequestView/>
           </d-column>
         </d-row>
@@ -37,27 +37,27 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeMount, provide, ref, watch} from "vue";
-import {useStore} from "vuex";
+import {computed, onBeforeMount, onMounted, provide, ref, watch} from "vue";
+import {credentialsOpen, selectedJiraConfig, jiraConfigs, selectedIssue} from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 import JiraList from "../components/JiraList.vue";
 import JiraInfoView from "../components/JiraInfoView.vue";
-import {credentialsOpen, currentJiraConfig, selectedIssue} from "../store/jira.store";
 import JiraBranchView from "../components/JiraBranchView.vue";
 import JiraPullRequestView from "../components/JiraPullRequestView.vue";
 import JiraCommentsView from "../components/JiraCommentsView.vue";
-
-const store = useStore()
-const jiraConfigs = computed(() => store.getters.jiraConfigs)
+import {JiraConfiguration} from "../../types/Jira";
+import JiraConfig = JiraConfiguration.JiraConfig;
 
 const currentIssue = computed<JiraTask | undefined>(() => jiraController.value && jiraController.value?.issues?.find((issue: JiraTask) => issue.task.key === selectedIssue.value) as JiraTask | undefined)
+const currentJiraConfig = computed<JiraConfig>(() => jiraConfigs.value?.find((base: { name: string; }) => base.name === selectedJiraConfig.value) as JiraConfig);
 
 const jiraController = ref<JiraController>();
 provide('JiraController', jiraController);
 
-watch(() => currentJiraConfig.value, setJiraBase);
+watch(() => selectedJiraConfig.value, setJiraBase);
+watch(() => currentJiraConfig.value, () => setJiraBase(selectedJiraConfig.value), {deep: true});
 
 async function setJiraBase(name: any) {
   console.log('baseName', name)
@@ -69,13 +69,15 @@ async function setJiraBase(name: any) {
       credentialsOpen.value = true;
       return;
     }
-    const selectedJiraBase = jiraConfigs.value?.find((base: { name: string; }) => base.name === currentJiraConfig.value);
-    if (!selectedJiraBase) {
+    if (!currentJiraConfig.value) {
       credentialsOpen.value = true;
       return;
     }
-    await store.dispatch('setCurrentJiraConfig', name);
-    jiraController.value = new JiraController(new JiraBaseController(selectedJiraBase.url, selectedJiraBase.name, cookieCredentials))
+    selectedJiraConfig.value = name;
+    jiraController.value = new JiraController(new JiraBaseController({
+      ...currentJiraConfig.value,
+      credentials: cookieCredentials
+    }))
     jiraController.value?.getAllIssues();
     jiraController.value?.getAllIssues(); //TODO try to figure out how to get branch/pr to be reactive, setting ref in JiraTask is not working as expected
   } else {
@@ -83,8 +85,8 @@ async function setJiraBase(name: any) {
   }
 }
 
-onBeforeMount(() => {
-  setJiraBase(currentJiraConfig.value)
+onMounted(() => {
+  setJiraBase(selectedJiraConfig.value)
 })
 </script>
 

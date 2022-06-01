@@ -8,5 +8,5 @@ export default defineConfig({
     mode: mode,
     plugins: [vue()],
     resolve: { dedupe: ['vue'] },
-    base: mode === 'production ' ? "/".concat(path.resolve(__dirname, "./dist/"), "/") : ''
+    base: mode === 'production' ? "/".concat(path.resolve(__dirname, "./dist/"), "/") : ''
 });

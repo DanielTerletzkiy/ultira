@@ -1,3 +1,17 @@
+export namespace JiraConfiguration {
+    export interface JiraConfig {
+        url: string,
+        name: string,
+        applicationType: ApplicationType
+    }
+
+    export enum ApplicationType {
+        Bitbucket = "bitbucket",
+        Stash = "stash",
+        GitHub = "github",
+    }
+}
+
 export namespace JiraIssue {
     export interface Task {
         expand: string
@@ -239,10 +253,10 @@ export namespace JiraCommits {
     export enum ChangeType {
         MODIFIED = 'MODIFIED',
         DELETED = 'DELETED',
-        MOVED  = 'MOVED',
-        ADDED  = 'ADDED',
-        COPIED  = 'COPIED',
-        UNKNOWN  = 'UNKNOWN',
+        MOVED = 'MOVED',
+        ADDED = 'ADDED',
+        COPIED = 'COPIED',
+        UNKNOWN = 'UNKNOWN',
     }
 
     interface Instance {

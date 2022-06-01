@@ -7,8 +7,8 @@ import PullRequests = JiraPullRequests.PullRequests;
 import CommentsRoot = JiraComments.CommentsRoot;
 
 export default class JiraTask extends ApiController {
-    task: Task;
     private readonly _controller: JiraBaseController;
+    task: Task;
 
     commitData: Commits | undefined;
     pullRequestData: PullRequests | undefined;
@@ -35,7 +35,7 @@ export default class JiraTask extends ApiController {
     }
 
     async getConnectedData() {
-        const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=bitbucket&dataType`;
+        const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
         [this.commitData, this.pullRequestData, this.commentsData] = await Promise.all([
             ApiController.fetchJira(
                 this._controller.url,

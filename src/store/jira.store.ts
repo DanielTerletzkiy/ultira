@@ -1,6 +1,9 @@
 import {createStore} from "vuex";
 import VuexPersistence from "vuex-persist";
 import {computed} from "vue";
+import {JiraConfiguration} from "../../types/Jira";
+import ApplicationType = JiraConfiguration.ApplicationType;
+import JiraConfig = JiraConfiguration.JiraConfig;
 
 const store = createStore({
     plugins: [new VuexPersistence().plugin],
@@ -9,10 +12,12 @@ const store = createStore({
         selectedJiraConfig: '',
         jiraConfigs: [{
             name: "sample",
-            url: "https://"
+            url: "https://",
+            applicationType: ApplicationType.Bitbucket
         }],
         credentialsDialogOpen: false,
-        refreshTime: 30,
+        refreshTime: 60,
+        zoomFactor: 1,
     },
     getters: {
         selectedIssue(state): string | undefined {
@@ -21,7 +26,7 @@ const store = createStore({
         currentJiraConfig(state): string | undefined {
             return state.selectedJiraConfig;
         },
-        jiraConfigs(state): Array<{ name: string, url: string }> {
+        jiraConfigs(state): Array<JiraConfig> {
             return state.jiraConfigs;
         },
         credentialsDialogOpen(state): boolean {
@@ -29,6 +34,9 @@ const store = createStore({
         },
         refreshTime(state): number {
             return state.refreshTime;
+        },
+        zoomFactor(state): number {
+            return state.zoomFactor;
         }
     },
     mutations: {
@@ -46,6 +54,9 @@ const store = createStore({
         },
         setRefreshTime(state, payload: number) {
             state.refreshTime = payload;
+        },
+        setZoomFactor(state, payload: number) {
+            state.zoomFactor = payload;
         }
     },
     actions: {
@@ -63,6 +74,9 @@ const store = createStore({
         },
         setRefreshTime(context, payload: number) {
             context.commit('setRefreshTime', payload);
+        },
+        setZoomFactor(context, payload: number) {
+            context.commit('setZoomFactor', payload);
         }
     },
 })
@@ -78,7 +92,7 @@ export const selectedIssue = computed({
     },
 });
 
-export const currentJiraConfig = computed({
+export const selectedJiraConfig = computed({
     get() {
         return store.getters.currentJiraConfig
     },
@@ -87,7 +101,7 @@ export const currentJiraConfig = computed({
     },
 });
 
-export const jiraConfigs = computed<Array<{ name: string, url: string }>>({
+export const jiraConfigs = computed<Array<JiraConfig>>({
     get() {
         return store.getters.jiraConfigs
     },
@@ -111,5 +125,14 @@ export const refreshTime = computed<number>({
     },
     set(value: number) {
         store.dispatch('setRefreshTime', value)
+    }
+})
+
+export const zoomFactor = computed<number>({
+    get() {
+        return store.getters.zoomFactor
+    },
+    set(value: number) {
+        store.dispatch('setZoomFactor', value)
     }
 })
