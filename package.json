@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "build": "vite build",
-    "dev": "SET APP_ENV=development&& vite",
-    "electron:start": "SET APP_ENV=production&&npm run build && electron .",
-    "electron:package": "SET APP_ENV=production&&npm run build && npx electron-packager . --overwrite",
+    "dev": "cross-env APP_ENV=development&& vite",
+    "electron:start": "cross-env APP_ENV=production&&npm run build && electron .",
+    "electron:package": "cross-env APP_ENV=production&&npm run build && npx electron-packager . --overwrite",
     "preview": "vite preview"
   },
   "main": "main.js",
@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
+    "cross-env": "^7.0.3",
     "electron": "^19.0.1",
     "electron-packager": "^15.5.1",
     "node-sass": "^7.0.1",

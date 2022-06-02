@@ -1,5 +1,5 @@
 <template>
-  <d-card rounded="pill" glow background-color="transparent" v-ripple width="auto" outlined>
+  <d-card rounded="pill" glow background-color="transparent" v-ripple width="auto">
     <d-tooltip position="right" color="primary" filled>
       <d-avatar v-if="avatar" rounded="circle" :size="24" :style="{
             backgroundImage: `url(${avatar})`,
