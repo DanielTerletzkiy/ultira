@@ -13,25 +13,33 @@ function toggleSettings() {
 function onSettingsSubmit() {
   toggleSettings();
 }
+
+const baseurl = import.meta.env.BASE_URL
 </script>
 
 <template>
   <d-root>
     <template v-slot:toolbar>
       <DToolbar>
-        <DCardTitle color="primary" class="font-size-medium">
-          Ultira
-        </DCardTitle>
         <d-row class="action" width="fit-content">
-          <d-tooltip>
-            <d-icon-button @click="toggleSettings">
-              <d-icon name="setting"/>
+          <d-tooltip color="primary">
+            <d-icon-button color="primary" @click="toggleSettings">
+              <d-avatar size="30" color="transparent" :style="{
+                  backgroundImage: `url(${baseurl}favicon.ico)`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                }">
+                <div/>
+              </d-avatar>
             </d-icon-button>
             <template v-slot:tooltip>
               Settings
             </template>
           </d-tooltip>
         </d-row>
+        <DCardTitle color="primary" class="title font-size-medium">
+          ULTIRA
+        </DCardTitle>
         <JiraBaseSelector/>
       </DToolbar>
     </template>
@@ -44,6 +52,7 @@ function onSettingsSubmit() {
 </template>
 
 <style lang="scss">
+@import url(//db.onlinewebfonts.com/c/1938c6d3ea712f9bdcf348aa789f5d68?family=MADE+Evolve+Sans+EVO);
 header, .d-toolbar {
   -webkit-app-region: drag;
 
@@ -51,10 +60,15 @@ header, .d-toolbar {
     -webkit-user-select: none !important;
   }
 
+  .title {
+    font-family: "MADE Evolve Sans EVO",sans-serif !important;
+  }
+
   .action {
     -webkit-app-region: no-drag;
   }
 }
+
 .d-tooltip {
   width: initial;
 }

@@ -1,5 +1,4 @@
 "use strict";
-// @ts-ignore
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 require("./JiraProxy");
@@ -15,14 +14,17 @@ function createWindow() {
         titleBarOverlay: {
             color: '#242832',
             symbolColor: '#94cdff',
-        }
+        },
+        icon: path.join(__dirname, 'public/favicon.ico')
     });
+    win.maximize();
     win.loadFile("dist/index.html");
     win.webContents.on('new-window', function (e, url) {
         e.preventDefault();
         require('electron').shell.openExternal(url);
     });
 }
+app.setUserTasks([]);
 app.whenReady().then(() => {
     createWindow();
     app.on("activate", () => {

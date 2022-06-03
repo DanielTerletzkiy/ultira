@@ -6,7 +6,7 @@
     "build": "vite build",
     "dev": "cross-env APP_ENV=development&& vite",
     "electron:start": "cross-env APP_ENV=production&&npm run build && electron .",
-    "electron:package": "cross-env APP_ENV=production&&npm run build && npx electron-packager . --overwrite",
+    "electron:package": "cross-env APP_ENV=production&&npm run build && npx electron-packager . --overwrite --out=release-build --icon=dist/favicon.ico",
     "preview": "vite preview"
   },
   "main": "main.js",
