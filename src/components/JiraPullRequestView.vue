@@ -1,13 +1,14 @@
 <template>
-  <d-card class="jira-pull-request" elevation="1" block height="100%">
-    <d-card-title class="font-size-medium">
+  <JiraViewWrapper>
+    <template v-slot:title>
       Pull Requests
-    </d-card-title>
-  </d-card>
+    </template>
+  </JiraViewWrapper>
 </template>
 
 <script setup lang="ts">
 
+import JiraViewWrapper from "./JiraViewWrapper.vue";
 </script>
 
 <style scoped lang="scss">

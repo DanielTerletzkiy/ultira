@@ -1,8 +1,8 @@
 <template>
-  <d-card class="jira-branch" elevation="1" block height="100%">
-    <d-card-title class="font-size-medium">
+  <JiraViewWrapper hide-divider>
+    <template v-slot:title>
       Branches & Commits
-    </d-card-title>
+    </template>
     <SlideXLeftTransition group>
       <d-column key="content" v-if="item?.commitData?.detail&&item?.commitData?.detail[0].repositories.length>0"
                 class="mx-2 pt-0"
@@ -106,7 +106,7 @@
       <d-elevation-loader key="loader" v-else :elevation="20" :columns="10" :amount="100" default-size="40"
                           :speed="4000"/>
     </SlideXLeftTransition>
-  </d-card>
+  </JiraViewWrapper>
 </template>
 
 <script setup lang="ts">
@@ -119,6 +119,7 @@ import {SlideXLeftTransition} from "v3-transitions";
 import {JiraCommits} from "../../types/Jira";
 import ChangeType = JiraCommits.ChangeType;
 import JiraUserItem from "./JiraUserItem.vue";
+import JiraViewWrapper from "./JiraViewWrapper.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };
