@@ -21,8 +21,8 @@
                 </d-card-subtitle>
               </d-column>
               <d-column>
-                <d-card-title class="font-size-medium">
-                  {{ repository.commits.length }}
+                <d-card-title class="font-size-medium" style="font-family: Consolas, sans-serif">
+                  {{ repository.commits.length.toString().padStart(2, '0') }}
                 </d-card-title>
                 <d-card-subtitle>
                   Commits
@@ -34,10 +34,10 @@
             <d-accordion v-for="commit in repository.commits" header-color="primary">
               <template v-slot:header>
                 <d-icon color="currentColor" name="file-check-alt"/>
-                <d-card-subtitle class="pa-0 font-size-small" v-html="jira2md.jira_to_html(commit.message)"/>
+                <d-card-subtitle class="pa-0" v-html="jira2md.jira_to_html(commit.message)"/>
                 <d-spacer/>
-                <d-button name="external-link-alt" size="24" root-tag="a" target="_blank" :href="commit.url" outlined
-                          color="inherit">
+                <d-button root-tag="a" target="_blank" :href="commit.url" outlined
+                          color="primary" style="margin: -6px 0">
                   <template v-slot:prefix>
                     <d-icon name="external-link-alt" :size="20"/>
                   </template>
@@ -45,50 +45,53 @@
                 </d-button>
               </template>
               <template v-slot:default>
-                <d-column gap>
-                  <d-row gap :wrap="false">
-                    <d-card-subtitle class="pr-0">
-                      <d-icon name="plus" :size="20" color="primary"/>
-                      {{ new Date(commit.authorTimestamp).toLocaleString('DE-de') }}
-                    </d-card-subtitle>
-                    <d-icon name="arrow-right"/>
-                    <JiraUserItem :name="commit.author.name" :avatar="commit.author.avatar">
-                      Committer
-                    </JiraUserItem>
-                  </d-row>
-                  <d-divider elevation="10"/>
-                  <d-card v-for="file in commit.files" block background-color="transparent">
-                    <d-row block gap justify="start">
-                      <d-label :color="changeTypeColor(file.changeType)">
-                        {{ file.changeType }}
-                      </d-label>
-                      <d-column class="pa-0" style="font-family: Consolas,sans-serif; min-width: 50px">
-                        <d-tooltip color="success" filled position="right">
-                          <d-card-subtitle class="pa-0" style="font-size: 0.8rem" color="success" glow>
-                            <d-icon name="plus" :size="14"/>
-                            {{ file.linesAdded }}
-                          </d-card-subtitle>
-                          <template v-slot:tooltip>
-                            Lines added
-                          </template>
-                        </d-tooltip>
-                        <d-tooltip color="error" filled position="right">
-                          <d-card-subtitle class="pa-0" style="font-size: 0.8rem" color="error" glow>
-                            <d-icon name="minus" :size="14"/>
-                            {{ file.linesRemoved }}
-                          </d-card-subtitle>
-                          <template v-slot:tooltip>
-                            Lines deleted
-                          </template>
-                        </d-tooltip>
-                      </d-column>
-                      <d-card-subtitle glow v-ripple root-tag="a" target="_blank" :href="file.url">
-                        {{ file.path }}
+                <d-row gap :wrap="false" block>
+                  <d-divider vertical block color="primary" size="2px"/>
+                  <d-column block>
+                    <d-row gap :wrap="false">
+                      <d-card-subtitle class="pr-0">
+                        <d-icon name="plus" :size="20" color="primary"/>
+                        {{ new Date(commit.authorTimestamp).toLocaleString('DE-de') }}
                       </d-card-subtitle>
+                      <d-icon name="arrow-right"/>
+                      <JiraUserItem :name="commit.author.name" :avatar="commit.author.avatar">
+                        Committer
+                      </JiraUserItem>
                     </d-row>
-                    <d-divider class="mt-2" elevation="6"/>
-                  </d-card>
-                </d-column>
+                    <d-divider elevation="10"/>
+                    <d-card v-for="file in commit.files" block background-color="transparent">
+                      <d-row block gap justify="start">
+                        <d-label :color="changeTypeColor(file.changeType)">
+                          {{ file.changeType }}
+                        </d-label>
+                        <d-column class="pa-0" style="font-family: Consolas,sans-serif; min-width: 50px">
+                          <d-tooltip color="success" filled position="right">
+                            <d-card-subtitle class="pa-0" style="font-size: 0.8rem" color="success" glow>
+                              <d-icon name="plus" :size="14"/>
+                              {{ file.linesAdded }}
+                            </d-card-subtitle>
+                            <template v-slot:tooltip>
+                              Lines added
+                            </template>
+                          </d-tooltip>
+                          <d-tooltip color="error" filled position="right">
+                            <d-card-subtitle class="pa-0" style="font-size: 0.8rem" color="error" glow>
+                              <d-icon name="minus" :size="14"/>
+                              {{ file.linesRemoved }}
+                            </d-card-subtitle>
+                            <template v-slot:tooltip>
+                              Lines deleted
+                            </template>
+                          </d-tooltip>
+                        </d-column>
+                        <d-card-subtitle glow v-ripple root-tag="a" target="_blank" :href="file.url">
+                          {{ file.path }}
+                        </d-card-subtitle>
+                      </d-row>
+                      <d-divider elevation="6"/>
+                    </d-card>
+                  </d-column>
+                </d-row>
               </template>
             </d-accordion>
           </d-column>
