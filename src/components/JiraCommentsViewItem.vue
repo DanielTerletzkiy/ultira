@@ -1,9 +1,8 @@
 <template>
   <d-card width="100%" elevation="2">
-
     <d-card-subtitle class="description"
                      v-html="jira2md.jira_to_html(comment.body)"/>
-    <d-divider class="mx-3"/>
+    <d-divider class="mx-3" elevation="6"/>
     <d-card-subtitle>
       <JiraUserItem :user="comment.author">
         {{new Date(comment.created).toLocaleString('de-DE')}}
