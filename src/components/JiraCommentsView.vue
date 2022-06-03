@@ -8,9 +8,10 @@
               gap :wrap="false">
       <JiraCommentsViewItem v-for="comment in item.commentsData.comments" :comment="comment"/>
       <d-spacer/>
-      <d-textfield full-width filled solo placeholder="Comment..." color="primary" class="sticky" elevation="2" style="min-height: 3rem">
+      <d-textfield v-model="commentBody" full-width filled solo placeholder="Comment..." color="primary" class="sticky"
+                   elevation="2" style="min-height: 3rem" @keyup.enter="submitComment">
         <template v-slot:suffix>
-          <d-icon-button name="message" :size="30"/>
+          <d-icon-button name="message" :size="30" @click="submitComment"/>
         </template>
       </d-textfield>
     </d-column>
@@ -18,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import {inject, PropType} from "vue";
+import {inject, PropType, ref} from "vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 import JiraCommentsViewItem from "./JiraCommentsViewItem.vue";
@@ -30,10 +31,16 @@ const props = defineProps({
   item: Object as PropType<JiraTask>
 })
 
+const commentBody = ref("");
+
+function submitComment() {
+  props.item.addComment(commentBody.value)
+}
+
 </script>
 
 <style scoped lang="scss">
-.sticky{
+.sticky {
   position: sticky;
   bottom: 0;
   z-index: 1;

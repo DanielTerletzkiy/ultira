@@ -67,4 +67,16 @@ export default class JiraTask extends ApiController {
         return result;
     }
 
+    async addComment(body: string){
+        const result = await ApiController.fetchJira(
+            this._controller.url,
+            `rest/api/latest/issue/${this.task.key}/comment`,
+            'POST',
+            this._controller.credentials, {
+                body
+            });
+        await this.updateSelf();
+        return result;
+    }
+
 }
