@@ -1,7 +1,7 @@
 <template>
   <d-row gap :wrap="false">
-    <d-tooltip modelValue position="right" :color="status.color" filled :tint="80">
-      <d-card elevation>
+    <d-tooltip position="right" :color="status.color" filled :tint="80">
+      <d-card elevation="4">
         <d-avatar :color="status.color" :tint="80" :size="40">
           <d-icon :name="status.icon" :color="status.color" :tint="-50" :size="30"/>
         </d-avatar>

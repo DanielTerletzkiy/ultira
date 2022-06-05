@@ -336,7 +336,7 @@ export namespace JiraPullRequests {
         url: string
     }
 
-    interface Reviewer {
+    export interface Reviewer {
         name: string
         avatar: string
         approved: boolean

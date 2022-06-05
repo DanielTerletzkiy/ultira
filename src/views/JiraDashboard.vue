@@ -28,7 +28,7 @@
             <JiraCommentsView :item="currentIssue"/>
           </d-column>
           <d-column block :wrap="false" style="flex: 3;">
-            <JiraPullRequestView/>
+            <JiraPullRequestView :item="currentIssue"/>
           </d-column>
         </d-row>
       </d-column>

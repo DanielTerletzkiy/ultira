@@ -33,7 +33,6 @@
           <d-column class="pa-2" gap>
             <d-accordion v-for="commit in repository.commits" header-color="primary">
               <template v-slot:header>
-                <d-icon color="currentColor" name="file-check-alt"/>
                 <d-card-subtitle class="pa-0" v-html="jira2md.jira_to_html(commit.message)"/>
                 <d-spacer/>
                 <d-button root-tag="a" target="_blank" :href="commit.url" outlined
