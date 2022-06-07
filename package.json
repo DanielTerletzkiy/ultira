@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "vite build",
-    "dev": "cross-env APP_ENV=development&& vite",
+    "dev": "concurrently \"cross-env APP_ENV=development&& vite\" \"node JiraProxy.js\" ",
     "electron:start": "cross-env APP_ENV=production&&npm run build && electron .",
     "electron:package": "cross-env APP_ENV=production&&npm run build && npx electron-packager . --overwrite --out=release-build --icon=dist/favicon.ico",
     "preview": "vite preview"
@@ -15,6 +15,7 @@
     "@vue/cli-service": "^5.0.4",
     "@vueuse/components": "^8.5.0",
     "@vueuse/electron": "^8.6.0",
+    "concurrently": "^7.2.1",
     "cors": "^2.8.5",
     "http-proxy-middleware": "^2.0.6",
     "jira2md": "^2.1.0",
