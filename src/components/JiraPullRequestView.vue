@@ -7,17 +7,11 @@
       <d-column v-if="item?.pullRequestData?.detail&&item?.pullRequestData?.detail[0].pullRequests.length>0" gap
                 style="max-height: 100%; overflow: overlay">
         <d-card v-for="pullRequest in item.pullRequestData.detail[0].pullRequests" block elevation="4">
-          <d-row gap class="px-3">
+          <d-row gap class="px-3" glow root-tag="a" target="_blank" :href="pullRequest.url">
             <d-card-title class="font-weight-bold">#{{ pullRequest.id }}</d-card-title>
+            <d-divider elevation="10" height="40px" width="1px"/>
             <d-card-title>{{ pullRequest.name }}</d-card-title>
-            <d-spacer/>
-            <d-button root-tag="a" target="_blank" :href="pullRequest.url" outlined
-                      color="primary">
-              <template v-slot:prefix>
-                <d-icon name="external-link-alt" :size="20"/>
-              </template>
-              Open
-            </d-button>
+            <d-label>{{ pullRequest.status }}</d-label>
           </d-row>
           <d-divider elevation="8"/>
           <d-card-subtitle class="pa-0">
