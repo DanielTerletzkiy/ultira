@@ -5,9 +5,9 @@
     </template>
     <SlideYDownTransition>
       <d-column v-if="item?.pullRequestData?.detail&&item?.pullRequestData?.detail[0].pullRequests.length>0" gap
-                style="max-height: 100%; overflow: overlay">
+                style="max-height: 100%; overflow: overlay" height="100%" :wrap="false">
         <d-card v-for="pullRequest in item.pullRequestData.detail[0].pullRequests" block elevation="4">
-          <d-row gap class="px-3" glow root-tag="a" target="_blank" :href="pullRequest.url">
+          <d-row gap class="px-3" glow v-ripple root-tag="a" target="_blank" :href="pullRequest.url">
             <d-card-title class="font-weight-bold">#{{ pullRequest.id }}</d-card-title>
             <d-divider elevation="10" height="40px" width="1px"/>
             <d-card-title>{{ pullRequest.name }}</d-card-title>
