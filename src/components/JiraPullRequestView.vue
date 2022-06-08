@@ -1,16 +1,20 @@
 <template>
   <JiraViewWrapper>
+    <template v-slot:icon>
+      <d-icon name="download-alt" :size="30" icon-style="monochrome" color="primary"/>
+    </template>
     <template v-slot:title>
       Pull Requests
     </template>
     <SlideYDownTransition>
-      <d-column v-if="item?.pullRequestData?.detail&&item?.pullRequestData?.detail[0].pullRequests.length>0" gap
+      <d-column v-if="item?.pullRequestData?.detail&&item?.pullRequestData?.detail[0]?.pullRequests.length>0" gap
                 style="max-height: 100%; overflow: overlay" height="100%" :wrap="false">
-        <d-card v-for="pullRequest in item.pullRequestData.detail[0].pullRequests" block elevation="4">
+        <d-card v-for="pullRequest in item.pullRequestData.detail[0]?.pullRequests" width="100%" elevation="4">
           <d-row gap class="px-3" glow v-ripple root-tag="a" target="_blank" :href="pullRequest.url">
-            <d-card-title class="font-weight-bold">#{{ pullRequest.id }}</d-card-title>
+            <d-card-title class="font-weight-bold">{{ pullRequest.id }}</d-card-title>
             <d-divider elevation="10" height="40px" width="1px"/>
-            <d-card-title>{{ pullRequest.name }}</d-card-title>
+            <d-card-title class="font-size-medium">{{ pullRequest.name }}</d-card-title>
+            <d-spacer/>
             <d-label>{{ pullRequest.status }}</d-label>
           </d-row>
           <d-divider elevation="8"/>
@@ -26,14 +30,15 @@
               {{ pullRequest.reviewers.length }}
             </d-card-subtitle>
           </d-card-subtitle>
-          <d-row gap class="pa-3 pt-0">
-            <d-tooltip v-for="user in pullRequest.reviewers" position="right" filled color="primary">
+          <d-row gap class="pa-3 pt-0" style="gap: 20px">
+            <d-tooltip v-for="user in pullRequest.reviewers.sort((a,b)=>b.approved - a.approved)" position="right"
+                       filled color="primary">
               <d-avatar rounded="circle" :size="40" :style="{
                 backgroundImage: `url(${user.avatar})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
-                outline: `2px solid ${$vuelize.getColor(user.approved ? 'success' : 'error')}`,
-                outlineOffset: '2px'
+                outline: `3px solid ${$vuelize.getColor(user.approved ? 'success' : 'error')}`,
+                outlineOffset: '4px'
               }">
                 <div/>
               </d-avatar>

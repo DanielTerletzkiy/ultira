@@ -24,5 +24,19 @@ export default class JiraController extends ApiController {
         this.totalIssues = searchResult.total;
         return { issues: this.issues, total: this.totalIssues };
     }
+    async getImageBase64(url) {
+        console.log(url);
+        const urlObj = new URL(url);
+        console.log(urlObj.pathname, urlObj.search);
+        const result = await ApiController.fetchJira(this.controller.url, `${urlObj.pathname.substring(1)}${urlObj.search}`, 'GET', this.controller.credentials, 1 /* FILES */);
+        const buffer = await result.arrayBuffer();
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        let binary = "";
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return `data:image/jpeg;base64,${btoa(binary)}`;
+    }
 }
 //# sourceMappingURL=JiraController.js.map

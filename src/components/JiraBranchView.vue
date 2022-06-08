@@ -1,14 +1,17 @@
 <template>
   <JiraViewWrapper hide-divider>
+    <template v-slot:icon>
+      <d-icon name="layer-group" :size="30" icon-style="monochrome" color="primary"/>
+    </template>
     <template v-slot:title>
       Branches & Commits
     </template>
-    <SlideXLeftTransition group>
-      <d-column key="content" v-if="item?.commitData?.detail&&item?.commitData?.detail[0].repositories.length>0"
+    <SlideXLeftTransition group style="width: 100%">
+      <d-column key="content" v-if="item?.commitData?.detail&&item?.commitData?.detail[0]?.repositories.length>0"
                 class="mx-2 pt-0"
                 style="max-height: calc(500px - 47px - 8px); overflow: overlay"
                 gap :wrap="false">
-        <d-card v-for="repository in item.commitData.detail[0].repositories" elevation="2" block
+        <d-card v-for="repository in item.commitData.detail[0]?.repositories" elevation="2" block
                 background-color="transparent">
           <d-card class="sticky" block elevation="4">
             <d-row>
@@ -33,7 +36,7 @@
           <d-column class="pa-2" gap>
             <d-accordion v-for="commit in repository.commits" header-color="primary">
               <template v-slot:header>
-                <d-card-subtitle class="pa-0" v-html="jira2md.jira_to_html(commit.message)"/>
+                <JiraMarkup :body="commit.message"/>
                 <d-spacer/>
                 <d-button root-tag="a" target="_blank" :href="commit.url" outlined
                           color="primary" style="margin: -6px 0">
@@ -96,7 +99,7 @@
           </d-column>
         </d-card>
       </d-column>
-      <d-column key="empty" v-else-if="item?.commitData?.detail[0].repositories.length === 0">
+      <d-column key="empty" v-else-if="item?.commitData?.detail[0]?.repositories.length === 0">
         <d-card-title color="primary">
           <d-icon name="file-question-alt" :size="30"/>
           Empty
@@ -112,13 +115,12 @@
 import {inject, PropType} from "vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
-//@ts-ignore
-import jira2md from "jira2md";
 import {SlideXLeftTransition} from "v3-transitions";
 import {JiraCommits} from "../../types/Jira";
 import ChangeType = JiraCommits.ChangeType;
 import JiraUserItem from "./JiraUserItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
+import JiraMarkup from "./JiraMarkup.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

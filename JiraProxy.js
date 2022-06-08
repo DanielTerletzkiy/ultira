@@ -15,7 +15,7 @@ app.post("/url", function (req, res) {
     targetInstance = req.headers['jira-host'];
     console.log('targetInstance: ', targetInstance);
     try {
-        app.use('/rest', createProxyMiddleware({
+        app.use('/', createProxyMiddleware({
             target: targetInstance,
             changeOrigin: true,
             protocolRewrite: "https",

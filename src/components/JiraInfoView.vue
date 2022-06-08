@@ -3,13 +3,19 @@
     <d-column gap block :wrap="false">
       <d-row class="px-1" gap :wrap="false">
         <d-tooltip position="right" filled color="primary">
-          <d-avatar size="64" :style="{
-            backgroundImage: `url(${item.task.fields.project.avatarUrls['48x48']})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-          }">
-            <div/>
-          </d-avatar>
+          <FadeTransition>
+            <JiraImage :url="item.task.fields.project.avatarUrls['48x48']" :key="item.task.key">
+              <template v-slot:default="{base64}">
+                <d-avatar color="transparent" size="64" :outlined="!base64" :style="{
+                  backgroundImage: `url(${base64})`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                }">
+                  <div/>
+                </d-avatar>
+              </template>
+            </JiraImage>
+          </FadeTransition>
           <template v-slot:tooltip>
             <d-column>
               <d-card-subtitle class="pa-0" color="inherit">
@@ -58,8 +64,7 @@
             </d-card-subtitle>
             <d-divider class="mx-3" block elevation="6"/>
           </d-row>
-          <d-card-subtitle class="description"
-                           v-html="jira2md.jira_to_html(item.task.fields.description)"/>
+          <JiraMarkup :body="item.task.fields.description"/>
         </d-column>
         <d-spacer v-else/>
         <JiraInfoViewSidebar :item="item"/>
@@ -76,6 +81,9 @@ import {State} from "vuelize/src/types/Vuelize";
 import jira2md from "jira2md";
 import JiraController from "../controller/JiraController";
 import JiraInfoViewSidebar from "./JiraInfoViewSidebar.vue";
+import JiraMarkup from "./JiraMarkup.vue";
+import JiraImage from "./JiraImage.vue";
+import {FadeTransition} from "v3-transitions"
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

@@ -8,8 +8,8 @@
           }">
         <div/>
       </d-avatar>
-      <d-avatar v-else rounded="circle" :size="36" color="primary" :tint="0">
-        <d-icon name="image-question" color="primary" :tint="-100"/>
+      <d-avatar v-else rounded="circle" :size="24" color="primary" :tint="0">
+        <d-icon name="image-question" color="primary" :tint="-100" :size="20"/>
       </d-avatar>
       <template v-slot:tooltip>
         <slot/>

@@ -12,22 +12,14 @@
           </d-column>
         </d-row>
         <d-row gap :wrap="false" style="flex: 1;" align="stretch">
-          <d-column :wrap="false" elevation="n1" v-if="selectedJiraConfig && jiraController"
-                    style="flex: 4;
-                     max-height: calc(100vh - 86px - 16px - 500px);
-                     overflow: overlay;
-                     overflow-x: hidden;
-                     min-width: fit-content;">
+          <d-column class="bottom-card" :wrap="false" elevation="n1" v-if="selectedJiraConfig && jiraController"
+                    style="flex: 3;">
             <JiraList v-model="selectedIssue"/>
           </d-column>
-          <d-column block :wrap="false" style="flex: 2;
-                      max-height: calc(100vh - 86px - 16px - 500px);
-                     overflow: overlay;
-                     overflow-x: hidden;
-                     min-width: fit-content;">
+          <d-column class="bottom-card" :wrap="false" style="flex: 1;">
             <JiraCommentsView :item="currentIssue"/>
           </d-column>
-          <d-column block :wrap="false" style="flex: 3;">
+          <d-column class="bottom-card" :wrap="false" style="flex: 3;">
             <JiraPullRequestView :item="currentIssue"/>
           </d-column>
         </d-row>
@@ -91,5 +83,15 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.bottom-card {
+  max-height: calc(100vh - 86px - 16px - 500px);
+  overflow: overlay;
+  overflow-x: hidden;
+  //min-width: fit-content;
+  min-width: 0;
 
+  > * {
+    word-break: break-word;
+  }
+}
 </style>

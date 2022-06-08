@@ -53,6 +53,11 @@ const status = computed(() => {
       payload.icon = 'forward';
       break;
     }
+    case 'In Code Review': {
+      payload.color = 'info';
+      payload.icon = 'search-alt'
+      break;
+    }
   }
   return payload;
 

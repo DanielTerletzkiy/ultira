@@ -1,5 +1,8 @@
 <template>
   <JiraViewWrapper class="jira-comments">
+    <template v-slot:icon>
+      <d-icon name="comment-message" :size="30" icon-style="monochrome" color="primary"/>
+    </template>
     <template v-slot:title>
       Comments
     </template>

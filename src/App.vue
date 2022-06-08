@@ -52,16 +52,11 @@ const baseurl = import.meta.env.BASE_URL
 </template>
 
 <style lang="scss">
-@import url(//db.onlinewebfonts.com/c/1938c6d3ea712f9bdcf348aa789f5d68?family=MADE+Evolve+Sans+EVO);
 header, .d-toolbar {
   -webkit-app-region: drag;
 
   .d-title {
     -webkit-user-select: none !important;
-  }
-
-  .title {
-    font-family: "MADE Evolve Sans EVO",sans-serif !important;
   }
 
   .action {

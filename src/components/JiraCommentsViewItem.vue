@@ -1,7 +1,6 @@
 <template>
   <d-card width="100%" elevation="2">
-    <d-card-subtitle class="description"
-                     v-html="jira2md.jira_to_html(comment.body)"/>
+    <JiraMarkup :body="comment.body"/>
     <d-divider class="mx-3" elevation="6"/>
     <d-card-subtitle>
       <JiraUserItem :user="comment.author">
@@ -14,8 +13,8 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 //@ts-ignore
-import jira2md from "jira2md";
 import JiraUserItem from "./JiraUserItem.vue";
+import JiraMarkup from "./JiraMarkup.vue";
 /* TODO why? when everything else works nearly the same?
 import {JiraComments} from "../../types/Jira";
 import Comment = JiraComments.Comment;
