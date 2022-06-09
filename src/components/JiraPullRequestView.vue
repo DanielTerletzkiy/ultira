@@ -30,22 +30,27 @@
               {{ pullRequest.reviewers.length }}
             </d-card-subtitle>
           </d-card-subtitle>
-          <d-row gap class="pa-3 pt-0" style="gap: 20px">
-            <d-tooltip v-for="user in pullRequest.reviewers.sort((a,b)=>b.approved - a.approved)" position="right"
-                       filled color="primary">
-              <d-avatar rounded="circle" :size="40" :style="{
-                backgroundImage: `url(${user.avatar})`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                outline: `3px solid ${$vuelize.getColor(user.approved ? 'success' : 'error')}`,
-                outlineOffset: '4px'
-              }">
-                <div/>
-              </d-avatar>
-              <template v-slot:tooltip>
-                {{ user.name }}
-              </template>
-            </d-tooltip>
+          <d-row>
+            <d-row v-for="approved in [true, false]"
+                   v-show="getReviewersForType(pullRequest.reviewers, approved).length"
+                   gap class="ma-2 pa-4" rounded="pill" style="gap: 20px"
+                   :color="approved?'success':'error'" width="max-content" glowing>
+              <d-tooltip v-for="user in getReviewersForType(pullRequest.reviewers, approved)" position="top"
+                         filled :color="approved?'success':'error'">
+                <d-avatar rounded="circle" :size="40" :style="{
+                      backgroundImage: `url(${user.avatar})`,
+                      backgroundPosition: 'center',
+                      backgroundSize: 'cover',
+                      outline: `3px solid ${$vuelize.getColor(user.approved ? 'success' : 'error')}`,
+                      outlineOffset: '4px'
+                    }">
+                  <div/>
+                </d-avatar>
+                <template v-slot:tooltip>
+                  {{ user.name }}
+                </template>
+              </d-tooltip>
+            </d-row>
           </d-row>
         </d-card>
       </d-column>
@@ -69,6 +74,12 @@ const props = defineProps({
 
 function getApprovals(reviewers: any)/*TODO export namespace bs*/ {
   return reviewers.filter((reviewer: any /*TODO export namespace bs*/) => reviewer.approved).length
+}
+
+function getReviewersForType(reviewers: any, approved: boolean) {
+  return reviewers
+      .filter((reviewer: any) => reviewer.approved == approved)
+      .sort((a: any, b: any) => b.name.localeCompare(a.name));
 }
 </script>
 
