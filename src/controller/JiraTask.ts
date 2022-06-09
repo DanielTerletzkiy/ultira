@@ -1,10 +1,11 @@
 import ApiController, {FetchContentType} from "./ApiController";
 import JiraBaseController from "./JiraBaseController";
-import {JiraComments, JiraCommits, JiraIssue, JiraPullRequests} from "../../types/Jira";
+import {JiraComments, JiraCommits, JiraIssue, JiraPullRequests, JiraTransitions} from "../../types/Jira";
 import Commits = JiraCommits.Commits;
 import Task = JiraIssue.Task;
 import PullRequests = JiraPullRequests.PullRequests;
 import CommentsRoot = JiraComments.CommentsRoot;
+import TransitionsRoot = JiraTransitions.TransitionsRoot;
 
 export default class JiraTask extends ApiController {
     private readonly _controller: JiraBaseController;
@@ -13,6 +14,7 @@ export default class JiraTask extends ApiController {
     commitData: Commits | undefined;
     pullRequestData: PullRequests | undefined;
     commentsData: CommentsRoot | undefined;
+    transitionData: TransitionsRoot | undefined;
 
     constructor(task: Task, controller: JiraBaseController) {
         super();
@@ -35,21 +37,27 @@ export default class JiraTask extends ApiController {
     }
 
     async getConnectedData() {
-        const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
-        [this.commitData, this.pullRequestData, this.commentsData] = await Promise.all([
+        const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
+        const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
+        [this.commitData, this.pullRequestData, this.commentsData, this.transitionData] = await Promise.all([
             ApiController.fetchJira(
                 this._controller.url,
-                `${dataUrl}=repository`,
+                `${applicationUrl}=repository`,
                 'GET',
                 this._controller.credentials),
             ApiController.fetchJira(
                 this._controller.url,
-                `${dataUrl}=pullrequest`,
+                `${applicationUrl}=pullrequest`,
                 'GET',
                 this._controller.credentials),
             ApiController.fetchJira(
                 this._controller.url,
-                `rest/api/latest/issue/${this.task.key}/comment`,
+                `${issueBaseUrl}/comment`,
+                'GET',
+                this._controller.credentials),
+            ApiController.fetchJira(
+                this._controller.url,
+                `${issueBaseUrl}/transitions`,
                 'GET',
                 this._controller.credentials)
         ])

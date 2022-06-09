@@ -5,6 +5,7 @@ export default class JiraTask extends ApiController {
     commitData;
     pullRequestData;
     commentsData;
+    transitionData;
     constructor(task, controller) {
         super();
         this.task = task;
@@ -20,11 +21,13 @@ export default class JiraTask extends ApiController {
         return self;
     }
     async getConnectedData() {
-        const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
-        [this.commitData, this.pullRequestData, this.commentsData] = await Promise.all([
-            ApiController.fetchJira(this._controller.url, `${dataUrl}=repository`, 'GET', this._controller.credentials),
-            ApiController.fetchJira(this._controller.url, `${dataUrl}=pullrequest`, 'GET', this._controller.credentials),
-            ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/comment`, 'GET', this._controller.credentials)
+        const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
+        const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
+        [this.commitData, this.pullRequestData, this.commentsData, this.transitionData] = await Promise.all([
+            ApiController.fetchJira(this._controller.url, `${applicationUrl}=repository`, 'GET', this._controller.credentials),
+            ApiController.fetchJira(this._controller.url, `${applicationUrl}=pullrequest`, 'GET', this._controller.credentials),
+            ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/comment`, 'GET', this._controller.credentials),
+            ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/transitions`, 'GET', this._controller.credentials)
         ]);
     }
     async addWorkLog(seconds) {

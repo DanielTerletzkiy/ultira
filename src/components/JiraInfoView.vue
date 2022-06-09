@@ -32,7 +32,7 @@
             </d-column>
           </template>
         </d-tooltip>
-        <d-column>
+        <d-column block>
           <d-card-title class="pt-0 font-size-medium">
             {{ item.task.fields.summary }}
           </d-card-title>
@@ -56,6 +56,8 @@
             <d-button width="max-content" root-tag="a" target="_blank" :href="issueLink">
               {{ item.task.key }}
             </d-button>
+            <d-spacer/>
+            <JiraTransitionButtons :item="item"/>
           </d-card-subtitle>
         </d-column>
       </d-row>
@@ -87,6 +89,7 @@ import JiraInfoViewSidebar from "./JiraInfoViewSidebar.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraImage from "./JiraImage.vue";
 import {FadeTransition} from "v3-transitions"
+import JiraTransitionButtons from "./JiraTransitionButtons.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };
