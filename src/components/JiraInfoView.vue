@@ -3,19 +3,22 @@
     <d-column gap block :wrap="false">
       <d-row class="px-1" gap :wrap="false">
         <d-tooltip position="right" filled color="primary">
-          <FadeTransition>
-            <JiraImage :url="item.task.fields.project.avatarUrls['48x48']" :key="item.task.key">
-              <template v-slot:default="{base64}">
-                <d-avatar color="transparent" size="64" :outlined="!base64" :style="{
-                  backgroundImage: `url(${base64})`,
-                  backgroundPosition: 'center',
-                  backgroundSize: 'cover',
-                }">
-                  <div/>
-                </d-avatar>
-              </template>
-            </JiraImage>
-          </FadeTransition>
+          <JiraImage :url="item.task.fields.project.avatarUrls['48x48']" :key="item.task.fields.project.key">
+            <template v-slot:default="{base64}">
+              <d-card width="64px" height="64px" elevation-light>
+                <FadeTransition group>
+                  <d-avatar v-if="base64" key="image" color="transparent" size="64" :style="{
+                    backgroundImage: `url(${base64})`,
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
+                  }">
+                    <div/>
+                  </d-avatar>
+                  <d-elevation-loader v-else key="loader" :default-size="32" :amount="4" :columns="2"/>
+                </FadeTransition>
+              </d-card>
+            </template>
+          </JiraImage>
           <template v-slot:tooltip>
             <d-column>
               <d-card-subtitle class="pa-0" color="inherit">
@@ -115,17 +118,6 @@ function copy(text: string) {
     .description-column {
       max-height: 100%;
       overflow: auto;
-
-      .description {
-        display: block;
-        text-align-last: left;
-        max-height: inherit;
-        overflow: auto;
-
-        ul, ol {
-          margin-left: 20px;
-        }
-      }
     }
   }
 }

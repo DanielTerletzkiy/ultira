@@ -19,7 +19,6 @@ const base64 = ref<string | null>(null);
 onMounted(async () => {
   if (props.url) {
     base64.value = await jiraController.value.getImageBase64(props.url);
-    console.log(base64.value);
   }
 })
 </script>

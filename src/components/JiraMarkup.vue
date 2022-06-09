@@ -17,6 +17,14 @@ const props = defineProps({
   align-items: baseline;
   gap: 0;
 
+  display: block;
+  text-align-last: left;
+  max-height: inherit;
+
+  ul, ol {
+    margin-left: 20px;
+  }
+
   ::v-deep(pre) {
     white-space: pre-wrap;
   }

@@ -36,23 +36,31 @@ export default class JiraController extends ApiController {
     }
 
     async getImageBase64(url: string): Promise<string> {
-        console.log(url)
         const urlObj = new URL(url);
-        console.log(urlObj.pathname, urlObj.search)
 
-        const result = await ApiController.fetchJira(
+        const response = await ApiController.fetchJira(
             this.controller.url,
             `${urlObj.pathname.substring(1)}${urlObj.search}`,
             'GET',
             this.controller.credentials, FetchContentType.FILES)
 
-        const buffer = await result.arrayBuffer();
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
-        let binary = "";
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
+        const contentType = response.headers.get("content-type");
+
+        switch (contentType) {
+            case "image/svg+xml;charset=UTF-8": {
+                const text = await response.text()
+                return `data:image/svg+xml,${encodeURIComponent(text)}`;
+            }
+            default: {
+                const buffer = await response.arrayBuffer();
+                const bytes = new Uint8Array(buffer);
+                const len = bytes.byteLength;
+                let binary = "";
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return `data:image/jpeg;base64,${btoa(binary)}`;
+            }
         }
-        return `data:image/jpeg;base64,${btoa(binary)}`;
     }
 }
