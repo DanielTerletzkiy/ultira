@@ -9,7 +9,7 @@
     <SlideXLeftTransition group style="width: 100%">
       <d-column key="content" v-if="item?.commitData?.detail&&item?.commitData?.detail[0]?.repositories.length>0"
                 class="mx-2 pt-0"
-                style="max-height: calc(500px - 47px - 8px); overflow: overlay"
+                style="max-height: calc(500px - 50px - 8px); overflow: overlay"
                 gap :wrap="false">
         <d-card v-for="repository in item.commitData.detail[0]?.repositories" elevation="2" block
                 background-color="transparent">

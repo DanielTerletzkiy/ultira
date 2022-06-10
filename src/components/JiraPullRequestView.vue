@@ -1,5 +1,5 @@
 <template>
-  <JiraViewWrapper>
+  <JiraViewWrapper class="jira-pull-request-view">
     <template v-slot:icon>
       <d-icon name="download-alt" :size="30" icon-style="monochrome" color="primary"/>
     </template>
@@ -11,11 +11,26 @@
                 style="max-height: 100%; overflow: overlay" height="100%" :wrap="false">
         <d-card v-for="pullRequest in item.pullRequestData.detail[0]?.pullRequests" width="100%" elevation="4">
           <d-row gap class="px-3" glow v-ripple root-tag="a" target="_blank" :href="pullRequest.url">
-            <d-card-title class="font-weight-bold">{{ pullRequest.id }}</d-card-title>
-            <d-divider elevation="10" height="40px" width="1px"/>
-            <d-card-title class="font-size-medium">{{ pullRequest.name }}</d-card-title>
+            <d-avatar key="image" color="transparent" size="40" elevation-light :style="{
+                          backgroundImage: `url(${pullRequest.source.repository.avatar})`,
+                          backgroundPosition: 'center',
+                          backgroundSize: 'cover',
+                        }">
+              <div/>
+            </d-avatar>
+            <d-column class="pa-0">
+              <d-card-title class="font-size-medium">
+                {{ pullRequest.name }}
+              </d-card-title>
+              <d-card-subtitle class="font-weight-bold">
+                {{ pullRequest.source.repository.name }}
+              </d-card-subtitle>
+            </d-column>
             <d-spacer/>
-            <d-label>{{ pullRequest.status }}</d-label>
+            <d-column>
+              <d-label>{{ pullRequest.status }}</d-label>
+              <strong>{{ pullRequest.id }}</strong>
+            </d-column>
           </d-row>
           <d-divider elevation="8"/>
           <d-card-subtitle class="pa-0">
@@ -33,19 +48,21 @@
           <d-row>
             <d-row v-for="approved in [true, false]"
                    v-show="getReviewersForType(pullRequest.reviewers, approved).length"
-                   gap class="ma-2 pa-4" rounded="pill" style="gap: 20px"
+                   gap class="ma-2 pa-3 mt-0" rounded="pill" style="gap: 20px"
                    :color="approved?'success':'error'" width="max-content" glowing>
               <d-tooltip v-for="user in getReviewersForType(pullRequest.reviewers, approved)" position="top"
                          filled :color="approved?'success':'error'">
-                <d-avatar rounded="circle" :size="40" :style="{
+                <SlideYUpTransition>
+                  <d-avatar rounded="circle" :size="40" :style="{
                       backgroundImage: `url(${user.avatar})`,
                       backgroundPosition: 'center',
                       backgroundSize: 'cover',
                       outline: `3px solid ${$vuelize.getColor(user.approved ? 'success' : 'error')}`,
                       outlineOffset: '4px'
                     }">
-                  <div/>
-                </d-avatar>
+                    <div/>
+                  </d-avatar>
+                </SlideYUpTransition>
                 <template v-slot:tooltip>
                   {{ user.name }}
                 </template>
@@ -63,7 +80,7 @@ import {inject, PropType} from "vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
-import {SlideYDownTransition} from "v3-transitions";
+import {SlideYDownTransition, SlideYUpTransition} from "v3-transitions";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };
@@ -84,5 +101,9 @@ function getReviewersForType(reviewers: any, approved: boolean) {
 </script>
 
 <style scoped lang="scss">
-
+.jira-pull-request-view {
+  .reviewer-row {
+    display: flex;
+  }
+}
 </style>

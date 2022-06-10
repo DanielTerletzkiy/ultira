@@ -1,10 +1,10 @@
 <template>
   <d-column gap>
     <d-list v-model="modelValue" @update:modelValue="onChange" color="primary" width="100%" class="font-weight-bold">
-      <d-list-item v-for="issue in issueList" :key="issue.task.key" :id="issue.task.key" class="item">
-        <JiraListItem :item="issue"/>
-        <span v-if="issue.task.key === modelValue" class="observer" v-intersection-observer="intersectObserver"></span>
-      </d-list-item>
+      <JiraListItem v-for="issue in issueList" :item="issue" class="item">
+          <span v-if="issue.task.key === modelValue" class="observer"
+                v-intersection-observer="intersectObserver"></span>
+      </JiraListItem>
     </d-list>
     <d-divider class="mx-3"/>
     <d-card class="sort-list mx-2" elevation-dark="2" elevation-light="">
@@ -119,7 +119,7 @@ const sortOptions = [
     flex: 1;
     text-align: center;
 
-    :deep(.d-list__item__content) {
+    ::v-deep(.d-list__item__content) {
       justify-content: center;
     }
   }
@@ -133,10 +133,6 @@ const sortOptions = [
     position: absolute;
     top: 0;
     left: 0;
-  }
-
-  ::v-deep(.d-list__item__content) {
-    padding: 6px 8px !important;
   }
 }
 </style>
