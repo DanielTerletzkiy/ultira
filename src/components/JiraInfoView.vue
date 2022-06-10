@@ -14,7 +14,7 @@
                   }">
                     <div/>
                   </d-avatar>
-                  <d-elevation-loader v-else key="loader" :default-size="32" :amount="4" :columns="2"/>
+                  <d-elevation-loader v-else key="loader" :default-size="16" :amount="16" :columns="4"/>
                 </FadeTransition>
               </d-card>
             </template>

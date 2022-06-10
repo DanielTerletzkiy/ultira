@@ -1,6 +1,6 @@
 <template>
   <d-column gap block>
-    <d-card v-if="selectedJiraConfig" block style="max-height: calc(100vh - 86px); overflow: hidden">
+    <d-card v-if="selectedJiraConfig" background-color="transparent" block style="max-height: calc(100vh - 86px); overflow: hidden">
       <d-column gap :wrap="false">
         <d-row gap :wrap="false" style="flex: 1; max-height: 500px; min-height: 500px;">
           <d-column block :wrap="false" v-if="currentIssue" style="flex: 1; min-height: inherit; max-height: inherit">

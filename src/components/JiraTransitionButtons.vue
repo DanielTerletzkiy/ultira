@@ -1,7 +1,7 @@
 <template>
-  <d-row gap v-if="item.transitionData" width="max-content" :key="item.task.key" :wrap="false">
+  <d-row v-if="item.transitionData" width="max-content" :key="item.task.key" :wrap="false" gap elevation="2">
     <d-tooltip v-for="transition in item.transitionData.transitions">
-      <d-button glow color="secondary">
+      <d-button color="secondary">
         {{ transition.name }}
       </d-button>
       <template v-slot:tooltip>
