@@ -1,6 +1,6 @@
 <template>
   <d-column gap>
-    <d-list v-model="modelValue" @update:modelValue="onChange" color="primary" width="100%">
+    <d-list v-model="modelValue" @update:modelValue="onChange" color="primary" width="100%" class="font-weight-bold">
       <d-list-item v-for="issue in issueList" :key="issue.task.key" :id="issue.task.key" class="item">
         <JiraListItem :item="issue"/>
         <span v-if="issue.task.key === modelValue" class="observer" v-intersection-observer="intersectObserver"></span>
