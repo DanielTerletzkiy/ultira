@@ -63,10 +63,10 @@
                     <d-divider elevation="10"/>
                     <d-card v-for="file in commit.files" block background-color="transparent">
                       <d-row block gap justify="start">
-                        <d-label :color="changeTypeColor(file.changeType)">
+                        <d-label rounded="pill" :color="changeTypeColor(file.changeType)">
                           {{ file.changeType }}
                         </d-label>
-                        <d-column class="pa-0" style="font-family: Consolas,sans-serif; min-width: 50px">
+                        <d-column v-if="file.linesAdded || file.linesRemoved" class="pa-0" style="font-family: Consolas,sans-serif; min-width: 50px">
                           <d-tooltip color="success" filled position="right">
                             <d-card-subtitle class="pa-0" style="font-size: 0.8rem" color="success" glow>
                               <d-icon name="plus" :size="14"/>

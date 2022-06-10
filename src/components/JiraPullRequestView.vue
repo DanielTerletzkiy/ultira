@@ -10,8 +10,8 @@
       <d-column v-if="item?.pullRequestData?.detail&&item?.pullRequestData?.detail[0]?.pullRequests.length>0" gap
                 style="max-height: 100%; overflow: overlay" height="100%" :wrap="false">
         <d-card v-for="pullRequest in item.pullRequestData.detail[0]?.pullRequests" width="100%" elevation="4">
-          <d-row gap class="px-3" glow v-ripple root-tag="a" target="_blank" :href="pullRequest.url">
-            <d-avatar key="image" color="transparent" size="40" elevation-light :style="{
+          <d-row gap class="pl-3" glow v-ripple root-tag="a" target="_blank" :href="pullRequest.url">
+            <d-avatar v-if="pullRequest.source?.repository" color="transparent" size="40" elevation-light :style="{
                           backgroundImage: `url(${pullRequest.source.repository.avatar})`,
                           backgroundPosition: 'center',
                           backgroundSize: 'cover',
@@ -22,14 +22,14 @@
               <d-card-title class="font-size-medium">
                 {{ pullRequest.name }}
               </d-card-title>
-              <d-card-subtitle class="font-weight-bold">
+              <d-card-subtitle v-if="pullRequest.source?.repository" class="font-weight-bold">
                 {{ pullRequest.source.repository.name }}
               </d-card-subtitle>
             </d-column>
             <d-spacer/>
-            <d-column>
-              <d-label>{{ pullRequest.status }}</d-label>
-              <strong>{{ pullRequest.id }}</strong>
+            <d-column style="overflow: hidden" class="pa-0">
+              <d-label rounded="none" width="100%">{{ pullRequest.id }}</d-label>
+              <d-label rounded="none" width="100%">{{ pullRequest.status }}</d-label>
             </d-column>
           </d-row>
           <d-divider elevation="8"/>
