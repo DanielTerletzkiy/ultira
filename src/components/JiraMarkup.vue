@@ -34,6 +34,7 @@ const props = defineProps({
   }
 
   ::v-deep(a) {
+    overflow-wrap: anywhere;
     text-decoration: underline;
   }
 }
