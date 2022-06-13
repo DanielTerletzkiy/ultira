@@ -63,7 +63,7 @@
 import JiraListItem from "./JiraListItem.vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
-import {computed, inject, Ref} from "vue";
+import {computed, inject, Ref, watch} from "vue";
 import {currentSort, refreshTime} from "../store/jira.store";
 import {vIntersectionObserver} from "@vueuse/components";
 import {FadeTransition} from "v3-transitions"
@@ -159,8 +159,6 @@ const sortGroups = computed(() => {
           jiraController.value.issues.findIndex(x => x.task.fields.project.id == issue.task.fields.project.id) == idx)
           .map((issue) => issue.task.fields.project).sort((a, b) => parseInt(a.id) - parseInt(b.id))
 
-      console.log(projects)
-
       for (const project of projects) {
         const items = jiraController.value.issues.filter((issue) => issue.task.fields.project.id === project.id)
         groups.push({
@@ -176,6 +174,14 @@ const sortGroups = computed(() => {
     }
   }
   return groups;
+})
+
+watch(() => currentSort.value, () => {
+  setTimeout(() => {
+    if (props.modelValue) {
+      scrollIntoView(props.modelValue)
+    }
+  }, 500)
 })
 
 </script>
