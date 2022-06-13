@@ -1,14 +1,38 @@
 <template>
-  <d-column gap>
+  <d-column gap block>
     <d-list v-model="modelValue" @update:modelValue="onChange" color="primary" width="100%" class="font-weight-bold">
-      <JiraListItem v-for="issue in issueList" :item="issue" class="item">
+      <d-card v-for="group in sortGroups" background-color="transparent" block>
+        <d-card-subtitle class="py-1 group-header font-size-medium font-weight-bold" rounded="none" elevation="n1">
+          <JiraImage :url="group.icon.url" :key="group.icon.url">
+            <template v-slot:default="{base64}">
+              <d-card width="25px" height="25px" elevation-light background-color="transparent">
+                <FadeTransition group>
+                  <d-avatar v-if="base64" key="image" color="transparent" size="25" :style="{
+                    backgroundImage: `url(${base64})`,
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
+                  }">
+                    <div/>
+                  </d-avatar>
+                  <d-elevation-loader v-else key="loader" :default-size="25" :amount="1" :columns="1"/>
+                </FadeTransition>
+              </d-card>
+            </template>
+          </JiraImage>
+          {{ group.name }}
+        </d-card-subtitle>
+        <d-column gap block class="pa-0 pt-1">
+          <JiraListItem v-for="issue in group.items" :item="issue" class="item">
           <span v-if="issue.task.key === modelValue" class="observer"
                 v-intersection-observer="intersectObserver"></span>
-      </JiraListItem>
+          </JiraListItem>
+        </d-column>
+      </d-card>
     </d-list>
+    <d-spacer/>
     <d-divider class="mx-3"/>
     <d-card class="sort-list mx-2" elevation-dark="2" elevation-light="">
-      <d-tab-list class="font-weight-bold" show-indicator v-model="currentSort">
+      <d-tab-list class="font-weight-bold" v-model="currentSort">
         <d-list-item class="sort-list__item" v-for="option in sortOptions" :key="option.name" :color="option.color">
           <d-icon :name="option.icon" :size="20"/>
           {{ option.name }}
@@ -39,9 +63,12 @@
 import JiraListItem from "./JiraListItem.vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
-import {computed, inject, Ref, ref} from "vue";
-import {refreshTime} from "../store/jira.store";
+import {computed, inject, Ref} from "vue";
+import {currentSort, refreshTime} from "../store/jira.store";
 import {vIntersectionObserver} from "@vueuse/components";
+import {FadeTransition} from "v3-transitions"
+import JiraImage from "./JiraImage.vue";
+import {SortNames} from "../../types/Jira";
 
 const jiraController = inject('JiraController') as Ref<JiraController>;
 
@@ -53,10 +80,6 @@ const props = defineProps({
 function onChange(selectedIssue: string) {
   emit('update:modelValue', selectedIssue)
 }
-
-const issueList = computed(() => {
-  return jiraController.value.issues.sort((a: JiraTask, b: JiraTask) => new Date(b.task.fields.updated).getTime() - new Date(a.task.fields.updated).getTime());
-})
 
 function scrollIntoView(id: string) {
   document?.getElementById(id)?.scrollIntoView({
@@ -87,28 +110,96 @@ function reload() {
 
 setInterval(reload, refreshTime.value * 1000)
 
-const currentSort = ref();
 const sortOptions = [
   {
-    name: 'Last updated',
+    name: SortNames.Latest,
     icon: 'clock',
     color: 'primary'
   },
   {
-    name: 'Priority',
+    name: SortNames.Priority,
     icon: 'exclamation-triangle',
     color: 'warning'
   },
   {
-    name: 'Project',
+    name: SortNames.State,
+    icon: 'arrow-growth',
+    color: 'primary'
+  },
+  {
+    name: SortNames.Project,
     icon: 'parcel',
     color: 'primary'
   },
-]
+];
+
+const sortGroups = computed(() => {
+  let groups: Array<{ name: string, icon: { type: string, url: string }, items: Array<JiraTask> }> = []
+  switch (currentSort.value) {
+    case SortNames.Priority: {
+      const priorities = jiraController.value.issues.filter((issue, idx) =>
+          jiraController.value.issues.findIndex(x => x.task.fields.priority.id == issue.task.fields.priority.id) == idx)
+          .map((issue) => issue.task.fields.priority).sort((a, b) => parseInt(a.id) - parseInt(b.id))
+
+      for (const priority of priorities) {
+        const items = jiraController.value.issues.filter((issue) => issue.task.fields.priority.id === priority.id)
+        groups.push({
+          name: priority.name,
+          icon: {
+            type: 'image',
+            url: priority.iconUrl
+          },
+          items
+        })
+      }
+      break;
+    }
+    case SortNames.Project: {
+      const projects = jiraController.value.issues.filter((issue, idx) =>
+          jiraController.value.issues.findIndex(x => x.task.fields.project.id == issue.task.fields.project.id) == idx)
+          .map((issue) => issue.task.fields.project).sort((a, b) => parseInt(a.id) - parseInt(b.id))
+
+      console.log(projects)
+
+      for (const project of projects) {
+        const items = jiraController.value.issues.filter((issue) => issue.task.fields.project.id === project.id)
+        groups.push({
+          name: project.name,
+          icon: {
+            type: 'image',
+            url: project.avatarUrls["32x32"]
+          },
+          items
+        })
+      }
+      break;
+    }
+  }
+  return groups;
+})
 
 </script>
 
 <style scoped lang="scss">
+
+.group-header {
+  position: sticky;
+  top: -4px;
+  z-index: 1;
+  user-select: none;
+}
+
+.item {
+  position: relative;
+  padding: 0 !important;
+
+  .observer {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
 .sort-list {
   position: sticky;
   bottom: 0;
@@ -122,17 +213,6 @@ const sortOptions = [
     ::v-deep(.d-list__item__content) {
       justify-content: center;
     }
-  }
-}
-
-.item {
-  position: relative;
-  padding: 0 !important;
-
-  .observer {
-    position: absolute;
-    top: 0;
-    left: 0;
   }
 }
 </style>

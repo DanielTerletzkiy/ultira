@@ -1,12 +1,13 @@
 import { createStore } from "vuex";
 import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
-import { JiraConfiguration } from "../../types/Jira";
+import { JiraConfiguration, SortNames } from "../../types/Jira";
 var ApplicationType = JiraConfiguration.ApplicationType;
 const store = createStore({
     plugins: [new VuexPersistence().plugin],
     state: {
         selectedIssue: '',
+        currentSort: SortNames.Latest,
         selectedJiraConfig: '',
         jiraConfigs: [{
                 name: "sample",
@@ -20,6 +21,9 @@ const store = createStore({
     getters: {
         selectedIssue(state) {
             return state.selectedIssue;
+        },
+        currentSort(state) {
+            return state.currentSort;
         },
         currentJiraConfig(state) {
             return state.selectedJiraConfig;
@@ -41,6 +45,9 @@ const store = createStore({
         setSelectedIssue(state, payload) {
             state.selectedIssue = payload;
         },
+        setCurrentSort(state, payload) {
+            state.currentSort = payload;
+        },
         setCurrentJiraConfig(state, payload) {
             state.selectedJiraConfig = payload;
         },
@@ -60,6 +67,9 @@ const store = createStore({
     actions: {
         setSelectedIssue(context, payload) {
             context.commit('setSelectedIssue', payload);
+        },
+        setCurrentSort(context, payload) {
+            context.commit('setCurrentSort', payload);
         },
         setCurrentJiraConfig(context, payload) {
             context.commit('setCurrentJiraConfig', payload);
@@ -85,6 +95,14 @@ export const selectedIssue = computed({
     },
     set(value) {
         store.dispatch('setSelectedIssue', value);
+    },
+});
+export const currentSort = computed({
+    get() {
+        return store.getters.currentSort;
+    },
+    set(value) {
+        store.dispatch('setCurrentSort', value);
     },
 });
 export const selectedJiraConfig = computed({

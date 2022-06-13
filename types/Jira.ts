@@ -1,3 +1,10 @@
+export enum SortNames {
+    Latest = 'Last Updated',
+    Priority = 'Priority',
+    State = 'State',
+    Project = 'Project'
+}
+
 export namespace JiraConfiguration {
     export interface JiraConfig {
         url: string,

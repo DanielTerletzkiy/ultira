@@ -1,3 +1,10 @@
+export var SortNames;
+(function (SortNames) {
+    SortNames["Latest"] = "Last Updated";
+    SortNames["Priority"] = "Priority";
+    SortNames["State"] = "State";
+    SortNames["Project"] = "Project";
+})(SortNames || (SortNames = {}));
 export var JiraConfiguration;
 (function (JiraConfiguration) {
     let ApplicationType;

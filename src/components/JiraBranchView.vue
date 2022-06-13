@@ -38,13 +38,10 @@
               <template v-slot:header>
                 <JiraMarkup :body="commit.message"/>
                 <d-spacer/>
-                <d-button root-tag="a" target="_blank" :href="commit.url" outlined
-                          color="primary" style="margin: -6px 0">
-                  <template v-slot:prefix>
-                    <d-icon name="external-link-alt" :size="20"/>
-                  </template>
-                  Open
-                </d-button>
+                <d-icon-button root-tag="a" target="_blank" :href="commit.url"
+                               color="primary" style="margin: -6px 0" :size="30">
+                  <d-icon name="external-link-alt" :size="20"/>
+                </d-icon-button>
               </template>
               <template v-slot:default>
                 <d-row gap :wrap="false" block>
@@ -66,7 +63,8 @@
                         <d-label rounded="pill" :color="changeTypeColor(file.changeType)">
                           {{ file.changeType }}
                         </d-label>
-                        <d-column v-if="file.linesAdded || file.linesRemoved" class="pa-0" style="font-family: Consolas,sans-serif; min-width: 50px">
+                        <d-column v-if="file.linesAdded || file.linesRemoved" class="pa-0"
+                                  style="font-family: Consolas,sans-serif; min-width: 50px">
                           <d-tooltip color="success" filled position="right">
                             <d-card-subtitle class="pa-0" style="font-size: 0.8rem" color="success" glow>
                               <d-icon name="plus" :size="14"/>
@@ -156,5 +154,15 @@ function changeTypeColor(type: ChangeType) {
   position: sticky;
   top: 0;
   z-index: 1;
+}
+
+::v-deep(.d-accordion) {
+  .d-title {
+    padding: 0 8px 0 0;
+  }
+
+  .d-accordion__content {
+    padding-top: 0;
+  }
 }
 </style>

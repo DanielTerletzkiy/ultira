@@ -47,6 +47,7 @@ export default class JiraController extends ApiController {
         const contentType = response.headers.get("content-type");
 
         switch (contentType) {
+            case "image/svg+xml":
             case "image/svg+xml;charset=UTF-8": {
                 const text = await response.text()
                 return `data:image/svg+xml,${encodeURIComponent(text)}`;
