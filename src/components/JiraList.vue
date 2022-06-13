@@ -2,7 +2,7 @@
   <d-column gap block>
     <d-list v-model="modelValue" @update:modelValue="onChange" color="primary" width="100%" class="font-weight-bold">
       <d-card v-for="group in sortGroups" background-color="transparent" block>
-        <d-card-title class="py-1 pl-3 group-header font-weight-bold font-size-medium" rounded="none" color="secondary">
+        <d-card-title class="py-1 pl-3 group-header font-weight-bold font-size-medium" glow color="secondary">
           <JiraImage v-if="group.icon.type === 'image'" :url="group.icon.url" :key="group.icon.url">
             <template v-slot:default="{base64}">
               <FadeTransition group>
