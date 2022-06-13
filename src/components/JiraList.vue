@@ -5,21 +5,20 @@
         <d-card-subtitle class="py-1 group-header font-size-medium font-weight-bold" rounded="none" elevation="n1">
           <JiraImage :url="group.icon.url" :key="group.icon.url">
             <template v-slot:default="{base64}">
-              <d-card width="25px" height="25px" elevation-light background-color="transparent">
-                <FadeTransition group>
-                  <d-avatar v-if="base64" key="image" color="transparent" size="25" :style="{
+              <FadeTransition group>
+                <d-avatar v-if="base64" key="image" color="transparent" size="25" :style="{
                     backgroundImage: `url(${base64})`,
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
                   }">
-                    <div/>
-                  </d-avatar>
-                  <d-elevation-loader v-else key="loader" :default-size="25" :amount="1" :columns="1"/>
-                </FadeTransition>
-              </d-card>
+                  <div/>
+                </d-avatar>
+                <d-elevation-loader v-else key="loader" :default-size="25" :amount="1" :columns="1"/>
+              </FadeTransition>
             </template>
           </JiraImage>
           {{ group.name }}
+          <d-divider block style="background: linear-gradient(90deg, rgba(0, 212, 255, 0) 0%, currentColor 200%);"/>
         </d-card-subtitle>
         <d-column gap block class="pa-0 pt-1">
           <JiraListItem v-for="issue in group.items" :item="issue" class="item">
