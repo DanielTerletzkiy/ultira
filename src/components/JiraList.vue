@@ -2,27 +2,25 @@
   <d-column gap block>
     <d-list v-model="modelValue" @update:modelValue="onChange" color="primary" width="100%" class="font-weight-bold">
       <d-card v-for="group in sortGroups" background-color="transparent" block>
-        <d-card-subtitle class="py-1 group-header font-size-medium font-weight-bold" rounded="none">
+        <d-card-title class="py-1 pl-3 group-header font-weight-bold font-size-medium" rounded="none" color="secondary">
           <JiraImage v-if="group.icon.type === 'image'" :url="group.icon.url" :key="group.icon.url">
             <template v-slot:default="{base64}">
               <FadeTransition group>
-                <d-avatar v-if="base64" key="image" color="transparent" :size="40" :style="{
+                <d-avatar v-if="base64" key="image" color="transparent" :size="30" :style="{
                     backgroundImage: `url(${base64})`,
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
                   }">
                   <div/>
                 </d-avatar>
-                <d-elevation-loader v-else key="loader" :default-size="20" :amount="4" :columns="2"/>
+                <d-elevation-loader v-else key="loader" :default-size="15" :amount="4" :columns="2"/>
               </FadeTransition>
             </template>
           </JiraImage>
-          <d-avatar v-else :size="40" color="transparent">
-            <d-icon :name="group.icon.url" :size="40" color="primary"/>
-          </d-avatar>
+          <d-icon v-else :name="group.icon.url" :size="30"/>
           {{ group.name }}
           <d-divider class="group-header__divider" block/>
-        </d-card-subtitle>
+        </d-card-title>
         <d-column gap block class="pa-0 pt-1">
           <JiraListItem v-for="issue in group.items" :item="issue" class="item">
           <span v-if="issue.task.key === modelValue" class="observer"
