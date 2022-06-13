@@ -6,72 +6,70 @@
     <template v-slot:title>
       Pull Requests
     </template>
-    <SlideYDownTransition>
-      <d-column v-if="item?.pullRequestData?.detail&&item?.pullRequestData?.detail[0]?.pullRequests.length>0" gap
-                style="max-height: 100%; overflow: overlay" height="100%" :wrap="false">
-        <d-card v-for="pullRequest in item.pullRequestData.detail[0]?.pullRequests" width="100%" elevation="4">
-          <d-row gap class="pl-3" glow v-ripple root-tag="a" target="_blank" :href="pullRequest.url">
-            <d-avatar v-if="pullRequest.source?.repository" color="transparent" size="40" elevation-light :style="{
+    <d-column v-if="item?.pullRequestData?.detail&&item?.pullRequestData?.detail[0]?.pullRequests.length>0" gap
+              style="max-height: 100%; overflow: overlay" height="100%" :wrap="false">
+      <d-card v-for="pullRequest in item.pullRequestData.detail[0]?.pullRequests" width="100%" elevation="4">
+        <d-row gap class="pl-3" glow v-ripple root-tag="a" target="_blank" :href="pullRequest.url">
+          <d-avatar v-if="pullRequest.source?.repository" color="transparent" size="40" elevation-light :style="{
                           backgroundImage: `url(${pullRequest.source.repository.avatar})`,
                           backgroundPosition: 'center',
                           backgroundSize: 'cover',
                         }">
-              <div/>
-            </d-avatar>
-            <d-column class="pa-0">
-              <d-card-title class="font-size-medium">
-                {{ pullRequest.name }}
-              </d-card-title>
-              <d-card-subtitle v-if="pullRequest.source?.repository" class="font-weight-bold">
-                {{ pullRequest.source.repository.name }}
-              </d-card-subtitle>
-            </d-column>
-            <d-spacer/>
-            <d-column style="overflow: hidden" class="pa-0">
-              <d-label rounded="none" width="100%">{{ pullRequest.id }}</d-label>
-              <d-label rounded="none" width="100%">{{ pullRequest.status }}</d-label>
-            </d-column>
-          </d-row>
-          <d-divider elevation="8"/>
-          <d-card-subtitle class="pa-0">
-            <d-card-subtitle class="font-weight-bold">
-              Reviewers
+            <div/>
+          </d-avatar>
+          <d-column class="pa-0">
+            <d-card-title class="font-size-medium">
+              {{ pullRequest.name }}
+            </d-card-title>
+            <d-card-subtitle v-if="pullRequest.source?.repository" class="font-weight-bold">
+              {{ pullRequest.source.repository.name }}
             </d-card-subtitle>
-            <d-card-subtitle class="font-weight-bold pa-0" color="success">
-              {{ getApprovals(pullRequest.reviewers) }}
-            </d-card-subtitle>
-            /
-            <d-card-subtitle class="pa-0">
-              {{ pullRequest.reviewers.length }}
-            </d-card-subtitle>
+          </d-column>
+          <d-spacer/>
+          <d-column style="overflow: hidden" class="pa-0">
+            <d-label rounded="none" width="100%">{{ pullRequest.id }}</d-label>
+            <d-label rounded="none" width="100%">{{ pullRequest.status }}</d-label>
+          </d-column>
+        </d-row>
+        <d-divider elevation="8"/>
+        <d-card-subtitle class="pa-0">
+          <d-card-subtitle class="font-weight-bold">
+            Reviewers
           </d-card-subtitle>
-          <d-row>
-            <d-row v-for="approved in [true, false]"
-                   v-show="getReviewersForType(pullRequest.reviewers, approved).length"
-                   gap class="ma-2 pa-3 mt-0" rounded="pill" style="gap: 20px"
-                   :color="approved?'success':'error'" width="max-content" glowing>
-              <d-tooltip v-for="user in getReviewersForType(pullRequest.reviewers, approved)" position="top"
-                         filled :color="approved?'success':'error'">
-                <SlideYUpTransition>
-                  <d-avatar rounded="circle" :size="40" :style="{
+          <d-card-subtitle class="font-weight-bold pa-0" color="success">
+            {{ getApprovals(pullRequest.reviewers) }}
+          </d-card-subtitle>
+          /
+          <d-card-subtitle class="pa-0">
+            {{ pullRequest.reviewers.length }}
+          </d-card-subtitle>
+        </d-card-subtitle>
+        <d-row>
+          <d-row v-for="approved in [true, false]"
+                 v-show="getReviewersForType(pullRequest.reviewers, approved).length"
+                 gap class="ma-2 pa-3 mt-0" rounded="pill" style="gap: 20px"
+                 :color="approved?'success':'error'" width="max-content" glowing>
+            <d-tooltip v-for="user in getReviewersForType(pullRequest.reviewers, approved)" position="top"
+                       filled :color="approved?'success':'error'">
+              <SlideYUpTransition>
+                <d-avatar rounded="circle" :size="40" :style="{
                       backgroundImage: `url(${user.avatar})`,
                       backgroundPosition: 'center',
                       backgroundSize: 'cover',
                       outline: `3px solid ${$vuelize.getColor(user.approved ? 'success' : 'error')}`,
                       outlineOffset: '4px'
                     }">
-                    <div/>
-                  </d-avatar>
-                </SlideYUpTransition>
-                <template v-slot:tooltip>
-                  {{ user.name }}
-                </template>
-              </d-tooltip>
-            </d-row>
+                  <div/>
+                </d-avatar>
+              </SlideYUpTransition>
+              <template v-slot:tooltip>
+                {{ user.name }}
+              </template>
+            </d-tooltip>
           </d-row>
-        </d-card>
-      </d-column>
-    </SlideYDownTransition>
+        </d-row>
+      </d-card>
+    </d-column>
   </JiraViewWrapper>
 </template>
 

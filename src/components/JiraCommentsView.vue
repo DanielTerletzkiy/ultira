@@ -6,12 +6,10 @@
     <template v-slot:title>
       Comments
     </template>
-    <SlideYDownTransition>
-      <d-column key="content" v-if="item?.commentsData && item?.commentsData?.comments.length>0" class="px-2"
-                style="max-height: calc(100% - 3rem); overflow: auto" height="100%" gap :wrap="false">
-        <JiraCommentsViewItem v-for="comment in item.commentsData.comments.slice().reverse()" :comment="comment"/>
-      </d-column>
-    </SlideYDownTransition>
+    <d-column key="content" v-if="item?.commentsData && item?.commentsData?.comments.length>0" class="px-2"
+              style="max-height: calc(100% - 3rem); overflow: auto" height="100%" gap :wrap="false">
+      <JiraCommentsViewItem v-for="comment in item.commentsData.comments.slice().reverse()" :comment="comment"/>
+    </d-column>
     <d-spacer/>
     <d-textfield v-model="commentBody" :disabled="loading" full-width filled solo placeholder="Comment..."
                  color="primary" class="sticky"

@@ -1,6 +1,7 @@
 <template>
   <d-column gap block>
-    <d-card v-if="selectedJiraConfig" background-color="transparent" block style="max-height: calc(100vh - 86px); overflow: hidden">
+    <d-card v-if="selectedJiraConfig" background-color="transparent" block
+            style="max-height: calc(100vh - 86px); overflow: hidden">
       <d-column gap :wrap="false">
         <d-row gap :wrap="false" style="flex: 1; max-height: 500px; min-height: 500px;">
           <d-column block :wrap="false" v-if="currentIssue" style="flex: 1; min-height: inherit; max-height: inherit">
@@ -48,6 +49,7 @@ const currentJiraConfig = computed<JiraConfig>(() => jiraConfigs.value?.find((ba
 const jiraController = ref<JiraController>();
 provide('JiraController', jiraController);
 
+watch(() => selectedIssue.value, connectCurrentData);
 watch(() => selectedJiraConfig.value, setJiraBase);
 watch(() => currentJiraConfig.value, () => setJiraBase(selectedJiraConfig.value), {deep: true});
 
@@ -70,10 +72,16 @@ async function setJiraBase(name: any) {
       ...currentJiraConfig.value,
       credentials: cookieCredentials
     }))
-    jiraController.value?.getAllIssues();
-    jiraController.value?.getAllIssues(); //TODO try to figure out how to get branch/pr to be reactive, setting ref in JiraTask is not working as expected
+    await jiraController.value?.getAllIssues();
+    connectCurrentData();
   } else {
     credentialsOpen.value = true;
+  }
+}
+
+function connectCurrentData(){
+  if (currentIssue.value) {
+    currentIssue.value.getConnectedData()
   }
 }
 

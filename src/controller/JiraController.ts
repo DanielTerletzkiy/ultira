@@ -3,6 +3,8 @@ import JiraBaseController from "./JiraBaseController";
 import JiraTask from "./JiraTask";
 import {JiraIssue} from "../../types/Jira";
 import Task = JiraIssue.Task;
+import {selectedIssue} from "../store/jira.store";
+import {raw} from "concurrently/dist/src/defaults";
 
 export default class JiraController extends ApiController {
     controller: JiraBaseController;
@@ -17,20 +19,26 @@ export default class JiraController extends ApiController {
     async getAllIssues(): Promise<any> {
         const searchResult = await ApiController.fetchJira(
             this.controller.url,
-            `rest/api/latest/search?jql=assignee=currentuser() OR reporter=currentuser() ORDER BY updated desc`,
+            `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() ORDER BY updated desc`,
             'GET',
             this.controller.credentials);
-        //TODO make it better
-        if (this.issues) {
-            searchResult.issues.filter((issue: Task) => this.issues.find((e) => e.task.key === issue.key)?.updateSelf())
-        }
-        if (this.issues.length !== searchResult.issues.length) {
-            this.issues = searchResult.issues.map((issue: Task) => {
-                if (!this.issues.find((e) => e.task.key === issue.key)) {
-                    return new JiraTask(issue, this.controller)
-                }
+
+        if (this.issues.length > 0) {
+            this.issues.forEach((issue) => {
+                issue.updateSelf(issue.task.key === selectedIssue.value)
             });
         }
+
+        for (const issue of searchResult.issues) {
+            if (this.issues.length > 0 && this.issues.findIndex((x) => x.task.key === issue.key) > -1) {
+                //return this.issues.find((x) => x.task.key === issue.key);
+            } else {
+                this.issues.push(await new JiraTask(issue, this.controller))
+            }
+        }
+
+        console.log(this.issues)
+
         this.totalIssues = searchResult.total;
         return {issues: this.issues, total: this.totalIssues};
     }

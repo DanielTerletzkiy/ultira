@@ -10,13 +10,12 @@ export default class JiraTask extends ApiController {
         super();
         this.task = task;
         this._controller = controller;
-        this.getConnectedData();
     }
-    async updateSelf() {
+    async updateSelf(updateConnected) {
         const url = new URL(this.task.self);
         [this.task] = await Promise.all([
             ApiController.fetchJira(this._controller.url, `${url.pathname.replace(/\//, '')}`, 'GET', this._controller.credentials),
-            this.getConnectedData()
+            updateConnected ? this.getConnectedData() : null
         ]);
         return self;
     }
@@ -34,14 +33,14 @@ export default class JiraTask extends ApiController {
         const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/worklog`, 'POST', this._controller.credentials, 0 /* JSON */, {
             timeSpentSeconds: seconds
         });
-        await this.updateSelf();
+        await this.updateSelf(true);
         return result;
     }
     async addComment(body) {
         const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/comment`, 'POST', this._controller.credentials, 0 /* JSON */, {
             body
         });
-        await this.updateSelf();
+        await this.updateSelf(true);
         return result;
     }
 }
