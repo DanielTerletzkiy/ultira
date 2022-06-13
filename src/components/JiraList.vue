@@ -18,7 +18,7 @@
             </template>
           </JiraImage>
           <d-avatar v-else :size="40" color="transparent">
-            <d-icon :name="group.icon.url" color="primary"/>
+            <d-icon :name="group.icon.url" :size="40" color="primary"/>
           </d-avatar>
           {{ group.name }}
           <d-divider class="group-header__divider" block/>
