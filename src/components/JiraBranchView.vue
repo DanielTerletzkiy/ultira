@@ -11,7 +11,7 @@
                 class="mx-2 pt-0"
                 style="max-height: calc(500px - 50px - 8px); overflow: overlay"
                 gap :wrap="false">
-        <d-card v-for="repository in item.commitData.detail[0]?.repositories" elevation="2" block
+        <d-card v-for="repository in item.commitData.detail[0]?.repositories" :key="repository.name" elevation="2" block
                 background-color="transparent">
           <d-card class="sticky" block elevation="4">
             <d-row>
@@ -34,7 +34,7 @@
             </d-row>
           </d-card>
           <d-column class="pa-2" gap>
-            <d-accordion v-for="commit in repository.commits" header-color="primary">
+            <d-accordion v-for="commit in repository.commits" :key="commit.id" header-color="primary">
               <template v-slot:header>
                 <JiraMarkup :body="commit.message"/>
                 <d-spacer/>
@@ -58,7 +58,7 @@
                       </JiraUserItem>
                     </d-row>
                     <d-divider elevation="10"/>
-                    <d-card v-for="file in commit.files" block background-color="transparent">
+                    <d-card v-for="file in commit.files" :key="file.path" block background-color="transparent">
                       <d-row block gap justify="start">
                         <d-label rounded="pill" :color="changeTypeColor(file.changeType)">
                           {{ file.changeType }}

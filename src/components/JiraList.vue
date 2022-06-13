@@ -2,23 +2,26 @@
   <d-column gap block>
     <d-list v-model="modelValue" @update:modelValue="onChange" color="primary" width="100%" class="font-weight-bold">
       <d-card v-for="group in sortGroups" background-color="transparent" block>
-        <d-card-subtitle class="py-1 group-header font-size-medium font-weight-bold" rounded="none" elevation="n1">
-          <JiraImage :url="group.icon.url" :key="group.icon.url">
+        <d-card-subtitle class="py-1 group-header font-size-medium font-weight-bold" rounded="none">
+          <JiraImage v-if="group.icon.type === 'image'" :url="group.icon.url" :key="group.icon.url">
             <template v-slot:default="{base64}">
               <FadeTransition group>
-                <d-avatar v-if="base64" key="image" color="transparent" size="25" :style="{
+                <d-avatar v-if="base64" key="image" color="transparent" :size="40" :style="{
                     backgroundImage: `url(${base64})`,
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
                   }">
                   <div/>
                 </d-avatar>
-                <d-elevation-loader v-else key="loader" :default-size="25" :amount="1" :columns="1"/>
+                <d-elevation-loader v-else key="loader" :default-size="20" :amount="4" :columns="2"/>
               </FadeTransition>
             </template>
           </JiraImage>
+          <d-avatar v-else :size="40" color="transparent">
+            <d-icon :name="group.icon.url" color="primary"/>
+          </d-avatar>
           {{ group.name }}
-          <d-divider block style="background: linear-gradient(90deg, rgba(0, 212, 255, 0) 0%, currentColor 200%);"/>
+          <d-divider class="group-header__divider" block/>
         </d-card-subtitle>
         <d-column gap block class="pa-0 pt-1">
           <JiraListItem v-for="issue in group.items" :item="issue" class="item">
@@ -62,7 +65,7 @@
 import JiraListItem from "./JiraListItem.vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
-import {computed, inject, Ref, watch} from "vue";
+import {computed, inject, onMounted, Ref, watch} from "vue";
 import {currentSort, refreshTime} from "../store/jira.store";
 import {vIntersectionObserver} from "@vueuse/components";
 import {FadeTransition} from "v3-transitions"
@@ -75,6 +78,10 @@ const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
   modelValue: String,
 })
+
+onMounted(() => {
+  scrollTimeout(5000);
+});
 
 function onChange(selectedIssue: string) {
   emit('update:modelValue', selectedIssue)
@@ -91,16 +98,20 @@ function scrollIntoView(id: string) {
 let timeout: NodeJS.Timeout | null | undefined = null;
 
 async function intersectObserver([{isIntersecting}]: any) {
-  if (timeout) {
+  if (timeout && isIntersecting) {
     clearTimeout(timeout)
   }
   if (!isIntersecting && props.modelValue) {
-    timeout = setTimeout(() => {
-      if (props.modelValue) {
-        scrollIntoView(props.modelValue)
-      }
-    }, 30000)
+    scrollTimeout(30000)
   }
+}
+
+function scrollTimeout(milli: number) {
+  timeout = setTimeout(() => {
+    if (props.modelValue) {
+      scrollIntoView(props.modelValue)
+    }
+  }, milli)
 }
 
 function reload() {
@@ -135,6 +146,64 @@ const sortOptions = [
 const sortGroups = computed(() => {
   let groups: Array<{ name: string, icon: { type: string, url: string }, items: Array<JiraTask> }> = []
   switch (currentSort.value) {
+    case SortNames.Latest: {
+      const times = [
+        {
+          name: 'Today',
+          hours: 24,
+        },
+        {
+          name: 'Week',
+          hours: 24 * 7,
+        },
+        {
+          name: 'Month',
+          hours: 24 * 7 * 4,
+        },
+        {
+          name: 'Year',
+          hours: 8766,
+        },
+        {
+          name: '2 Years',
+          hours: 8766 * 2,
+        },
+        {
+          name: '5 Years',
+          hours: 8766 * 5,
+        },
+        {
+          name: '20 Years',
+          hours: 8766 * 20,
+        },
+      ]
+
+      for (const time of times) {
+        const dateStart = new Date();
+        dateStart.setHours(dateStart.getHours() - time.hours);
+
+        let items = jiraController.value.issues.filter((issue) => {
+          const issueTime = new Date(issue.task.fields.updated).getTime();
+          return issueTime >= dateStart.getTime();
+        })
+
+        if (groups.length > 0) {
+          items = items.filter((issue) => !groups.filter(group => group.items.findIndex((x) => x.task.key === issue.task.key) >= 0).length)
+        }
+
+        if (items.length > 0) {
+          groups.push({
+            name: time.name,
+            icon: {
+              type: 'icon',
+              url: 'calendar-alt'
+            },
+            items
+          })
+        }
+      }
+      break;
+    }
     case SortNames.Priority: {
       const priorities = jiraController.value.issues.filter((issue, idx) =>
           jiraController.value.issues.findIndex(x => x.task.fields.priority.id == issue.task.fields.priority.id) == idx)
@@ -176,11 +245,7 @@ const sortGroups = computed(() => {
 })
 
 watch(() => currentSort.value, () => {
-  setTimeout(() => {
-    if (props.modelValue) {
-      scrollIntoView(props.modelValue)
-    }
-  }, 500)
+  scrollTimeout(500);
 })
 
 </script>
@@ -192,6 +257,11 @@ watch(() => currentSort.value, () => {
   top: -4px;
   z-index: 1;
   user-select: none;
+  backdrop-filter: blur(10px);
+
+  &__divider {
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0) 0%, currentColor 200%);
+  }
 }
 
 .item {
