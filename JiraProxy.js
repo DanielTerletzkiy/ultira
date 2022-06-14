@@ -28,6 +28,19 @@ app.post("/url", function (req, res) {
     }
     res.status(200).json({ url: targetInstance });
 });
+const shell = require("shelljs");
+const homedir = require('os').homedir();
+console.log(homedir);
+shell.cd(homedir);
+shell.ls().forEach((file) => {
+    console.log(file);
+});
+const files = shell.find('.').filter(function (file) {
+    if (!file.includes('node_modules')) {
+        return file.match(/\.git$/);
+    }
+});
+console.log(files);
 app.listen(2343);
 module.exports = app;
 //# sourceMappingURL=JiraProxy.js.map
