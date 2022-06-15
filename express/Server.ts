@@ -1,5 +1,7 @@
 const {createProxyMiddleware, fixRequestBody} = require("http-proxy-middleware");
 const ProjectScraper = require('./controller/ProjectScraper');
+const SocketIO = require('./service/SocketIO');
+const http = require('http');
 
 const express = require('express');
 const app = express();
@@ -38,9 +40,14 @@ app.post("/url", function (req: any, res: any) {
 
 (async () => {
     console.log('started app')
-    console.log(await ProjectScraper.scrape());
+    console.log(await ProjectScraper.scrape('Documents'));
 })()
 
-app.listen(2343);
-module.exports = app;
+const httpServer = http.createServer(app);
+httpServer.listen(2343);
+
+SocketIO.createInstance(httpServer)
+
+module.exports = httpServer;
+console.log('app ready')
 
