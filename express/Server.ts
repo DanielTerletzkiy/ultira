@@ -1,4 +1,5 @@
 const {createProxyMiddleware, fixRequestBody} = require("http-proxy-middleware");
+const ProjectScraper = require('./controller/ProjectScraper');
 
 const express = require('express');
 const app = express();
@@ -35,19 +36,11 @@ app.post("/url", function (req: any, res: any) {
     res.status(200).json({url: targetInstance});
 });
 
-const shell = require("shelljs");
-const homedir = require('os').homedir();
-console.log(homedir)
-shell.cd(homedir);
-shell.ls().forEach((file:string)=>{
-    console.log(file)
-});
-const files = shell.find('.').filter(function (file: string) {
-    if (!file.includes('node_modules')) {
-        return file.match(/\.git$/);
-    }
-});
-console.log(files)
+(async () => {
+    console.log('started app')
+    console.log(await ProjectScraper.scrape());
+})()
 
 app.listen(2343);
 module.exports = app;
+

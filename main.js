@@ -1,7 +1,7 @@
 "use strict";
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
-require("./JiraProxy");
+require("./Server");
 function createWindow() {
     const win = new BrowserWindow({
         webPreferences: {

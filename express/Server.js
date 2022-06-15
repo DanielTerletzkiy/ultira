@@ -1,5 +1,6 @@
 "use strict";
 const { createProxyMiddleware, fixRequestBody } = require("http-proxy-middleware");
+const ProjectScraper = require('./controller/ProjectScraper');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -28,19 +29,10 @@ app.post("/url", function (req, res) {
     }
     res.status(200).json({ url: targetInstance });
 });
-const shell = require("shelljs");
-const homedir = require('os').homedir();
-console.log(homedir);
-shell.cd(homedir);
-shell.ls().forEach((file) => {
-    console.log(file);
-});
-const files = shell.find('.').filter(function (file) {
-    if (!file.includes('node_modules')) {
-        return file.match(/\.git$/);
-    }
-});
-console.log(files);
+(async () => {
+    console.log('started app');
+    console.log(await ProjectScraper.scrape());
+})();
 app.listen(2343);
 module.exports = app;
-//# sourceMappingURL=JiraProxy.js.map
+//# sourceMappingURL=Server.js.map
