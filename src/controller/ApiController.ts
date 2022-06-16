@@ -1,7 +1,12 @@
 export default class ApiController {
 
-    static async generic(url: string, method: string, headers: Headers, body?: any): Promise<any> {
-        const options: { method: string, headers: Headers, body?: string } = {
+    static async generic(url: string, method: string, headers?: Headers, body?: any): Promise<any> {
+        if (!headers && body) {
+            headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            headers.append('Accept', 'application/json');
+        }
+        const options: { method: string, headers?: Headers, body?: string } = {
             method,
             headers,
             body: JSON.stringify(body ?? {})

@@ -1,4 +1,4 @@
-import ApiController from "./ApiController";
+import ApiController, { FetchContentType } from "./ApiController";
 import JiraTask from "./JiraTask";
 import { selectedIssue } from "../store/jira.store";
 export default class JiraController extends ApiController {
@@ -30,7 +30,7 @@ export default class JiraController extends ApiController {
     }
     async getImageBase64(url) {
         const urlObj = new URL(url);
-        const response = await ApiController.fetchJira(this.controller.url, `${urlObj.pathname.substring(1)}${urlObj.search}`, 'GET', this.controller.credentials, 1 /* FILES */);
+        const response = await ApiController.fetchJira(this.controller.url, `${urlObj.pathname.substring(1)}${urlObj.search}`, 'GET', this.controller.credentials, FetchContentType.FILES);
         const contentType = response.headers.get("content-type");
         switch (contentType) {
             case "image/svg+xml":

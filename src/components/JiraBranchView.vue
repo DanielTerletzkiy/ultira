@@ -9,12 +9,12 @@
     <SlideXLeftTransition group style="width: 100%">
       <d-column key="content" v-if="item?.commitData?.detail&&item?.commitData?.detail[0]?.repositories.length>0"
                 class="mx-2 pt-0"
-                style="max-height: calc(500px - 50px - 8px); overflow: overlay"
+                style="max-height: calc(500px - 50px - 8px); overflow: overlay; overflow-x: hidden"
                 gap :wrap="false">
         <d-card v-for="repository in item.commitData.detail[0]?.repositories" :key="repository.name" elevation="2" block
                 background-color="transparent">
           <d-card class="sticky" block elevation="4">
-            <d-row>
+            <d-row class="pr-3">
               <d-column>
                 <d-card-title class="font-size-medium">
                   {{ repository.name }}
@@ -31,6 +31,8 @@
                   Commits
                 </d-card-subtitle>
               </d-column>
+              <d-spacer/>
+              <JiraProjectButton :repository="repository.name"/>
             </d-row>
           </d-card>
           <d-column class="pa-2" gap>
@@ -119,6 +121,7 @@ import ChangeType = JiraCommits.ChangeType;
 import JiraUserItem from "./JiraUserItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
+import JiraProjectButton from "./JiraProjectButton.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

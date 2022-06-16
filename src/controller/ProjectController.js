@@ -1,0 +1,13 @@
+import SocketClient from "../service/SocketIOClient";
+import ApiController from "./ApiController";
+export default class ProjectController extends ApiController {
+    static subscribe(callback) {
+        SocketClient.instance.on('project/scan/complete', callback);
+    }
+    static async open(project, issue) {
+        return await ApiController.generic('/api/project/open', 'POST', undefined, {
+            project, issue
+        });
+    }
+}
+//# sourceMappingURL=ProjectController.js.map

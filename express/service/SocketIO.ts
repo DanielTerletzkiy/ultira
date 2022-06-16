@@ -25,7 +25,7 @@ module.exports = class SocketIO {
 
     }
 
-    get instance() {
+    static get instance() {
         return SocketIO.socketIO;
     }
 }

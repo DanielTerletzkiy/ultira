@@ -14,6 +14,10 @@ const store = createStore({
                 url: "https://",
                 applicationType: ApplicationType.Bitbucket
             }],
+        projects: [{
+                path: '',
+                project: ''
+            }],
         credentialsDialogOpen: false,
         refreshTime: 60,
         zoomFactor: 1,
@@ -30,6 +34,9 @@ const store = createStore({
         },
         jiraConfigs(state) {
             return state.jiraConfigs;
+        },
+        projects(state) {
+            return state.projects;
         },
         credentialsDialogOpen(state) {
             return state.credentialsDialogOpen;
@@ -54,6 +61,9 @@ const store = createStore({
         setJiraConfigs(state, payload) {
             state.jiraConfigs = payload;
         },
+        setProjects(state, payload) {
+            state.projects = payload;
+        },
         setCredentialsDialogOpen(state, payload) {
             state.credentialsDialogOpen = payload;
         },
@@ -76,6 +86,9 @@ const store = createStore({
         },
         setJiraConfigs(context, payload) {
             context.commit('setJiraConfigs', payload);
+        },
+        setProjects(context, payload) {
+            context.commit('setProjects', payload);
         },
         setCredentialsDialogOpen(context, payload) {
             context.commit('setCredentialsDialogOpen', payload);
@@ -119,6 +132,14 @@ export const jiraConfigs = computed({
     },
     set(value) {
         store.dispatch('setJiraConfigs', value);
+    }
+});
+export const projects = computed({
+    get() {
+        return store.getters.projects;
+    },
+    set(value) {
+        store.dispatch('setProjects', value);
     }
 });
 export const credentialsOpen = computed({

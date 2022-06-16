@@ -1,5 +1,10 @@
 export default class ApiController {
     static async generic(url, method, headers, body) {
+        if (!headers && body) {
+            headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            headers.append('Accept', 'application/json');
+        }
         const options = {
             method,
             headers,
@@ -10,15 +15,15 @@ export default class ApiController {
         }
         return await fetch(url, options);
     }
-    static async fetchJira(jiraHost, path, method, basicCredentials, type = 0 /* JSON */, body) {
+    static async fetchJira(jiraHost, path, method, basicCredentials, type = FetchContentType.JSON, body) {
         const headers = new Headers();
         switch (type) {
-            case 0 /* JSON */: {
+            case FetchContentType.JSON: {
                 headers.append('Content-Type', 'application/json');
                 headers.append('Accept', 'application/json');
                 break;
             }
-            case 1 /* FILES */: {
+            case FetchContentType.FILES: {
                 break;
             }
         }
@@ -27,7 +32,7 @@ export default class ApiController {
         headers.append('Jira-Host', jiraHost);
         headers.append('User-Agent', 'XXX');
         const response = await this.generic('http://localhost:2343/' + path, method, headers, body);
-        if (type === 0 /* JSON */) {
+        if (type === FetchContentType.JSON) {
             return response.json();
         }
         else {
@@ -35,4 +40,9 @@ export default class ApiController {
         }
     }
 }
+export var FetchContentType;
+(function (FetchContentType) {
+    FetchContentType[FetchContentType["JSON"] = 0] = "JSON";
+    FetchContentType[FetchContentType["FILES"] = 1] = "FILES";
+})(FetchContentType || (FetchContentType = {}));
 //# sourceMappingURL=ApiController.js.map

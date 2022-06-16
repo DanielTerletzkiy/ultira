@@ -11,5 +11,10 @@ export default defineConfig({
     mode: mode,
     plugins: [vue()],
     resolve: {dedupe: ['vue']},
-    base: mode === 'production' ? `/${path.resolve(__dirname, "./dist/")}/` : ''
+    base: mode === 'production' ? `/${path.resolve(__dirname, "./dist/")}/` : '',
+    server: {
+        proxy: {
+            '/api': 'http://localhost:2343'
+        }
+    },
 })

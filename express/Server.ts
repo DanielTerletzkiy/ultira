@@ -1,3 +1,5 @@
+import Index from "./router/Index";
+
 const {createProxyMiddleware, fixRequestBody} = require("http-proxy-middleware");
 const ProjectScraper = require('./controller/ProjectScraper');
 const SocketIO = require('./service/SocketIO');
@@ -5,6 +7,8 @@ const http = require('http');
 
 const express = require('express');
 const app = express();
+
+app.use('/api', Index)
 
 const cors = require('cors')
 app.use(cors())
@@ -40,7 +44,11 @@ app.post("/url", function (req: any, res: any) {
 
 (async () => {
     console.log('started app')
-    console.log(await ProjectScraper.scrape('Documents'));
+    /*ProjectScraper.open({
+        "path": "C:/Users/danie/PhpstormProjects/hal",
+        "project": "hal"
+    }, 'HAL-1')*/
+    console.log(await ProjectScraper.scrape('PhpstormProjects'));
 })()
 
 const httpServer = http.createServer(app);
@@ -48,6 +56,6 @@ httpServer.listen(2343);
 
 SocketIO.createInstance(httpServer)
 
-module.exports = httpServer;
+export default httpServer;
 console.log('app ready')
 

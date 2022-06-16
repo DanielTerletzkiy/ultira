@@ -1,10 +1,16 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const Index_1 = __importDefault(require("./router/Index"));
 const { createProxyMiddleware, fixRequestBody } = require("http-proxy-middleware");
 const ProjectScraper = require('./controller/ProjectScraper');
 const SocketIO = require('./service/SocketIO');
 const http = require('http');
 const express = require('express');
 const app = express();
+app.use('/api', Index_1.default);
 const cors = require('cors');
 app.use(cors());
 app.use(express.json());
@@ -33,11 +39,14 @@ app.post("/url", function (req, res) {
 });
 (async () => {
     console.log('started app');
-    console.log(await ProjectScraper.scrape('Documents'));
+    /*ProjectScraper.open({
+        "path": "C:/Users/danie/PhpstormProjects/hal",
+        "project": "hal"
+    }, 'HAL-1')*/
+    console.log(await ProjectScraper.scrape('PhpstormProjects'));
 })();
 const httpServer = http.createServer(app);
 httpServer.listen(2343);
 SocketIO.createInstance(httpServer);
-module.exports = httpServer;
+exports.default = httpServer;
 console.log('app ready');
-//# sourceMappingURL=Server.js.map

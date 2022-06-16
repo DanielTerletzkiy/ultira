@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import {computed, onBeforeMount, onMounted, provide, ref, watch} from "vue";
-import {credentialsOpen, selectedJiraConfig, jiraConfigs, selectedIssue} from "../store/jira.store";
+import {credentialsOpen, selectedJiraConfig, jiraConfigs, selectedIssue, projects} from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
@@ -42,6 +42,7 @@ import JiraPullRequestView from "../components/JiraPullRequestView.vue";
 import JiraCommentsView from "../components/JiraCommentsView.vue";
 import {JiraConfiguration} from "../../types/Jira";
 import JiraConfig = JiraConfiguration.JiraConfig;
+import ProjectController from "../controller/ProjectController";
 
 const currentIssue = computed<JiraTask | undefined>(() => jiraController.value && jiraController.value?.issues?.find((issue: JiraTask) => issue.task.key === selectedIssue.value) as JiraTask | undefined)
 const currentJiraConfig = computed<JiraConfig>(() => jiraConfigs.value?.find((base: { name: string; }) => base.name === selectedJiraConfig.value) as JiraConfig);
@@ -74,6 +75,7 @@ async function setJiraBase(name: any) {
     }))
     await jiraController.value?.getAllIssues();
     connectCurrentData();
+
   } else {
     credentialsOpen.value = true;
   }
@@ -87,6 +89,10 @@ function connectCurrentData(){
 
 onMounted(() => {
   setJiraBase(selectedJiraConfig.value)
+  ProjectController.subscribe((resProjects) => {
+    console.log('projects: ', resProjects)
+    projects.value = resProjects;
+  });
 })
 </script>
 

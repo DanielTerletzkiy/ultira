@@ -1,9 +1,10 @@
 import {createStore} from "vuex";
 import VuexPersistence from "vuex-persist";
 import {computed} from "vue";
-import {JiraConfiguration, SortNames} from "../../types/Jira";
+import {JiraConfiguration, JiraIssue, Project, SortNames} from "../../types/Jira";
 import ApplicationType = JiraConfiguration.ApplicationType;
 import JiraConfig = JiraConfiguration.JiraConfig;
+import Task = JiraIssue.Task;
 
 const store = createStore({
     plugins: [new VuexPersistence().plugin],
@@ -16,12 +17,16 @@ const store = createStore({
             url: "https://",
             applicationType: ApplicationType.Bitbucket
         }],
+        projects: [{
+            path: '',
+            project: ''
+        }],
         credentialsDialogOpen: false,
         refreshTime: 60,
         zoomFactor: 1,
     },
     getters: {
-        selectedIssue(state): string | undefined {
+        selectedIssue(state): Task['key'] | undefined {
             return state.selectedIssue;
         },
         currentSort(state): SortNames {
@@ -32,6 +37,9 @@ const store = createStore({
         },
         jiraConfigs(state): Array<JiraConfig> {
             return state.jiraConfigs;
+        },
+        projects(state): Array<Project> {
+            return state.projects;
         },
         credentialsDialogOpen(state): boolean {
             return state.credentialsDialogOpen;
@@ -44,7 +52,7 @@ const store = createStore({
         }
     },
     mutations: {
-        setSelectedIssue(state, payload: string) {
+        setSelectedIssue(state, payload: Task['key']) {
             state.selectedIssue = payload;
         },
         setCurrentSort(state, payload: SortNames) {
@@ -53,8 +61,11 @@ const store = createStore({
         setCurrentJiraConfig(state, payload: string) {
             state.selectedJiraConfig = payload;
         },
-        setJiraConfigs(state, payload) {
+        setJiraConfigs(state, payload: Array<JiraConfig>) {
             state.jiraConfigs = payload;
+        },
+        setProjects(state, payload: Array<Project>) {
+            state.projects = payload
         },
         setCredentialsDialogOpen(state, payload: boolean) {
             state.credentialsDialogOpen = payload;
@@ -67,7 +78,7 @@ const store = createStore({
         }
     },
     actions: {
-        setSelectedIssue(context, payload: string) {
+        setSelectedIssue(context, payload: Task['key']) {
             context.commit('setSelectedIssue', payload);
         },
         setCurrentSort(context, payload: SortNames) {
@@ -76,8 +87,11 @@ const store = createStore({
         setCurrentJiraConfig(context, payload: string) {
             context.commit('setCurrentJiraConfig', payload);
         },
-        setJiraConfigs(context, payload) {
+        setJiraConfigs(context, payload: Array<JiraConfig>) {
             context.commit('setJiraConfigs', payload);
+        },
+        setProjects(context, payload: Array<Project>) {
+            context.commit('setProjects', payload)
         },
         setCredentialsDialogOpen(context, payload: boolean) {
             context.commit('setCredentialsDialogOpen', payload);
@@ -93,11 +107,11 @@ const store = createStore({
 
 export default store;
 
-export const selectedIssue = computed({
+export const selectedIssue = computed<Task['key']>({
     get() {
         return store.getters.selectedIssue
     },
-    set(value: string) {
+    set(value: Task['key']) {
         store.dispatch('setSelectedIssue', value)
     },
 });
@@ -126,6 +140,15 @@ export const jiraConfigs = computed<Array<JiraConfig>>({
     },
     set(value) {
         store.dispatch('setJiraConfigs', value)
+    }
+})
+
+export const projects = computed<Array<Project>>({
+    get() {
+        return store.getters.projects
+    },
+    set(value) {
+        store.dispatch('setProjects', value)
     }
 })
 

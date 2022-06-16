@@ -20,8 +20,7 @@ module.exports = class SocketIO {
             console.log(`${chalk.bgRedBright.black('IO')}: ${chalk.blue('User Connected')}`);
         });
     }
-    get instance() {
+    static get instance() {
         return SocketIO.socketIO;
     }
 };
-//# sourceMappingURL=SocketIO.js.map
