@@ -1,7 +1,7 @@
 <template>
   <d-column gap block>
     <d-card v-if="selectedJiraConfig" background-color="transparent" block
-            style="max-height: calc(100vh - 86px); overflow: hidden">
+            style="max-height: calc(100vh - 52px); overflow: hidden">
       <d-column gap :wrap="false">
         <d-row gap :wrap="false" style="flex: 1; max-height: 500px; min-height: 500px;">
           <d-column block :wrap="false" v-if="currentIssue" style="flex: 1; min-height: inherit; max-height: inherit">
@@ -13,7 +13,7 @@
           </d-column>
         </d-row>
         <d-row gap :wrap="false" style="flex: 1;" align="stretch">
-          <d-column class="bottom-card" :wrap="false" elevation="n1" v-if="selectedJiraConfig && jiraController"
+          <d-column outlined class="bottom-card" :wrap="false" elevation="n1" v-if="selectedJiraConfig && jiraController"
                     style="flex: 3;">
             <JiraList v-model="selectedIssue"/>
           </d-column>
@@ -98,7 +98,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .bottom-card {
-  max-height: calc(100vh - 86px - 16px - 500px);
+  max-height: calc(100vh - 52px - 16px - 500px);
   overflow: overlay;
   overflow-x: hidden;
   //min-width: fit-content;

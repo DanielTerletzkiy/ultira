@@ -20,11 +20,11 @@ const baseurl = import.meta.env.BASE_URL
 <template>
   <d-root>
     <template v-slot:toolbar>
-      <DToolbar>
+      <DToolbar style="max-height: 30px;">
         <d-row class="action" width="fit-content">
-          <d-tooltip color="primary">
-            <d-icon-button color="primary" @click="toggleSettings">
-              <d-avatar size="30" color="transparent" :style="{
+          <d-tooltip color="secondary" position="right" filled>
+            <d-icon-button color="primary" :size="30" @click="toggleSettings">
+              <d-avatar :size="20" color="transparent" :style="{
                   backgroundImage: `url(${baseurl}favicon.ico)`,
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
@@ -37,7 +37,7 @@ const baseurl = import.meta.env.BASE_URL
             </template>
           </d-tooltip>
         </d-row>
-        <DCardTitle color="primary" class="title font-size-medium">
+        <DCardTitle color="primary" class="title font-size-small">
           ULTIRA
         </DCardTitle>
         <JiraBaseSelector/>
@@ -52,6 +52,13 @@ const baseurl = import.meta.env.BASE_URL
 </template>
 
 <style lang="scss">
+.d-root > div {
+  height: calc(100% - 20px) !important;
+}
+
+.d-root > header {
+  max-height: 20px !important;
+}
 header, .d-toolbar {
   -webkit-app-region: drag;
 

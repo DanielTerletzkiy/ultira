@@ -5,7 +5,7 @@ export default class ProjectController extends ApiController {
         SocketClient.instance.on('project/scan/complete', callback);
     }
     static async open(project, issue) {
-        return await ApiController.generic('/api/project/open', 'POST', undefined, {
+        return await ApiController.generic('http://localhost:2343/api/project/open', 'POST', undefined, {
             project, issue
         });
     }

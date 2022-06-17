@@ -9,7 +9,7 @@ export default class ProjectController extends ApiController {
     }
 
     static async open(project: Project, issue: Task['key']) {
-        return await ApiController.generic('/api/project/open', 'POST', undefined, {
+        return await ApiController.generic('http://localhost:2343/api/project/open', 'POST', undefined, {
             project, issue
         })
     }

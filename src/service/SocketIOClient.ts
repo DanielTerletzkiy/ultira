@@ -1,7 +1,7 @@
 import * as io from 'socket.io-client'
 
 export default class SocketClient {
-    static connectionString = `${window.location.protocol}//${window.location.hostname}:2343`
+    static connectionString = `http://localhost:2343`
     static ioInstance: io.Socket
 
     static get instance() {

@@ -6,10 +6,11 @@
     <template v-slot:title>
       Branches & Commits
     </template>
-    <SlideXLeftTransition group style="width: 100%">
+    <SlideXLeftTransition group
+                          style="width: 100%; max-height: calc(500px - 50px - 8px); overflow: overlay; overflow-x: hidden"
+                          :class="$vuelize.theme.dark?'dark':'light'">
       <d-column key="content" v-if="item?.commitData?.detail&&item?.commitData?.detail[0]?.repositories.length>0"
                 class="mx-2 pt-0"
-                style="max-height: calc(500px - 50px - 8px); overflow: overlay; overflow-x: hidden"
                 gap :wrap="false">
         <d-card v-for="repository in item.commitData.detail[0]?.repositories" :key="repository.name" elevation="2" block
                 background-color="transparent">
@@ -104,6 +105,7 @@
           <d-icon name="file-question-alt" :size="30"/>
           Empty
         </d-card-title>
+        <JiraProjectList/>
       </d-column>
       <d-elevation-loader key="loader" v-else :elevation="20" :columns="10" :amount="100" default-size="40"
                           :speed="4000"/>
@@ -122,6 +124,7 @@ import JiraUserItem from "./JiraUserItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraProjectButton from "./JiraProjectButton.vue";
+import JiraProjectList from "./JiraProjectList.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

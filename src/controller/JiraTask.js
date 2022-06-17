@@ -1,4 +1,4 @@
-import ApiController, { FetchContentType } from "./ApiController";
+import ApiController from "./ApiController";
 export default class JiraTask extends ApiController {
     _controller;
     task;
@@ -30,14 +30,14 @@ export default class JiraTask extends ApiController {
         ]);
     }
     async addWorkLog(seconds) {
-        const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/worklog`, 'POST', this._controller.credentials, FetchContentType.JSON, {
+        const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/worklog`, 'POST', this._controller.credentials, 0 /* JSON */, {
             timeSpentSeconds: seconds
         });
         await this.updateSelf(true);
         return result;
     }
     async addComment(body) {
-        const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/comment`, 'POST', this._controller.credentials, FetchContentType.JSON, {
+        const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/comment`, 'POST', this._controller.credentials, 0 /* JSON */, {
             body
         });
         await this.updateSelf(true);

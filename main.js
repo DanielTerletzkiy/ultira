@@ -1,7 +1,8 @@
 "use strict";
+// @ts-ignore
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
-require("./Server");
+require("./express/Server");
 function createWindow() {
     const win = new BrowserWindow({
         webPreferences: {
