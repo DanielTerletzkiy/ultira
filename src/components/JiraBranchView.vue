@@ -101,10 +101,19 @@
         </d-card>
       </d-column>
       <d-column key="empty" v-else-if="item?.commitData?.detail[0]?.repositories.length === 0">
-        <d-card-title color="primary">
-          <d-icon name="file-question-alt" :size="30"/>
-          Empty
-        </d-card-title>
+        <d-column style="user-select: none">
+          <d-card-title color="primary" class="mx-3">
+            <d-icon name="file-question-alt" :size="30"/>
+            Empty
+          </d-card-title>
+          <d-card-subtitle class="ml-4">
+            Select Project below to
+            <d-card-subtitle root-tag="pre" elevation="3" style="user-select: text">
+              <d-icon name="brackets-curly" :size="18"/>
+              git stash && git checkout -b {{ selectedIssue }}
+            </d-card-subtitle>
+          </d-card-subtitle>
+        </d-column>
         <JiraProjectList/>
       </d-column>
       <d-elevation-loader key="loader" v-else :elevation="20" :columns="10" :amount="100" default-size="40"
@@ -125,6 +134,7 @@ import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraProjectList from "./JiraProjectList.vue";
+import {selectedIssue} from "../store/jira.store";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

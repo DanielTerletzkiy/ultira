@@ -1,5 +1,5 @@
 <template>
-  <d-column gap block>
+  <d-column gap block style="position:relative;">
     <d-card v-if="selectedJiraConfig" background-color="transparent" block
             style="max-height: calc(100vh - 52px); overflow: hidden">
       <d-column gap :wrap="false">
@@ -13,14 +13,13 @@
           </d-column>
         </d-row>
         <d-row gap :wrap="false" style="flex: 1;" align="stretch">
-          <d-column outlined class="bottom-card" :wrap="false" elevation="n1" v-if="selectedJiraConfig && jiraController"
-                    style="flex: 3;">
+          <d-column class="bottom-card" :wrap="false" style="flex: 3;" v-if="selectedJiraConfig && jiraController">
             <JiraList v-model="selectedIssue"/>
           </d-column>
-          <d-column class="bottom-card" :wrap="false" style="flex: 1;">
+          <d-column class="bottom-card" :wrap="false" style="flex: 1;" v-if="currentIssue">
             <JiraCommentsView :item="currentIssue"/>
           </d-column>
-          <d-column class="bottom-card" :wrap="false" style="flex: 3;">
+          <d-column class="bottom-card" :wrap="false" style="flex: 3;" v-if="currentIssue">
             <JiraPullRequestView :item="currentIssue"/>
           </d-column>
         </d-row>
@@ -30,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeMount, onMounted, provide, ref, watch} from "vue";
+import {computed, onMounted, provide, ref, watch} from "vue";
 import {credentialsOpen, selectedJiraConfig, jiraConfigs, selectedIssue, projects} from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -81,7 +80,7 @@ async function setJiraBase(name: any) {
   }
 }
 
-function connectCurrentData(){
+function connectCurrentData() {
   if (currentIssue.value) {
     currentIssue.value.getConnectedData()
   }
@@ -99,7 +98,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .bottom-card {
   max-height: calc(100vh - 52px - 16px - 500px);
-  overflow: overlay;
+  overflow: auto;
   overflow-x: hidden;
   //min-width: fit-content;
   min-width: 0;

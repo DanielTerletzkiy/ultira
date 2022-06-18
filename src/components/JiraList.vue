@@ -1,6 +1,6 @@
 <template>
-  <d-column gap block>
-    <d-list v-model="modelValue" @update:modelValue="onChange" color="primary" width="100%" class="font-weight-bold">
+  <d-column gap block elevation="n1">
+    <d-list v-model="modelValue" @update:modelValue="onChange" width="100%" class="font-weight-bold">
       <d-card v-for="group in sortGroups" background-color="transparent" block>
         <d-card-title class="py-1 pl-3 group-header font-weight-bold font-size-medium" glow color="secondary">
           <JiraImage v-if="group.icon.type === 'image'" :url="group.icon.url" :key="group.icon.url">
@@ -31,7 +31,7 @@
     </d-list>
     <d-spacer/>
     <d-divider class="mx-3"/>
-    <d-card class="sort-list mx-2" elevation-dark="2" elevation-light="">
+    <d-card class="sort-list" outlined elevation-dark="2" elevation-light="">
       <d-tab-list class="font-weight-bold" v-model="currentSort">
         <d-list-item class="sort-list__item" v-for="option in sortOptions" :key="option.name" :color="option.color">
           <d-icon :name="option.icon" :size="20"/>
@@ -129,11 +129,11 @@ const sortOptions = [
     icon: 'exclamation-triangle',
     color: 'warning'
   },
-  {
+  /*{ TODO
     name: SortNames.State,
     icon: 'arrow-growth',
     color: 'primary'
-  },
+  },*/
   {
     name: SortNames.Project,
     icon: 'parcel',
@@ -255,10 +255,10 @@ watch(() => currentSort.value, () => {
   top: -4px;
   z-index: 1;
   user-select: none;
-  backdrop-filter: blur(10px);
+  backdrop-filter: saturate(120%) blur(10px);
 
   &__divider {
-    background: linear-gradient(90deg, rgba(0, 212, 255, 0) 0%, currentColor 200%);
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0) 0%, currentColor 100%);
   }
 }
 

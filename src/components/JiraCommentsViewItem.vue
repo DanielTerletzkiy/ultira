@@ -1,5 +1,5 @@
 <template>
-  <d-card width="100%" elevation="2">
+  <d-card width="100%" elevation="4">
     <JiraMarkup :body="comment.body"/>
     <d-divider class="mx-3" elevation="6"/>
     <d-card-subtitle>
