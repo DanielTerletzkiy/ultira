@@ -10,7 +10,6 @@ const SocketIO = require('./service/SocketIO');
 const http = require('http');
 const express = require('express');
 const app = express();
-app.use('/api', Index_1.default);
 const cors = require('cors');
 app.use(cors());
 app.use(express.json());
@@ -19,6 +18,7 @@ app.use((req, res, next) => {
     delete req.headers['user-agent'];
     next();
 });
+app.use('/api', Index_1.default);
 let targetInstance;
 app.post("/url", function (req, res) {
     targetInstance = req.headers['jira-host'];
@@ -43,7 +43,7 @@ app.post("/url", function (req, res) {
         "path": "C:/Users/danie/PhpstormProjects/hal",
         "project": "hal"
     }, 'HAL-1')*/
-    console.log(await ProjectScraper.scrape('PhpstormProjects'));
+    console.log(await ProjectScraper.scrape('Documents')); //TODO
 })();
 const httpServer = http.createServer(app);
 httpServer.listen(2343);

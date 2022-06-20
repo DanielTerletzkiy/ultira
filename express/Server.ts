@@ -8,7 +8,6 @@ const http = require('http');
 const express = require('express');
 const app = express();
 
-app.use('/api', Index)
 
 const cors = require('cors')
 app.use(cors())
@@ -20,6 +19,8 @@ app.use((req: any, res: any, next: any) => {
     delete req.headers['user-agent']
     next()
 })
+
+app.use('/api', Index)
 
 let targetInstance: string;
 
@@ -48,7 +49,7 @@ app.post("/url", function (req: any, res: any) {
         "path": "C:/Users/danie/PhpstormProjects/hal",
         "project": "hal"
     }, 'HAL-1')*/
-    console.log(await ProjectScraper.scrape('PhpstormProjects'));
+    console.log(await ProjectScraper.scrape('Documents')); //TODO
 })()
 
 const httpServer = http.createServer(app);
