@@ -9,5 +9,8 @@ export default class ProjectController extends ApiController {
             project, issue
         });
     }
+    static async scrape(path) {
+        return await ApiController.generic('http://localhost:2343/api/project/scrape/' + path, 'GET');
+    }
 }
 //# sourceMappingURL=ProjectController.js.map

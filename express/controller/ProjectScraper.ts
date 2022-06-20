@@ -1,6 +1,5 @@
 import {JiraIssue, Project} from "../../types/Jira";
 import Task = JiraIssue.Task;
-import shell from "shelljs";
 
 const Worker = require('worker_threads').Worker;
 const path = require("path");
@@ -25,14 +24,19 @@ module.exports = class ProjectScraper {
     }
 
     static open(project: Project, issue: Task['key']) {
-        const shell = require("shelljs");
-        shell.config.execPath = shell.which('node').stdout
-        shell.cd(project.path);
-        shell.exec(`git stash`) //sash current uncommitted files
-        if (shell.exec(`git checkout ${issue}`).code !== 0) {
-            shell.exec(`git checkout -b ${issue}`)
-        } //try to check out branch, create if necessary
-        shell.exec('phpstorm64 .') //open as project in current directory
-
+        try {
+            const shell = require("shelljs");
+            shell.config.execPath = shell.which('node').stdout
+            shell.cd(project.path);
+            shell.exec(`git stash`) //sash current uncommitted files
+            if (shell.exec(`git checkout ${issue}`).code !== 0) {
+                shell.exec(`git checkout -b ${issue}`)
+            } //try to check out branch, create if necessary
+            shell.exec('phpstorm64 .') //open as project in current directory
+            return true;
+        } catch (e) {
+            console.error('error: ', e)
+            return false
+        }
     }
 }

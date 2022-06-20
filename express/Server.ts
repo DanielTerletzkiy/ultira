@@ -43,15 +43,6 @@ app.post("/url", function (req: any, res: any) {
     res.status(200).json({url: targetInstance});
 });
 
-(async () => {
-    console.log('started app')
-    /*ProjectScraper.open({
-        "path": "C:/Users/danie/PhpstormProjects/hal",
-        "project": "hal"
-    }, 'HAL-1')*/
-    console.log(await ProjectScraper.scrape('Documents')); //TODO
-})()
-
 const httpServer = http.createServer(app);
 httpServer.listen(2343);
 

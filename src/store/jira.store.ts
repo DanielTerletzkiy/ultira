@@ -65,7 +65,7 @@ const store = createStore({
             state.jiraConfigs = payload;
         },
         setProjects(state, payload: Array<Project>) {
-            state.projects = payload
+            state.projects.push(...payload)
         },
         setCredentialsDialogOpen(state, payload: boolean) {
             state.credentialsDialogOpen = payload;
@@ -91,7 +91,14 @@ const store = createStore({
             context.commit('setJiraConfigs', payload);
         },
         setProjects(context, payload: Array<Project>) {
-            context.commit('setProjects', payload)
+            let projects: Array<Project> = [];
+            for (const project of payload) {
+                if (context.state.projects.findIndex((x) => x.project === project.project) === -1) {
+                    console.log(project)
+                    projects.push(project)
+                }
+            }
+            context.commit('setProjects', projects)
         },
         setCredentialsDialogOpen(context, payload: boolean) {
             context.commit('setCredentialsDialogOpen', payload);

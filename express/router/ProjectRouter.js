@@ -4,7 +4,10 @@ const express = require('express');
 const router = express.Router();
 const ProjectScraper = require("../controller/ProjectScraper");
 router.post('/open', (req, res) => {
-    console.log(req.body);
-    ProjectScraper.open(req.body.project, req.body.issue);
+    res.send(ProjectScraper.open(req.body.project, req.body.issue));
+});
+router.get('/scrape/:path', (req, res) => {
+    ProjectScraper.scrape(req.params.path);
+    res.send(true);
 });
 exports.default = router;
