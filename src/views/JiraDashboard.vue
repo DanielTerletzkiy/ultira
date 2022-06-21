@@ -29,8 +29,8 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, provide, ref, watch} from "vue";
-import {credentialsOpen, selectedJiraConfig, jiraConfigs, selectedIssue, projects} from "../store/jira.store";
+import {computed, inject, onMounted, provide, ref, watch} from "vue";
+import {credentialsOpen, jiraConfigs, projects, selectedIssue, selectedJiraConfig} from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
@@ -40,8 +40,11 @@ import JiraBranchView from "../components/JiraBranchView.vue";
 import JiraPullRequestView from "../components/JiraPullRequestView.vue";
 import JiraCommentsView from "../components/JiraCommentsView.vue";
 import {JiraConfiguration} from "../../types/Jira";
-import JiraConfig = JiraConfiguration.JiraConfig;
 import ProjectController from "../controller/ProjectController";
+import {State} from "vuelize/src/types/Vuelize";
+import JiraConfig = JiraConfiguration.JiraConfig;
+
+const vuelize: Vuelize = inject('vuelize') as Vuelize;
 
 const currentIssue = computed<JiraTask | undefined>(() => jiraController.value && jiraController.value?.issues?.find((issue: JiraTask) => issue.task.key === selectedIssue.value) as JiraTask | undefined)
 const currentJiraConfig = computed<JiraConfig>(() => jiraConfigs.value?.find((base: { name: string; }) => base.name === selectedJiraConfig.value) as JiraConfig);
@@ -91,6 +94,7 @@ onMounted(() => {
   ProjectController.subscribe((resProjects) => {
     console.log('projects: ', resProjects)
     projects.value = resProjects;
+    vuelize.notify('Scraper', `Found ${resProjects.length} Projects`, State.Success);
   });
 })
 </script>

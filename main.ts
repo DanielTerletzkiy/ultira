@@ -1,7 +1,7 @@
 // @ts-ignore
 const {app, BrowserWindow} = require("electron");
 const path = require("path");
-require("./express/Server");
+const expressServer = require("./express/Server");
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -44,5 +44,9 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit();
+    }
+    try {
+        expressServer.close();
+    } catch (e) {
     }
 });

@@ -24,7 +24,6 @@ export default class JiraController extends ApiController {
                 this.issues.push(await new JiraTask(issue, this.controller));
             }
         }
-        console.log(this.issues);
         this.totalIssues = searchResult.total;
         return { issues: this.issues, total: this.totalIssues };
     }

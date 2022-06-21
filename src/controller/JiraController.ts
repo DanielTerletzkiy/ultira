@@ -37,8 +37,6 @@ export default class JiraController extends ApiController {
             }
         }
 
-        console.log(this.issues)
-
         this.totalIssues = searchResult.total;
         return {issues: this.issues, total: this.totalIssues};
     }
