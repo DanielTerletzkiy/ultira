@@ -45,6 +45,8 @@
         {{ secondsToTime(item.task.fields.timespent) }} / {{ secondsToTime(item.task.fields.timeoriginalestimate) }}
       </template>
     </d-tooltip>
+    <d-divider class="mx-3" elevation="10"/>
+    <JiraComponentLabels :item="item"/>
   </d-column>
 </template>
 
@@ -54,6 +56,7 @@ import {PropType, ref} from "vue";
 import JiraTask from "../controller/JiraTask";
 //TODO WTH? not registered with vite?
 import DProgressbar from "vuelize/src/components/progress/DProgressbar.vue"
+import JiraComponentLabels from "./JiraComponentLabels.vue";
 
 const props = defineProps({
   item: Object as PropType<JiraTask>

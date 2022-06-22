@@ -100,7 +100,7 @@ async function intersectObserver([{isIntersecting}]: any) {
     clearTimeout(timeout)
   }
   if (!isIntersecting && props.modelValue) {
-    scrollTimeout(30000)
+    scrollTimeout(60000)
   }
 }
 

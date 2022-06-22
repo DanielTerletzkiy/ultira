@@ -78,7 +78,7 @@ import {inject, PropType} from "vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
-import {SlideYDownTransition, SlideYUpTransition} from "v3-transitions";
+import {SlideYUpTransition} from "v3-transitions";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

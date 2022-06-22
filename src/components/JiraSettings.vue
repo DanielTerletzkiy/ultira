@@ -86,9 +86,9 @@ import JiraSettingsProject from "./JiraSettingsProject.vue";
 import {FadeTransition} from "v3-transitions"
 import {jiraConfigs, projects, refreshTime, zoomFactor} from "../store/jira.store";
 import {JiraConfiguration} from "../../types/Jira";
-import ApplicationType = JiraConfiguration.ApplicationType;
 import {useZoomFactor} from '@vueuse/electron'
 import ProjectController from "../controller/ProjectController";
+import ApplicationType = JiraConfiguration.ApplicationType;
 
 let factor: any;
 if (import.meta.env.MODE === 'production') {

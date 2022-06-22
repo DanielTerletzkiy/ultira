@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import JiraCredentialsDialog from "./JiraCredentialsDialog.vue";
-import {credentialsOpen, selectedJiraConfig, jiraConfigs} from "../store/jira.store";
+import {credentialsOpen, jiraConfigs, selectedJiraConfig} from "../store/jira.store";
 import {onMounted} from "vue";
 
 function openCredentials() {

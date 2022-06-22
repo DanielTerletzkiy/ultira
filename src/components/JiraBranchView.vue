@@ -128,13 +128,13 @@ import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 import {SlideXLeftTransition} from "v3-transitions";
 import {JiraCommits} from "../../types/Jira";
-import ChangeType = JiraCommits.ChangeType;
 import JiraUserItem from "./JiraUserItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraProjectList from "./JiraProjectList.vue";
 import {selectedIssue} from "../store/jira.store";
+import ChangeType = JiraCommits.ChangeType;
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

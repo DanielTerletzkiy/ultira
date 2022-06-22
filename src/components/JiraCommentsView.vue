@@ -28,7 +28,6 @@ import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 import JiraCommentsViewItem from "./JiraCommentsViewItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
-import {SlideYDownTransition} from "v3-transitions";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

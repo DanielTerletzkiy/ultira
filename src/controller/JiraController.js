@@ -10,7 +10,7 @@ export default class JiraController extends ApiController {
         this.controller = baseController;
     }
     async getAllIssues() {
-        const searchResult = await ApiController.fetchJira(this.controller.url, `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() ORDER BY updated desc`, 'GET', this.controller.credentials);
+        const searchResult = await ApiController.fetchJira(this.controller.url, `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`, 'GET', this.controller.credentials);
         if (this.issues.length > 0) {
             this.issues.forEach((issue) => {
                 issue.updateSelf(issue.task.key === selectedIssue.value);

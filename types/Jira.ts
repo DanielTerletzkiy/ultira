@@ -56,7 +56,7 @@ export namespace JiraIssue {
         assignee: User
         updated: string
         status: Status
-        components: any[]
+        components: Component[]
         timeoriginalestimate: any
         description: string
         aggregatetimeestimate: any
@@ -69,6 +69,12 @@ export namespace JiraIssue {
         duedate: any
         progress: Progress
         votes: Votes
+    }
+
+    interface Component {
+        id: string
+        name: string
+        self: string
     }
 
     interface Issuetype {

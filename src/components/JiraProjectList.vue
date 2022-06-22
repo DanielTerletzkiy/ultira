@@ -22,7 +22,7 @@ import JiraProjectButton from "./JiraProjectButton.vue";
 
 <style scoped lang="scss">
 .project {
-  .title{
+  .title {
     font-size: 1.2rem;
     font-weight: 600;
   }
