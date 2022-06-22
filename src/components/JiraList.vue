@@ -129,6 +129,11 @@ const sortOptions = [
     icon: 'exclamation-triangle',
     color: 'warning'
   },
+  {
+    name: SortNames.Type,
+    icon: 'list-ui-alt',
+    color: 'primary'
+  },
   /*{ TODO
     name: SortNames.State,
     icon: 'arrow-growth',
@@ -214,6 +219,24 @@ const sortGroups = computed(() => {
           icon: {
             type: 'image',
             url: priority.iconUrl
+          },
+          items
+        })
+      }
+      break;
+    }
+    case SortNames.Type: {
+      const types = jiraController.value.issues.filter((issue, idx) =>
+          jiraController.value.issues.findIndex(x => x.task.fields.issuetype.id == issue.task.fields.issuetype.id) == idx)
+          .map((issue) => issue.task.fields.issuetype).sort((a, b) => parseInt(a.id) - parseInt(b.id))
+
+      for (const type of types) {
+        const items = jiraController.value.issues.filter((issue) => issue.task.fields.issuetype.id === type.id)
+        groups.push({
+          name: type.name,
+          icon: {
+            type: 'image',
+            url: type.iconUrl
           },
           items
         })

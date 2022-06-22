@@ -3,6 +3,7 @@ export var SortNames;
     SortNames["Latest"] = "Last Updated";
     SortNames["Priority"] = "Priority";
     SortNames["State"] = "State";
+    SortNames["Type"] = "Type";
     SortNames["Project"] = "Project";
 })(SortNames || (SortNames = {}));
 export var JiraConfiguration;

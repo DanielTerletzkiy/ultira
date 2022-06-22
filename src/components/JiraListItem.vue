@@ -15,7 +15,8 @@
         <d-card-subtitle class="summary">
           {{ item.task.fields.summary }}
           <d-spacer/>
-          <d-image width="16px" height="16px" :src="item.task.fields.priority.iconUrl"/>
+          <d-image width="16px" height="16px" :src="item.task.fields.priority.iconUrl" rounded="md"/>
+          <d-image width="16px" height="16px" :src="item.task.fields.issuetype.iconUrl" rounded="md"/>
         </d-card-subtitle>
         <d-card-subtitle class="sub">
           <span class="key">{{ item.task.key }}</span>
