@@ -16,6 +16,8 @@ export default class JiraTask extends ApiController {
     commentsData: CommentsRoot | undefined;
     transitionData: TransitionsRoot | undefined;
 
+    loading: boolean = false;
+
     constructor(task: Task, controller: JiraBaseController) {
         super();
         this.task = task;
@@ -32,10 +34,11 @@ export default class JiraTask extends ApiController {
                 this._controller.credentials),
             updateConnected ? this.getConnectedData() : null
         ])
-        return self;
+        return this;
     }
 
     async getConnectedData() {
+        this.loading = true;
         const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
         const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
         let commitData;
@@ -70,6 +73,7 @@ export default class JiraTask extends ApiController {
         if (((pullRequestData && pullRequestData?.detail.length > 0) && (this.pullRequestData && this.pullRequestData?.detail.length > 0)) || !this.pullRequestData) {
             this.pullRequestData = pullRequestData;
         }
+        this.loading = false;
     }
 
     async addWorkLog(seconds: number) {

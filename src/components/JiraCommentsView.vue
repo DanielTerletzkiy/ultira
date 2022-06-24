@@ -10,6 +10,15 @@
               style="max-height: calc(100% - 3rem); overflow: auto" height="100%" gap :wrap="false">
       <JiraCommentsViewItem v-for="comment in item.commentsData.comments.slice().reverse()" :comment="comment"/>
     </d-column>
+    <d-column v-else-if="item?.commentsData?.comments?.length === 0" style="user-select: none">
+      <d-card-title color="primary" class="mx-3 font-size-medium">
+        <d-icon name="file-question-alt" :size="30"/>
+        No Comments
+      </d-card-title>
+    </d-column>
+    <d-row v-else block justify="center">
+      <JiraLoader :size="200"/>
+    </d-row>
     <d-spacer/>
     <d-textfield v-model="commentBody" :disabled="loading" full-width filled solo placeholder="Comment..."
                  color="primary" class="sticky"
@@ -28,6 +37,7 @@ import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 import JiraCommentsViewItem from "./JiraCommentsViewItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
+import JiraLoader from "./JiraLoader.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

@@ -171,7 +171,7 @@ onBeforeMount(() => {
   setElectronZoom(zoomFactor.value);
   vuelize.theme.dark = JSON.parse(localStorage.getItem('theme:dark') || '{}');
   ['dark', 'light'].forEach((theme) => {
-    const primary = localStorage.getItem(`${theme}:primary`) || '#9FCDFF'
+    const primary = localStorage.getItem(`${theme}:primary`) || '#A8B2FF'
     if (primary) {
       //@ts-ignore
       vuelize.theme.themes[theme].primary = primary;

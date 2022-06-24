@@ -70,6 +70,15 @@
         </d-row>
       </d-card>
     </d-column>
+    <d-column v-else-if="item?.pullRequestData?.detail[0]?.pullRequests.length === 0" style="user-select: none">
+      <d-card-title color="primary" class="mx-3 font-size-medium">
+        <d-icon name="file-question-alt" :size="30"/>
+        No Pull Requests
+      </d-card-title>
+    </d-column>
+    <d-row v-else block justify="center">
+      <JiraLoader :size="200"/>
+    </d-row>
   </JiraViewWrapper>
 </template>
 
@@ -79,6 +88,7 @@ import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import {SlideYUpTransition} from "v3-transitions";
+import JiraLoader from "./JiraLoader.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

@@ -6,6 +6,7 @@ export default class JiraTask extends ApiController {
     pullRequestData;
     commentsData;
     transitionData;
+    loading = false;
     constructor(task, controller) {
         super();
         this.task = task;
@@ -17,9 +18,10 @@ export default class JiraTask extends ApiController {
             ApiController.fetchJira(this._controller.url, `${url.pathname.replace(/\//, '')}`, 'GET', this._controller.credentials),
             updateConnected ? this.getConnectedData() : null
         ]);
-        return self;
+        return this;
     }
     async getConnectedData() {
+        this.loading = true;
         const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
         const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
         let commitData;
@@ -36,6 +38,7 @@ export default class JiraTask extends ApiController {
         if (((pullRequestData && pullRequestData?.detail.length > 0) && (this.pullRequestData && this.pullRequestData?.detail.length > 0)) || !this.pullRequestData) {
             this.pullRequestData = pullRequestData;
         }
+        this.loading = false;
     }
     async addWorkLog(seconds) {
         const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/worklog`, 'POST', this._controller.credentials, 0 /* JSON */, {

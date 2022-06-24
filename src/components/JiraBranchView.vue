@@ -116,8 +116,7 @@
         </d-column>
         <JiraProjectList/>
       </d-column>
-      <d-elevation-loader key="loader" v-else :elevation="20" :columns="10" :amount="100" default-size="40"
-                          :speed="4000"/>
+      <JiraLoader key="loader" v-else/>
     </SlideXLeftTransition>
   </JiraViewWrapper>
 </template>
@@ -135,6 +134,7 @@ import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraProjectList from "./JiraProjectList.vue";
 import {selectedIssue} from "../store/jira.store";
 import ChangeType = JiraCommits.ChangeType;
+import JiraLoader from "./JiraLoader.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

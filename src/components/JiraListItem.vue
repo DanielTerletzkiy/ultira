@@ -15,6 +15,17 @@
         <d-card-subtitle class="summary">
           {{ item.task.fields.summary }}
           <d-spacer/>
+          <FadeTransition>
+            <ve-progress
+                v-if="item.loading"
+                :color="$vuelize.getColor('primary', 0)"
+                :empty-color="$vuelize.getColor('primary', 20)+'10'"
+                thickness="2"
+                empty-thickness="2px"
+                :size="16"
+                loading
+            />
+          </FadeTransition>
           <d-image width="16px" height="16px" :src="item.task.fields.priority.iconUrl" rounded="md"/>
           <d-image width="16px" height="16px" :src="item.task.fields.issuetype.iconUrl" rounded="md"/>
         </d-card-subtitle>
@@ -30,6 +41,9 @@
 </template>
 
 <script setup lang="ts">
+//@ts-ignore
+import {VeProgress} from "vue-ellipse-progress";
+import {FadeTransition} from "v3-transitions";
 import {computed, PropType} from "vue";
 import JiraTask from "../controller/JiraTask";
 
