@@ -14,7 +14,7 @@ function createWindow() {
         titleBarStyle: 'hidden',
         titleBarOverlay: {
             color: '#242832',
-            symbolColor: '#94cdff',
+            symbolColor: '#A8B2FF',
         },
         icon: path.join(__dirname, 'public/favicon.ico')
     });
