@@ -44,8 +44,10 @@
 //@ts-ignore
 import {VeProgress} from "vue-ellipse-progress";
 import {FadeTransition} from "v3-transitions";
-import {computed, PropType} from "vue";
+import {computed, inject, PropType} from "vue";
 import JiraTask from "../controller/JiraTask";
+
+const vuelize: Vuelize = inject('vuelize') as Vuelize;
 
 const props = defineProps({
   item: {type: Object as PropType<JiraTask>, required: true}
@@ -60,7 +62,7 @@ const status = computed(() => {
     case 'Open':
     case 'Backlog':
     case 'To Do': {
-      payload.color = 'error';
+      payload.color = vuelize.getColor('error', 40);
       payload.icon = 'database';
       break;
     }
