@@ -113,12 +113,7 @@
               git stash && git checkout -b {{ selectedIssue }}
             </d-card-subtitle>
             <d-spacer/>
-            <d-button color="primary" outlined @click="ProjectController.scrapeBranches(projects.map((project) => project.path))">
-              <template v-slot:prefix>
-                <d-icon name="sync" :size="20"/>
-              </template>
-              Refresh branches
-            </d-button>
+            <JiraProjectBranchRefreshButton/>
           </d-card-subtitle>
         </d-column>
         <JiraProjectList/>
@@ -139,10 +134,10 @@ import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraProjectList from "./JiraProjectList.vue";
-import {projects, selectedIssue} from "../store/jira.store";
+import {selectedIssue} from "../store/jira.store";
 import ChangeType = JiraCommits.ChangeType;
 import JiraLoader from "./JiraLoader.vue";
-import ProjectController from "../controller/ProjectController";
+import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
 const jiraController = inject('JiraController') as { value: JiraController };

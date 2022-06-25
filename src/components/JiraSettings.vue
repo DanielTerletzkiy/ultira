@@ -1,11 +1,13 @@
 <template>
   <d-dialog :modelValue="open" @update:modelValue="(e)=>$emit('update:open', e)">
-    <d-card class="pa-2 pt-1" width="700px">
-      <d-card-title>
-        Ultira Settings
-      </d-card-title>
-      <d-divider/>
-      <d-column gap :wrap="false" style="min-height: 300px; max-height: 800px; overflow: overlay">
+    <d-card width="700px">
+      <d-card class="pa-2 pt-1" block>
+        <d-card-title>
+          Ultira Settings
+        </d-card-title>
+        <d-divider/>
+      </d-card>
+      <d-column class="pa-4" gap :wrap="false" style="min-height: 300px; max-height: 800px; overflow: overlay;">
         <d-column gap>
           <d-card-subtitle class="pl-0 font-weight-bold">
             Look & Feel
@@ -57,12 +59,15 @@
           <d-card-subtitle class="pl-0 font-weight-bold">
             Projects
           </d-card-subtitle>
-          <d-textfield v-model="scrapePath" color="primary" outlined filled full-width label="Scrape Path"
-                       placeholder="C:\Users\[Current User]/[your input] or ~/[your input]">
-            <template v-slot:suffix>
-              <d-icon-button name="arrow-right" :size="30" :disabled="!scrapePath" @click="startScraper(scrapePath)"/>
-            </template>
-          </d-textfield>
+          <d-column gap>
+            <d-textfield v-model="scrapePath" color="primary" outlined filled full-width label="Scrape Path"
+                         placeholder="C:\Users\[Current User]/[your input] or ~/[your input]">
+              <template v-slot:suffix>
+                <d-icon-button name="arrow-right" :size="30" :disabled="!scrapePath" @click="startScraper(scrapePath)"/>
+              </template>
+            </d-textfield>
+            <JiraProjectBranchRefreshButton/>
+          </d-column>
           <FadeTransition group>
             <d-column v-for="(project, i) in projects" :key="i" gap>
               <JiraSettingsProject v-model="projects[i]" @remove="removeProject(i)"/>
@@ -89,6 +94,7 @@ import {JiraConfiguration} from "../../types/Jira";
 import {useZoomFactor} from '@vueuse/electron'
 import ProjectController from "../controller/ProjectController";
 import ApplicationType = JiraConfiguration.ApplicationType;
+import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 
 let factor: any;
 if (import.meta.env.MODE === 'production') {
