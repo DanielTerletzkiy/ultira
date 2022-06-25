@@ -32,10 +32,12 @@ export default class JiraTask extends ApiController {
             ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/comment`, 'GET', this._controller.credentials),
             ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/transitions`, 'GET', this._controller.credentials)
         ]);
-        if (((commitData && commitData?.detail.length > 0) && (this.commitData && this.commitData?.detail.length > 0)) || !this.commitData) {
+        if (((commitData && commitData?.detail[0].repositories.length > 0) &&
+            (this.commitData && this.commitData?.detail[0].repositories.length > 0)) ||
+            !this.commitData) {
             this.commitData = commitData;
         }
-        if (((pullRequestData && pullRequestData?.detail.length > 0) && (this.pullRequestData && this.pullRequestData?.detail.length > 0)) || !this.pullRequestData) {
+        if (((pullRequestData && pullRequestData?.detail[0].pullRequests.length > 0) && (this.pullRequestData && this.pullRequestData?.detail[0].pullRequests.length > 0)) || !this.pullRequestData) {
             this.pullRequestData = pullRequestData;
         }
         this.loading = false;
