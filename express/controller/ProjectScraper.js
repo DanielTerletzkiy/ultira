@@ -15,9 +15,36 @@ module.exports = class ProjectScraper {
                 resolve(message);
             });
         });
+        projects.map((project) => {
+            project.branch = ProjectScraper.getBranch(project.path);
+        });
         SocketIO.instance.emit('project/scan/complete', projects);
         ProjectScraper.projects = projects;
         return projects;
+    }
+    static getBranch(path) {
+        let branch = "NONE";
+        try {
+            const shell = require("shelljs");
+            shell.config.execPath = shell.which('node').stdout;
+            shell.cd(path);
+            branch = shell.exec('git branch --show-current').replace(/(\r\n|\n|\r)/gm, "");
+        }
+        catch (e) {
+            console.error(e);
+        }
+        return branch;
+    }
+    static scrapeBranches(paths) {
+        const projectBranches = [];
+        paths.forEach((path) => {
+            projectBranches.push({
+                path: path,
+                branch: ProjectScraper.getBranch(path)
+            });
+        });
+        SocketIO.instance.emit('branches/scan/complete', projectBranches);
+        return projectBranches;
     }
     static open(project, issue) {
         try {

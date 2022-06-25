@@ -10,7 +10,8 @@
         </d-card-subtitle>
       </d-column>
       <d-spacer/>
-      <d-button v-if="project.branch" color="secondary" @click="selectedIssue = project.branch">
+      <d-button v-if="project.branch" color="secondary" :disabled="!issueExists(project.branch)"
+                @click="setIssue(project.branch)">
         {{ project.branch }}
       </d-button>
       <JiraProjectButton :repository="project.project"/>
@@ -21,6 +22,18 @@
 <script setup lang="ts">
 import {projects, selectedIssue} from "../store/jira.store";
 import JiraProjectButton from "./JiraProjectButton.vue";
+import {inject} from "vue";
+import JiraController from "../controller/JiraController";
+
+const jiraController = inject('JiraController') as { value: JiraController };
+
+function setIssue(branch: string) {
+  selectedIssue.value = branch;
+}
+
+function issueExists(branch: string): boolean {
+ return jiraController.value.issues.findIndex((issue)=>issue.task.key === branch) > -1
+}
 </script>
 
 <style scoped lang="scss">

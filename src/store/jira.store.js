@@ -91,7 +91,7 @@ const store = createStore({
         setProjects(context, payload) {
             let projects = [];
             for (const project of payload) {
-                const index = context.state.projects.findIndex((x) => x.project === project.project);
+                const index = context.state.projects.findIndex((x) => x.path === project.path);
                 if (index === -1) {
                     console.log(project);
                     projects.push(project);

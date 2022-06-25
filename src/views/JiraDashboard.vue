@@ -90,11 +90,17 @@ function connectCurrentData() {
 }
 
 onMounted(() => {
-  setJiraBase(selectedJiraConfig.value)
+  setJiraBase(selectedJiraConfig.value);
   ProjectController.subscribe((resProjects) => {
     console.log('projects: ', resProjects)
     projects.value = resProjects;
     vuelize.notify('Scraper', `Found ${resProjects.length} Projects`, State.Success);
+  });
+
+  ProjectController.subscribeBranches((resProjects) => {
+    console.log('projects branches: ', resProjects)
+    projects.value = resProjects;
+    vuelize.notify('Scraper', `Updated ${resProjects.length} Branches`, State.Success);
   });
 })
 </script>
