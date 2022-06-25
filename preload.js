@@ -1,8 +1,10 @@
 "use strict";
 // @ts-ignore
-const { ipcRenderer } = require('electron');
+const electron = require('electron');
 // @ts-ignore
-window.ipcRenderer = ipcRenderer;
+window.ipcRenderer = electron.ipcRenderer;
+// @ts-ignore
+window.electron = electron;
 window.addEventListener("DOMContentLoaded", () => {
     const replaceText = (selector, text) => {
         const element = document.getElementById(selector);

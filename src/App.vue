@@ -14,6 +14,10 @@ function onSettingsSubmit() {
   toggleSettings();
 }
 
+function closeWindow() {
+  window.close()
+}
+
 const baseurl = import.meta.env.BASE_URL
 </script>
 
@@ -41,6 +45,10 @@ const baseurl = import.meta.env.BASE_URL
           ULTIRA
         </DCardTitle>
         <JiraBaseSelector/>
+        <d-spacer/>
+        <d-row class="action" gap width="auto">
+          <d-icon-button :size="25" name="times" color="primary" @click="closeWindow"/>
+        </d-row>
       </DToolbar>
     </template>
     <template v-slot:default>

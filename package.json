@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "vite build",
-    "dev": "concurrently \"cross-env APP_ENV=development&& vite\" \"node express/Server.js\" ",
+    "dev": "concurrently \"cross-env APP_ENV=development&& vite\" \"npm run node\" ",
     "node": "nodemon express/Server.js",
     "electron:start": "cross-env APP_ENV=production&&npm run build && electron .",
     "electron:package": "cross-env APP_ENV=production&&npm run build && npx electron-packager . --overwrite --out=release-build --icon=dist/favicon.ico",

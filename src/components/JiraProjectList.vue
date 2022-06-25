@@ -10,13 +10,16 @@
         </d-card-subtitle>
       </d-column>
       <d-spacer/>
+      <d-button v-if="project.branch" color="secondary" @click="selectedIssue = project.branch">
+        {{ project.branch }}
+      </d-button>
       <JiraProjectButton :repository="project.project"/>
     </d-row>
   </d-column>
 </template>
 
 <script setup lang="ts">
-import {projects} from "../store/jira.store";
+import {projects, selectedIssue} from "../store/jira.store";
 import JiraProjectButton from "./JiraProjectButton.vue";
 </script>
 

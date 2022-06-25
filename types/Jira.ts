@@ -8,7 +8,8 @@ export enum SortNames {
 
 export interface Project {
     path: string,
-    project: string
+    project: string,
+    branch: string
 }
 
 export namespace JiraConfiguration {

@@ -11,7 +11,7 @@ function createWindow() {
             contextIsolation: false,
         },
         frame: false,
-        titleBarStyle: 'hidden',
+        titleBarStyle: 'customButtonsOnHover',
         titleBarOverlay: {
             color: '#242832',
             symbolColor: '#A8B2FF',

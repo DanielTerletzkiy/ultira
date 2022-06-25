@@ -1,7 +1,9 @@
 // @ts-ignore
-const {ipcRenderer} = require('electron')
+const electron = require('electron')
 // @ts-ignore
-window.ipcRenderer = ipcRenderer
+window.ipcRenderer = electron.ipcRenderer
+// @ts-ignore
+window.electron = electron
 
 window.addEventListener("DOMContentLoaded", () => {
     const replaceText = (selector: string, text: string) => {

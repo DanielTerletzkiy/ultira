@@ -16,7 +16,8 @@ const store = createStore({
             }],
         projects: [{
                 path: '',
-                project: ''
+                project: '',
+                branch: ''
             }],
         credentialsDialogOpen: false,
         refreshTime: 60,
@@ -90,9 +91,13 @@ const store = createStore({
         setProjects(context, payload) {
             let projects = [];
             for (const project of payload) {
-                if (context.state.projects.findIndex((x) => x.project === project.project) === -1) {
+                const index = context.state.projects.findIndex((x) => x.project === project.project);
+                if (index === -1) {
                     console.log(project);
                     projects.push(project);
+                }
+                if (index > -1) {
+                    context.state.projects[index].branch = project.branch;
                 }
             }
             context.commit('setProjects', projects);

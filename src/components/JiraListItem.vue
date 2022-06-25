@@ -18,8 +18,8 @@
           <FadeTransition>
             <ve-progress
                 v-if="item.loading"
-                :color="$vuelize.getColor('primary', 0)"
-                :empty-color="$vuelize.getColor('primary', 20)+'10'"
+                :color="$vuelize.getColor(status.color, 0)"
+                :empty-color="$vuelize.getColor(status.color, 20)+'10'"
                 thickness="2"
                 empty-thickness="2px"
                 :size="16"
