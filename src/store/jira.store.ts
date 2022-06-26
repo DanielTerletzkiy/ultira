@@ -5,11 +5,13 @@ import {JiraConfiguration, JiraIssue, Project, SortNames} from "../../types/Jira
 import ApplicationType = JiraConfiguration.ApplicationType;
 import JiraConfig = JiraConfiguration.JiraConfig;
 import Task = JiraIssue.Task;
+import JiraTask from "../controller/JiraTask";
+import JiraController from "../controller/JiraController";
 
 const store = createStore({
     plugins: [new VuexPersistence().plugin],
     state: {
-        selectedIssue: '',
+        currentIssueKey: '',
         currentSort: SortNames.Latest,
         selectedJiraConfig: '',
         jiraConfigs: [{
@@ -27,8 +29,8 @@ const store = createStore({
         zoomFactor: 1,
     },
     getters: {
-        selectedIssue(state): Task['key'] | undefined {
-            return state.selectedIssue;
+        currentIssueKey(state): Task['key'] | undefined {
+            return state.currentIssueKey;
         },
         currentSort(state): SortNames {
             return state.currentSort;
@@ -53,8 +55,8 @@ const store = createStore({
         }
     },
     mutations: {
-        setSelectedIssue(state, payload: Task['key']) {
-            state.selectedIssue = payload;
+        setCurrentIssueKey(state, payload: Task['key']) {
+            state.currentIssueKey = payload;
         },
         setCurrentSort(state, payload: SortNames) {
             state.currentSort = payload;
@@ -79,8 +81,8 @@ const store = createStore({
         }
     },
     actions: {
-        setSelectedIssue(context, payload: Task['key']) {
-            context.commit('setSelectedIssue', payload);
+        setCurrentIssueKey(context, payload: Task['key']) {
+            context.commit('setCurrentIssueKey', payload);
         },
         setCurrentSort(context, payload: SortNames) {
             context.commit('setCurrentSort', payload);
@@ -119,12 +121,14 @@ const store = createStore({
 
 export default store;
 
-export const selectedIssue = computed<Task['key']>({
+export const currentIssue = computed<JiraTask | undefined>(() => JiraController && JiraController.issues.value?.find((issue: JiraTask) => issue.task.key === currentIssueKey.value) as JiraTask | undefined);
+
+export const currentIssueKey = computed<Task['key']>({
     get() {
-        return store.getters.selectedIssue
+        return store.getters.currentIssueKey
     },
     set(value: Task['key']) {
-        store.dispatch('setSelectedIssue', value)
+        store.dispatch('setCurrentIssueKey', value)
     },
 });
 

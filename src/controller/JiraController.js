@@ -1,35 +1,35 @@
 import ApiController from "./ApiController";
 import JiraTask from "./JiraTask";
-import { selectedIssue } from "../store/jira.store";
+import { currentIssueKey } from "../store/jira.store";
+import { ref } from "vue";
 export default class JiraController extends ApiController {
-    controller;
-    issues = [];
-    totalIssues = 0;
-    constructor(baseController) {
-        super();
-        this.controller = baseController;
+    static controller;
+    static issues = ref([]);
+    static totalIssues = ref(0);
+    static setBase(baseController) {
+        JiraController.controller = baseController;
     }
-    async getAllIssues() {
-        const searchResult = await ApiController.fetchJira(this.controller.url, `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`, 'GET', this.controller.credentials);
-        if (this.issues.length > 0) {
-            this.issues.forEach((issue) => {
-                issue.updateSelf(issue.task.key === selectedIssue.value);
+    static async getAllIssues() {
+        const searchResult = await ApiController.fetchJira(JiraController.controller.url, `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`, 'GET', JiraController.controller.credentials);
+        if (JiraController.issues.value.length > 0) {
+            JiraController.issues.value.forEach((issue) => {
+                issue.updateSelf(issue.task.key === currentIssueKey.value);
             });
         }
         for (const issue of searchResult.issues) {
-            if (this.issues.length > 0 && this.issues.findIndex((x) => x.task.key === issue.key) > -1) {
+            if (JiraController.issues.value.length > 0 && JiraController.issues.value.findIndex((x) => x.task.key === issue.key) > -1) {
                 //return this.issues.find((x) => x.task.key === issue.key);
             }
             else {
-                this.issues.push(await new JiraTask(issue, this.controller));
+                JiraController.issues.value.push(await new JiraTask(issue, JiraController.controller));
             }
         }
-        this.totalIssues = searchResult.total;
-        return { issues: this.issues, total: this.totalIssues };
+        JiraController.totalIssues = searchResult.total;
+        return { issues: JiraController.issues.value, total: JiraController.totalIssues };
     }
-    async getImageBase64(url) {
+    static async getImageBase64(url) {
         const urlObj = new URL(url);
-        const response = await ApiController.fetchJira(this.controller.url, `${urlObj.pathname.substring(1)}${urlObj.search}`, 'GET', this.controller.credentials, 1 /* FILES */);
+        const response = await ApiController.fetchJira(JiraController.controller.url, `${urlObj.pathname.substring(1)}${urlObj.search}`, 'GET', JiraController.controller.credentials, 1 /* FILES */);
         const contentType = response.headers.get("content-type");
         switch (contentType) {
             case "image/svg+xml":

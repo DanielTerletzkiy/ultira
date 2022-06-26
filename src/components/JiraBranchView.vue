@@ -9,10 +9,10 @@
     <SlideXLeftTransition group
                           style="width: 100%; max-height: calc(500px - 50px - 8px); overflow: overlay; overflow-x: hidden"
                           :class="$vuelize.theme.dark?'dark':'light'">
-      <d-column key="content" v-if="item?.commitData?.detail&&item?.commitData?.detail[0]?.repositories.length>0"
+      <d-column key="content" v-if="currentIssue?.commitData?.detail&&currentIssue?.commitData?.detail[0]?.repositories.length>0"
                 class="mx-2 pt-0"
                 gap :wrap="false">
-        <d-card v-for="repository in item.commitData.detail[0]?.repositories" :key="repository.name" elevation="2" block
+        <d-card v-for="repository in currentIssue.commitData.detail[0]?.repositories" :key="repository.name" elevation="2" block
                 background-color="transparent">
           <d-card class="sticky" block elevation="4">
             <d-row class="pr-3">
@@ -100,7 +100,7 @@
           </d-column>
         </d-card>
       </d-column>
-      <d-column key="empty" v-else-if="item?.commitData?.detail[0]?.repositories.length === 0">
+      <d-column key="empty" v-else-if="currentIssue?.commitData?.detail[0]?.repositories.length === 0">
         <d-column style="user-select: none">
           <d-card-title color="primary" class="mx-3">
             <d-icon name="file-question-alt" :size="30"/>
@@ -110,7 +110,7 @@
             Select Project below to
             <d-card-subtitle root-tag="pre" elevation="3" style="user-select: text">
               <d-icon name="brackets-curly" :size="18"/>
-              git stash && git checkout -b {{ selectedIssue }}
+              git stash && git checkout -b {{ currentIssueKey }}
             </d-card-subtitle>
             <d-spacer/>
             <JiraProjectBranchRefreshButton/>
@@ -124,9 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import {inject, PropType} from "vue";
-import JiraController from "../controller/JiraController";
-import JiraTask from "../controller/JiraTask";
+import {inject} from "vue";
 import {SlideXLeftTransition} from "v3-transitions";
 import {JiraCommits} from "../../types/Jira";
 import JiraUserItem from "./JiraUserItem.vue";
@@ -134,17 +132,12 @@ import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraProjectList from "./JiraProjectList.vue";
-import {selectedIssue} from "../store/jira.store";
+import {currentIssueKey, currentIssue} from "../store/jira.store";
 import ChangeType = JiraCommits.ChangeType;
 import JiraLoader from "./JiraLoader.vue";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
-const jiraController = inject('JiraController') as { value: JiraController };
-
-const props = defineProps({
-  item: Object as PropType<JiraTask>
-})
 
 function changeTypeColor(type: ChangeType) {
   switch (type) {

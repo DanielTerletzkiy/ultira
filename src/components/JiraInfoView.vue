@@ -3,7 +3,7 @@
     <d-column gap block :wrap="false">
       <d-row class="px-1" gap :wrap="false">
         <d-tooltip position="right" filled color="primary">
-          <JiraImage :url="item.task.fields.project.avatarUrls['48x48']" :key="item.task.fields.project.key">
+          <JiraImage :url="currentIssue.task.fields.project.avatarUrls['48x48']" :key="currentIssue.task.fields.project.key">
             <template v-slot:default="{base64}">
               <d-card width="64px" height="64px" elevation-light>
                 <FadeTransition group>
@@ -23,22 +23,22 @@
             <d-column>
               <d-card-subtitle class="pa-0" color="inherit">
                 <d-icon name="transaction" :size="20"/>
-                {{ item.task.fields.project.name }}
+                {{ currentIssue.task.fields.project.name }}
               </d-card-subtitle>
               <d-card-subtitle class="pa-0" color="inherit">
                 <d-icon name="key-skeleton" :size="20"/>
-                {{ item.task.fields.project.key }}
+                {{ currentIssue.task.fields.project.key }}
               </d-card-subtitle>
             </d-column>
           </template>
         </d-tooltip>
         <d-column block>
           <d-card-title class="pt-0 font-size-medium">
-            {{ item.task.fields.summary }}
+            {{ currentIssue.task.fields.summary }}
           </d-card-title>
           <d-card-subtitle>
             <d-tooltip>
-              <d-icon-button rounded="md" :size="24" color="inherit" @click="copy(item.task.key)">
+              <d-icon-button rounded="md" :size="24" color="inherit" @click="copy(currentIssue.task.key)">
                 <d-icon name="key-skeleton" :size="20"/>
               </d-icon-button>
               <template v-slot:tooltip>
@@ -46,7 +46,7 @@
               </template>
             </d-tooltip>
             <d-tooltip>
-              <d-icon-button rounded="md" :size="24" color="inherit" @click="copy(`[${item.task.key}](${issueLink})`)">
+              <d-icon-button rounded="md" :size="24" color="inherit" @click="copy(`[${currentIssue.task.key}](${issueLink})`)">
                 <d-icon name="link-alt" :size="20"/>
               </d-icon-button>
               <template v-slot:tooltip>
@@ -54,25 +54,25 @@
               </template>
             </d-tooltip>
             <d-button width="max-content" root-tag="a" target="_blank" :href="issueLink">
-              {{ item.task.key }}
+              {{ currentIssue.task.key }}
             </d-button>
             <d-spacer/>
-            <JiraTransitionButtons :item="item"/>
+            <JiraTransitionButtons/>
           </d-card-subtitle>
         </d-column>
       </d-row>
       <d-row class="info-row" gap block :wrap="false" align="start">
-        <d-column v-if="item.task.fields.description" class="description-column" :wrap="false" block>
+        <d-column v-if="currentIssue.task.fields.description" class="description-column" :wrap="false" block>
           <d-row>
             <d-card-subtitle class="pa-0 font-weight-bold">
               Description
             </d-card-subtitle>
             <d-divider class="mx-3" block elevation="6"/>
           </d-row>
-          <JiraMarkup :body="item.task.fields.description"/>
+          <JiraMarkup :body="currentIssue.task.fields.description"/>
         </d-column>
         <d-spacer v-else/>
-        <JiraInfoViewSidebar :item="item"/>
+        <JiraInfoViewSidebar/>
       </d-row>
     </d-column>
   </d-card>
@@ -90,15 +90,11 @@ import JiraMarkup from "./JiraMarkup.vue";
 import JiraImage from "./JiraImage.vue";
 import {FadeTransition} from "v3-transitions"
 import JiraTransitionButtons from "./JiraTransitionButtons.vue";
+import {currentIssue} from "../store/jira.store";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
-const jiraController = inject('JiraController') as { value: JiraController };
 
-const props = defineProps({
-  item: Object as PropType<JiraTask>
-})
-
-const issueLink = computed(() => `${jiraController.value.controller.url}/browse/${props.item?.task.key}`)
+const issueLink = computed(() => `${JiraController.controller.url}/browse/${currentIssue.value?.task.key}`)
 
 function copy(text: string) {
   navigator.clipboard.writeText(text).then(function () {

@@ -3,10 +3,11 @@ import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
 import { JiraConfiguration, SortNames } from "../../types/Jira";
 var ApplicationType = JiraConfiguration.ApplicationType;
+import JiraController from "../controller/JiraController";
 const store = createStore({
     plugins: [new VuexPersistence().plugin],
     state: {
-        selectedIssue: '',
+        currentIssueKey: '',
         currentSort: SortNames.Latest,
         selectedJiraConfig: '',
         jiraConfigs: [{
@@ -24,8 +25,8 @@ const store = createStore({
         zoomFactor: 1,
     },
     getters: {
-        selectedIssue(state) {
-            return state.selectedIssue;
+        currentIssueKey(state) {
+            return state.currentIssueKey;
         },
         currentSort(state) {
             return state.currentSort;
@@ -50,8 +51,8 @@ const store = createStore({
         }
     },
     mutations: {
-        setSelectedIssue(state, payload) {
-            state.selectedIssue = payload;
+        setCurrentIssueKey(state, payload) {
+            state.currentIssueKey = payload;
         },
         setCurrentSort(state, payload) {
             state.currentSort = payload;
@@ -76,8 +77,8 @@ const store = createStore({
         }
     },
     actions: {
-        setSelectedIssue(context, payload) {
-            context.commit('setSelectedIssue', payload);
+        setCurrentIssueKey(context, payload) {
+            context.commit('setCurrentIssueKey', payload);
         },
         setCurrentSort(context, payload) {
             context.commit('setCurrentSort', payload);
@@ -114,12 +115,13 @@ const store = createStore({
     },
 });
 export default store;
-export const selectedIssue = computed({
+export const currentIssue = computed(() => JiraController && JiraController.issues.value?.find((issue) => issue.task.key === currentIssueKey.value));
+export const currentIssueKey = computed({
     get() {
-        return store.getters.selectedIssue;
+        return store.getters.currentIssueKey;
     },
     set(value) {
-        store.dispatch('setSelectedIssue', value);
+        store.dispatch('setCurrentIssueKey', value);
     },
 });
 export const currentSort = computed({

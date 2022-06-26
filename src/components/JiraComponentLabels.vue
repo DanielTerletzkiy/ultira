@@ -1,23 +1,16 @@
 <template>
-  <d-column v-if="item.task.fields.components" :key="item.task.key" gap>
-    <d-label v-for="component in item.task.fields.components" color="primary" width="auto">
+  <d-column v-if="currentIssue.task.fields.components" :key="currentIssue.task.key" gap>
+    <d-label v-for="component in currentIssue.task.fields.components" color="primary" width="auto">
       {{ component.name }}
     </d-label>
   </d-column>
 </template>
 
 <script setup lang="ts">
-
-import {inject, PropType} from "vue";
-import JiraController from "../controller/JiraController";
-import JiraTask from "../controller/JiraTask";
+import {inject} from "vue";
+import {currentIssue} from "../store/jira.store";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
-const jiraController = inject('JiraController') as { value: JiraController };
-
-const props = defineProps({
-  item: Object as PropType<JiraTask>
-})
 </script>
 
 <style scoped>

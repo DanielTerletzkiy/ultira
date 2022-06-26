@@ -70,8 +70,6 @@ import {FadeTransition} from "v3-transitions"
 import JiraImage from "./JiraImage.vue";
 import {SortNames} from "../../types/Jira";
 
-const jiraController = inject('JiraController') as Ref<JiraController>;
-
 const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
   modelValue: String,
@@ -113,7 +111,7 @@ function scrollTimeout(milli: number) {
 }
 
 function reload() {
-  jiraController.value.getAllIssues();
+  JiraController.getAllIssues();
 }
 
 setInterval(reload, refreshTime.value * 1000)
@@ -185,7 +183,7 @@ const sortGroups = computed(() => {
         const dateStart = new Date();
         dateStart.setHours(dateStart.getHours() - time.hours);
 
-        let items = jiraController.value.issues.filter((issue) => {
+        let items = JiraController.issues.value.filter((issue) => {
           const issueTime = new Date(issue.task.fields.updated).getTime();
           return issueTime >= dateStart.getTime();
         })
@@ -208,12 +206,12 @@ const sortGroups = computed(() => {
       break;
     }
     case SortNames.Priority: {
-      const priorities = jiraController.value.issues.filter((issue, idx) =>
-          jiraController.value.issues.findIndex(x => x.task.fields.priority.id == issue.task.fields.priority.id) == idx)
+      const priorities = JiraController.issues.value.filter((issue, idx) =>
+          JiraController.issues.value.findIndex(x => x.task.fields.priority.id == issue.task.fields.priority.id) == idx)
           .map((issue) => issue.task.fields.priority).sort((a, b) => parseInt(a.id) - parseInt(b.id))
 
       for (const priority of priorities) {
-        const items = jiraController.value.issues.filter((issue) => issue.task.fields.priority.id === priority.id)
+        const items = JiraController.issues.value.filter((issue) => issue.task.fields.priority.id === priority.id)
         groups.push({
           name: priority.name,
           icon: {
@@ -226,12 +224,12 @@ const sortGroups = computed(() => {
       break;
     }
     case SortNames.Type: {
-      const types = jiraController.value.issues.filter((issue, idx) =>
-          jiraController.value.issues.findIndex(x => x.task.fields.issuetype.id == issue.task.fields.issuetype.id) == idx)
+      const types = JiraController.issues.value.filter((issue, idx) =>
+          JiraController.issues.value.findIndex(x => x.task.fields.issuetype.id == issue.task.fields.issuetype.id) == idx)
           .map((issue) => issue.task.fields.issuetype).sort((a, b) => parseInt(a.id) - parseInt(b.id))
 
       for (const type of types) {
-        const items = jiraController.value.issues.filter((issue) => issue.task.fields.issuetype.id === type.id)
+        const items = JiraController.issues.value.filter((issue) => issue.task.fields.issuetype.id === type.id)
         groups.push({
           name: type.name,
           icon: {
@@ -244,12 +242,12 @@ const sortGroups = computed(() => {
       break;
     }
     case SortNames.Project: {
-      const projects = jiraController.value.issues.filter((issue, idx) =>
-          jiraController.value.issues.findIndex(x => x.task.fields.project.id == issue.task.fields.project.id) == idx)
+      const projects = JiraController.issues.value.filter((issue, idx) =>
+          JiraController.issues.value.findIndex(x => x.task.fields.project.id == issue.task.fields.project.id) == idx)
           .map((issue) => issue.task.fields.project).sort((a, b) => parseInt(a.id) - parseInt(b.id))
 
       for (const project of projects) {
-        const items = jiraController.value.issues.filter((issue) => issue.task.fields.project.id === project.id)
+        const items = JiraController.issues.value.filter((issue) => issue.task.fields.project.id === project.id)
         groups.push({
           name: project.name,
           icon: {

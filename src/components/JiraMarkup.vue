@@ -1,5 +1,5 @@
 <template>
-  <d-card-subtitle class="content" v-html="jira2md.jira_to_html(body)"/>
+  <d-card-subtitle class="content" color="secondary" :tint="10" v-html="jira2md.jira_to_html(body)"/>
 </template>
 
 <script setup lang="ts">

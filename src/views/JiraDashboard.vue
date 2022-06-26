@@ -5,22 +5,22 @@
       <d-column gap :wrap="false">
         <d-row gap :wrap="false" style="flex: 1; max-height: 500px; min-height: 500px;">
           <d-column block :wrap="false" v-if="currentIssue" style="flex: 1; min-height: inherit; max-height: inherit">
-            <JiraInfoView :item="currentIssue"/>
+            <JiraInfoView/>
           </d-column>
           <d-column block :wrap="false" v-if="currentIssue"
                     style="flex: 1; max-height: 500px; min-height: 500px;">
-            <JiraBranchView :item="currentIssue"/>
+            <JiraBranchView/>
           </d-column>
         </d-row>
         <d-row gap :wrap="false" style="flex: 1;" align="stretch">
-          <d-column class="bottom-card" :wrap="false" style="flex: 3;" v-if="selectedJiraConfig && jiraController">
-            <JiraList v-model="selectedIssue"/>
+          <d-column class="bottom-card" :wrap="false" style="flex: 3;" v-if="selectedJiraConfig && JiraController.issues.value">
+            <JiraList v-model="currentIssueKey"/>
           </d-column>
           <d-column class="bottom-card" :wrap="false" style="flex: 1;" v-if="currentIssue">
-            <JiraCommentsView :item="currentIssue"/>
+            <JiraCommentsView/>
           </d-column>
           <d-column class="bottom-card" :wrap="false" style="flex: 3;" v-if="currentIssue">
-            <JiraPullRequestView :item="currentIssue"/>
+            <JiraPullRequestView/>
           </d-column>
         </d-row>
       </d-column>
@@ -30,10 +30,16 @@
 
 <script setup lang="ts">
 import {computed, inject, onMounted, provide, ref, watch} from "vue";
-import {credentialsOpen, jiraConfigs, projects, selectedIssue, selectedJiraConfig} from "../store/jira.store";
+import {
+  credentialsOpen,
+  jiraConfigs,
+  projects,
+  currentIssueKey,
+  selectedJiraConfig,
+  currentIssue
+} from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
-import JiraTask from "../controller/JiraTask";
 import JiraList from "../components/JiraList.vue";
 import JiraInfoView from "../components/JiraInfoView.vue";
 import JiraBranchView from "../components/JiraBranchView.vue";
@@ -45,14 +51,9 @@ import {State} from "vuelize/src/types/Vuelize";
 import JiraConfig = JiraConfiguration.JiraConfig;
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
-
-const currentIssue = computed<JiraTask | undefined>(() => jiraController.value && jiraController.value?.issues?.find((issue: JiraTask) => issue.task.key === selectedIssue.value) as JiraTask | undefined)
 const currentJiraConfig = computed<JiraConfig>(() => jiraConfigs.value?.find((base: { name: string; }) => base.name === selectedJiraConfig.value) as JiraConfig);
 
-const jiraController = ref<JiraController>();
-provide('JiraController', jiraController);
-
-watch(() => selectedIssue.value, connectCurrentData);
+watch(() => currentIssueKey.value, connectCurrentData);
 watch(() => selectedJiraConfig.value, setJiraBase);
 watch(() => currentJiraConfig.value, () => setJiraBase(selectedJiraConfig.value), {deep: true});
 
@@ -71,11 +72,12 @@ async function setJiraBase(name: any) {
       return;
     }
     selectedJiraConfig.value = name;
-    jiraController.value = new JiraController(new JiraBaseController({
+    JiraController.setBase(new JiraBaseController({
       ...currentJiraConfig.value,
       credentials: cookieCredentials
     }))
-    await jiraController.value?.getAllIssues();
+    await JiraController.getAllIssues();
+    console.log(JiraController.issues.value)
     connectCurrentData();
 
   } else {

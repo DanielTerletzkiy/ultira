@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import {projects, selectedIssue} from "../store/jira.store";
+import {projects, currentIssueKey} from "../store/jira.store";
 import {computed} from "vue";
 import ProjectController from "../controller/ProjectController";
 import {Project} from "../../types/Jira";
@@ -23,7 +23,7 @@ const props = defineProps({
 const project = computed<Project>(() => projects.value.find((project) => project.project.toLowerCase() === props.repository.toLowerCase()) as Project)
 
 function onClick() {
-  ProjectController.open(project.value, selectedIssue.value)
+  ProjectController.open(project.value, currentIssueKey.value)
 }
 </script>
 

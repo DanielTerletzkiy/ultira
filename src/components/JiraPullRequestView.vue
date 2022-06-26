@@ -6,9 +6,9 @@
     <template v-slot:title>
       Pull Requests
     </template>
-    <d-column v-if="item?.pullRequestData?.detail&&item?.pullRequestData?.detail[0]?.pullRequests.length>0" gap
+    <d-column v-if="currentIssue?.pullRequestData?.detail&&currentIssue?.pullRequestData?.detail[0]?.pullRequests.length>0" gap
               style="max-height: 100%; overflow: overlay" height="100%" :wrap="false">
-      <d-card v-for="pullRequest in item.pullRequestData.detail[0]?.pullRequests" width="100%" elevation="4">
+      <d-card v-for="pullRequest in currentIssue.pullRequestData.detail[0]?.pullRequests" width="100%" elevation="4">
         <d-row gap class="pl-3" glow v-ripple root-tag="a" target="_blank" :href="pullRequest.url">
           <d-avatar v-if="pullRequest.source?.repository" color="transparent" size="40" elevation-light :style="{
                           backgroundImage: `url(${pullRequest.source.repository.avatar})`,
@@ -70,7 +70,7 @@
         </d-row>
       </d-card>
     </d-column>
-    <d-column v-else-if="item?.pullRequestData?.detail[0]?.pullRequests.length === 0" style="user-select: none">
+    <d-column v-else-if="currentIssue?.pullRequestData?.detail[0]?.pullRequests.length === 0" style="user-select: none">
       <d-card-title color="primary" class="mx-3 font-size-medium">
         <d-icon name="file-question-alt" :size="30"/>
         No Pull Requests
@@ -83,19 +83,13 @@
 </template>
 
 <script setup lang="ts">
-import {inject, PropType} from "vue";
-import JiraController from "../controller/JiraController";
-import JiraTask from "../controller/JiraTask";
+import {inject} from "vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import {SlideYUpTransition} from "v3-transitions";
 import JiraLoader from "./JiraLoader.vue";
+import {currentIssue} from "../store/jira.store";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
-const jiraController = inject('JiraController') as { value: JiraController };
-
-const props = defineProps({
-  item: Object as PropType<JiraTask>
-})
 
 function getApprovals(reviewers: any)/*TODO export namespace bs*/ {
   return reviewers.filter((reviewer: any /*TODO export namespace bs*/) => reviewer.approved).length

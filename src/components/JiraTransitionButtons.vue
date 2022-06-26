@@ -1,6 +1,6 @@
 <template>
-  <d-row v-if="item.transitionData" width="max-content" :key="item.task.key" :wrap="false" gap elevation="2">
-    <d-tooltip v-for="transition in item.transitionData.transitions">
+  <d-row v-if="currentIssue.transitionData" width="max-content" :key="currentIssue.task.key" :wrap="false" gap elevation="2">
+    <d-tooltip v-for="transition in currentIssue.transitionData.transitions">
       <d-button color="secondary">
         {{ transition.name }}
       </d-button>
@@ -14,17 +14,10 @@
 </template>
 
 <script setup lang="ts">
-
-import {inject, PropType} from "vue";
-import JiraController from "../controller/JiraController";
-import JiraTask from "../controller/JiraTask";
+import {inject} from "vue";
+import {currentIssue} from "../store/jira.store";
 
 const vuelize: Vuelize = inject('vuelize') as Vuelize;
-const jiraController = inject('JiraController') as { value: JiraController };
-
-const props = defineProps({
-  item: Object as PropType<JiraTask>
-})
 </script>
 
 <style scoped>

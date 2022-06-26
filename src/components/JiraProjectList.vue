@@ -20,19 +20,18 @@
 </template>
 
 <script setup lang="ts">
-import {projects, selectedIssue} from "../store/jira.store";
+import {projects, currentIssueKey} from "../store/jira.store";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import {inject} from "vue";
 import JiraController from "../controller/JiraController";
 
-const jiraController = inject('JiraController') as { value: JiraController };
 
 function setIssue(branch: string) {
-  selectedIssue.value = branch;
+  currentIssueKey.value = branch;
 }
 
 function issueExists(branch: string): boolean {
- return jiraController.value.issues.findIndex((issue)=>issue.task.key === branch) > -1
+ return JiraController.issues.value.findIndex((issue)=>issue.task.key === branch) > -1
 }
 </script>
 
