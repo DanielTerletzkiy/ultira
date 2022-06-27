@@ -49,5 +49,8 @@ export default class JiraController extends ApiController {
             }
         }
     }
+    static get issueKeys() {
+        return JiraController.issues.value.map((issue) => issue.task.key);
+    }
 }
 //# sourceMappingURL=JiraController.js.map

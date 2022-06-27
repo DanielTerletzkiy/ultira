@@ -6,7 +6,9 @@ import jiraStore from "./store/jira.store";
 import 'v3-transitions/dist/style.css';
 import App from './App.vue';
 import SocketClient from "./service/SocketIOClient";
+import DomListener from "./dom/DomListener";
 SocketClient.instance;
+DomListener.init();
 createApp(App)
     .use(jiraStore)
     .use(vuelize)

@@ -4,6 +4,7 @@ import JiraTask from "./JiraTask";
 import {JiraIssue} from "../../types/Jira";
 import {currentIssueKey} from "../store/jira.store";
 import {ref, Ref} from "vue";
+import Task = JiraIssue.Task;
 
 export default class JiraController extends ApiController {
     static controller: JiraBaseController;
@@ -67,5 +68,9 @@ export default class JiraController extends ApiController {
                 return `data:image/jpeg;base64,${btoa(binary)}`;
             }
         }
+    }
+
+    static get issueKeys(): Array<Task['key']> {
+        return JiraController.issues.value.map((issue) => issue.task.key);
     }
 }

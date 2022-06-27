@@ -3,6 +3,8 @@ import {ref} from "vue";
 import JiraDashboard from "./views/JiraDashboard.vue";
 import JiraSettings from "./components/JiraSettings.vue";
 import JiraBaseSelector from "./components/JiraBaseSelector.vue";
+import JiraSearchDialog from "./components/JiraSearchDialog.vue";
+import {searchOpen} from "./store/jira.store";
 
 const settingsOpen = ref(false);
 
@@ -55,6 +57,7 @@ const baseurl = import.meta.env.BASE_URL
       <d-notification-wrapper/>
       <JiraDashboard/>
       <JiraSettings v-model:open="settingsOpen" @submit="onSettingsSubmit"/>
+      <JiraSearchDialog v-model:open="searchOpen"/>
     </template>
   </d-root>
 </template>

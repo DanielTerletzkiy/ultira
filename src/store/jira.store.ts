@@ -24,6 +24,7 @@ const store = createStore({
             project: '',
             branch: ''
         }],
+        searchDialogOpen: false,
         credentialsDialogOpen: false,
         refreshTime: 60,
         zoomFactor: 1,
@@ -43,6 +44,9 @@ const store = createStore({
         },
         projects(state): Array<Project> {
             return state.projects;
+        },
+        searchDialogOpen(state): boolean {
+            return state.searchDialogOpen;
         },
         credentialsDialogOpen(state): boolean {
             return state.credentialsDialogOpen;
@@ -69,6 +73,9 @@ const store = createStore({
         },
         setProjects(state, payload: Array<Project>) {
             state.projects.push(...payload)
+        },
+        setSearchDialogOpen(state, payload: boolean) {
+            state.searchDialogOpen = payload;
         },
         setCredentialsDialogOpen(state, payload: boolean) {
             state.credentialsDialogOpen = payload;
@@ -106,6 +113,9 @@ const store = createStore({
                 }
             }
             context.commit('setProjects', projects)
+        },
+        setSearchDialogOpen(context, payload: boolean) {
+            context.commit('setSearchDialogOpen', payload);
         },
         setCredentialsDialogOpen(context, payload: boolean) {
             context.commit('setCredentialsDialogOpen', payload);
@@ -168,7 +178,16 @@ export const projects = computed<Array<Project>>({
     }
 })
 
-export const credentialsOpen = computed({
+export const searchOpen = computed<boolean>({
+    get() {
+        return store.getters.searchDialogOpen
+    },
+    set(value: boolean) {
+        store.dispatch('setSearchDialogOpen', value)
+    }
+});
+
+export const credentialsOpen = computed<boolean>({
     get() {
         return store.getters.credentialsDialogOpen
     },

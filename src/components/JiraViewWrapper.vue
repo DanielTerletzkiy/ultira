@@ -28,6 +28,8 @@ defineProps({
 
 <style scoped lang="scss">
 .jira-view-wrapper {
+  overflow: hidden;
+
   .header {
     user-select: none;
   }
