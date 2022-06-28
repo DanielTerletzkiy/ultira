@@ -6,6 +6,9 @@
     <template v-slot:title>
       Comments
     </template>
+    <template v-slot:tooltip>
+      Read and write Issue Comments
+    </template>
     <d-column key="content" v-if="currentIssue?.commentsData && currentIssue?.commentsData?.comments.length>0" class="px-2"
               style="max-height: calc(100% - 3rem); overflow: auto" height="100%" gap :wrap="false">
       <JiraCommentsViewItem v-for="comment in currentIssue.commentsData.comments.slice().reverse()" :comment="comment"/>

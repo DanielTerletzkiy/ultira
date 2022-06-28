@@ -6,6 +6,9 @@
     <template v-slot:title>
       Branches & Commits
     </template>
+    <template v-slot:tooltip>
+      View and Open Branches & Commits
+    </template>
     <SlideXLeftTransition group
                           style="width: 100%; max-height: calc(500px - 50px - 8px); overflow: overlay; overflow-x: hidden"
                           :class="$vuelize.theme.dark?'dark':'light'">

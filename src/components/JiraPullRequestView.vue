@@ -6,6 +6,9 @@
     <template v-slot:title>
       Pull Requests
     </template>
+    <template v-slot:tooltip>
+      Lookup Pull Request status of current Issue
+    </template>
     <d-column v-if="currentIssue?.pullRequestData?.detail&&currentIssue?.pullRequestData?.detail[0]?.pullRequests.length>0" gap
               style="max-height: 100%; overflow: overlay" height="100%" :wrap="false">
       <d-card v-for="pullRequest in currentIssue.pullRequestData.detail[0]?.pullRequests" width="100%" elevation="4">

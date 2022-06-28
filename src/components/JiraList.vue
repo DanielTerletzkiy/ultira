@@ -1,7 +1,7 @@
 <template>
   <d-column gap block elevation="n1">
     <d-list v-model="modelValue" @update:modelValue="onChange" width="100%" class="font-weight-bold">
-      <d-card v-for="group in sortGroups" background-color="transparent" block>
+      <d-card v-for="group in debouncedSortedGroups" background-color="transparent" block>
         <d-card-title class="py-1 pl-3 group-header font-weight-bold font-size-medium" glow color="secondary">
           <JiraImage v-if="group.icon.type === 'image'" :url="group.icon.url" :key="group.icon.url">
             <template v-slot:default="{base64}">
@@ -63,7 +63,8 @@
 import JiraListItem from "./JiraListItem.vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
-import {computed, inject, onMounted, Ref, watch} from "vue";
+import {computed, inject, onMounted, ref, Ref, watch} from "vue";
+import debounce from "lodash/debounce"
 import {currentSort, refreshTime} from "../store/jira.store";
 import {vIntersectionObserver} from "@vueuse/components";
 import {FadeTransition} from "v3-transitions"
@@ -144,7 +145,7 @@ const sortOptions = [
   },
 ];
 
-const sortGroups = computed(() => {
+const sortGroups = () => {
   let groups: Array<{ name: string, icon: { type: string, url: string }, items: Array<JiraTask> }> = []
   switch (currentSort.value) {
     case SortNames.Latest: {
@@ -261,10 +262,17 @@ const sortGroups = computed(() => {
     }
   }
   return groups;
-})
+}
 
-watch(() => currentSort.value, () => {
-  scrollTimeout(500);
+
+const debouncedSortedGroups = ref<Array<{ name: string, icon: { type: string, url: string }, items: Array<JiraTask> }>>([]);
+watch(JiraController.issues, debounce(() => {
+  debouncedSortedGroups.value = sortGroups();
+}, 500), {deep: true})
+
+watch(currentSort, () => {
+  debouncedSortedGroups.value = sortGroups();
+  scrollTimeout(100);
 })
 
 </script>
