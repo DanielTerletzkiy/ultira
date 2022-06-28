@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import JiraController from "../controller/JiraController";
 import JiraList from "./JiraList.vue";
 import {currentIssueKey} from "../store/jira.store";
@@ -38,6 +38,9 @@ const searchKey = ref<string>();
 const searchResults = ref<Array<JiraTask>>([]);
 
 const search = () => {
+  if (!props.open || !searchKey.value) {
+    return
+  }
   searchKey.value = searchKey.value?.toUpperCase();
   console.log(searchKey.value)
   const result = JiraController.issues.value.filter((issue) => {
@@ -52,7 +55,9 @@ const search = () => {
   searchResults.value = result;
 }
 
-watch(searchKey, search)
+watch([searchKey, () => props.open], search)
+
+onMounted(search)
 
 </script>
 
