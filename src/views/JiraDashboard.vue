@@ -14,7 +14,7 @@
         </d-row>
         <d-row gap :wrap="false" style="flex: 1;" align="stretch">
           <d-column class="bottom-card" :wrap="false" style="flex: 3;" v-if="selectedJiraConfig && JiraController.issues.value">
-            <JiraList v-model="currentIssueKey"/>
+            <JiraList v-model="currentIssueKey" :issue-list="JiraController.issues.value"/>
           </d-column>
           <d-column class="bottom-card" :wrap="false" style="flex: 1;" v-if="currentIssue">
             <JiraCommentsView/>
