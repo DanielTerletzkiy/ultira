@@ -24,14 +24,6 @@ export default class JiraController extends ApiController {
                 JiraController.issues.value.push(await new JiraTask(issue, JiraController.controller));
             }
         }
-        JiraController.issues.value.sort((a, b) => {
-            const da = new Date(a.task.fields.updated);
-            const db = new Date(b.task.fields.updated);
-            if (da == db) {
-                return 0;
-            }
-            return da < db ? 1 : -1;
-        });
         JiraController.totalIssues = searchResult.total;
         return { issues: JiraController.issues.value, total: JiraController.totalIssues };
     }

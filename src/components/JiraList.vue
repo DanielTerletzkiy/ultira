@@ -22,10 +22,12 @@
           <d-divider class="group-header__divider" block/>
         </d-card-title>
         <d-column gap block class="pa-0 pt-1">
-          <JiraListItem v-for="issue in group.items" :item="issue" class="item">
-          <span v-if="issue.task.key === modelValue" class="observer"
-                v-intersection-observer="intersectObserver"></span>
-          </JiraListItem>
+          <FadeTransition group style="display: flex; flex-direction: column; gap: 6px; flex-wrap: nowrap">
+            <JiraListItem v-for="issue in group.items" :item="issue" class="item" :key="issue.task.key">
+            <span v-if="issue.task.key === modelValue" class="observer"
+                  v-intersection-observer="intersectObserver"></span>
+            </JiraListItem>
+          </FadeTransition>
         </d-column>
       </d-card>
     </d-list>
@@ -152,6 +154,16 @@ const sortOptions = [
 
 const sortGroups = () => {
   let groups: Array<{ name: string, icon: { type: string, url: string }, items: Array<JiraTask> }> = []
+
+  props.issueList.sort((a, b) => {
+    const da = new Date(a.task.fields.updated);
+    const db = new Date(b.task.fields.updated);
+    if (da == db) {
+      return 0;
+    }
+    return da < db ? 1 : -1;
+  })
+
   switch (currentSort.value) {
     case SortNames.Latest: {
       const times = [
@@ -271,9 +283,9 @@ const sortGroups = () => {
 
 
 const debouncedSortedGroups = ref<Array<{ name: string, icon: { type: string, url: string }, items: Array<JiraTask> }>>([]);
-watch(()=>props.issueList, debounce(() => {
+watch(() => props.issueList, debounce(() => {
   debouncedSortedGroups.value = sortGroups();
-}, 500), {deep: true})
+}, props.hideSorter ? 0 : 500), {deep: true})
 
 watch(currentSort, () => {
   debouncedSortedGroups.value = sortGroups();
