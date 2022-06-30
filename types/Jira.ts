@@ -1,3 +1,31 @@
+export enum SortNames {
+    Latest = 'Last Updated',
+    Priority = 'Priority',
+    State = 'State',
+    Type = 'Type',
+    Project = 'Project'
+}
+
+export interface Project {
+    path: string,
+    project: string,
+    branch: string
+}
+
+export namespace JiraConfiguration {
+    export interface JiraConfig {
+        url: string,
+        name: string,
+        applicationType: ApplicationType
+    }
+
+    export enum ApplicationType {
+        Bitbucket = "bitbucket",
+        Stash = "stash",
+        GitHub = "GitHub", //hmm ¯\_(ツ)_/¯
+    }
+}
+
 export namespace JiraIssue {
     export interface Task {
         expand: string
@@ -29,7 +57,7 @@ export namespace JiraIssue {
         assignee: User
         updated: string
         status: Status
-        components: any[]
+        components: Component[]
         timeoriginalestimate: any
         description: string
         aggregatetimeestimate: any
@@ -42,6 +70,12 @@ export namespace JiraIssue {
         duedate: any
         progress: Progress
         votes: Votes
+    }
+
+    interface Component {
+        id: string
+        name: string
+        self: string
     }
 
     interface Issuetype {
@@ -195,7 +229,7 @@ export namespace JiraCommits {
         _instance: Instance
     }
 
-    interface Repository {
+    export interface Repository {
         name: string
         avatar: string
         avatarDescription: string
@@ -231,9 +265,18 @@ export namespace JiraCommits {
     interface File {
         path: string
         url: string
-        changeType: string
+        changeType: ChangeType
         linesAdded: number
         linesRemoved: number
+    }
+
+    export enum ChangeType {
+        MODIFIED = 'MODIFIED',
+        DELETED = 'DELETED',
+        MOVED = 'MOVED',
+        ADDED = 'ADDED',
+        COPIED = 'COPIED',
+        UNKNOWN = 'UNKNOWN',
     }
 
     interface Instance {
@@ -313,7 +356,7 @@ export namespace JiraPullRequests {
         url: string
     }
 
-    interface Reviewer {
+    export interface Reviewer {
         name: string
         avatar: string
         approved: boolean
@@ -380,4 +423,84 @@ export namespace JiraWorkLog {
         timeZone: string
         accountType: string
     }
+}
+
+export namespace JiraComments {
+    export interface CommentsRoot {
+        startAt: number
+        maxResults: number
+        total: number
+        comments: Comment[]
+    }
+
+    export interface Comment {
+        self: string
+        id: string
+        author: Author
+        body: string
+        updateAuthor: UpdateAuthor
+        created: string
+        updated: string
+        jsdPublic: boolean
+    }
+
+    interface Author {
+        self: string
+        accountId: string
+        emailAddress: string
+        avatarUrls: AvatarUrls
+        displayName: string
+        active: boolean
+        timeZone: string
+        accountType: string
+    }
+
+    interface AvatarUrls {
+        "48x48": string
+        "24x24": string
+        "16x16": string
+        "32x32": string
+    }
+
+    interface UpdateAuthor {
+        self: string
+        accountId: string
+        emailAddress: string
+        avatarUrls: AvatarUrls
+        displayName: string
+        active: boolean
+        timeZone: string
+        accountType: string
+    }
+}
+
+export namespace JiraTransitions {
+    export interface TransitionsRoot {
+        expand: string
+        transitions: Transition[]
+    }
+
+    export interface Transition {
+        id: string
+        name: string
+        to: To
+    }
+
+    export interface To {
+        self: string
+        description: string
+        iconUrl: string
+        name: string
+        id: string
+        statusCategory: StatusCategory
+    }
+
+    export interface StatusCategory {
+        self: string
+        id: number
+        key: string
+        colorName: string
+        name: string
+    }
+
 }

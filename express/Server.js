@@ -1,5 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const Index_1 = __importDefault(require("./router/Index"));
 const { createProxyMiddleware, fixRequestBody } = require("http-proxy-middleware");
+const ProjectScraper = require('./controller/ProjectScraper');
+const SocketIO = require('./service/SocketIO');
+const http = require('http');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -10,12 +18,13 @@ app.use((req, res, next) => {
     delete req.headers['user-agent'];
     next();
 });
+app.use('/api', Index_1.default);
 let targetInstance;
 app.post("/url", function (req, res) {
     targetInstance = req.headers['jira-host'];
     console.log('targetInstance: ', targetInstance);
     try {
-        app.use('/rest', createProxyMiddleware({
+        app.use('/', createProxyMiddleware({
             target: targetInstance,
             changeOrigin: true,
             protocolRewrite: "https",
@@ -28,6 +37,8 @@ app.post("/url", function (req, res) {
     }
     res.status(200).json({ url: targetInstance });
 });
-app.listen(2343);
-module.exports = app;
-//# sourceMappingURL=JiraProxy.js.map
+const httpServer = http.createServer(app);
+httpServer.listen(2343);
+SocketIO.createInstance(httpServer);
+exports.default = httpServer;
+console.log('app ready');

@@ -1,5 +1,10 @@
 export default class ApiController {
     static async generic(url, method, headers, body) {
+        if (!headers && body) {
+            headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            headers.append('Accept', 'application/json');
+        }
         const options = {
             method,
             headers,
@@ -10,16 +15,29 @@ export default class ApiController {
         }
         return await fetch(url, options);
     }
-    static async fetchJira(jiraHost, path, method, basicCredentials, body) {
+    static async fetchJira(jiraHost, path, method, basicCredentials, type = 0 /* JSON */, body) {
         const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        headers.append('Accept', 'application/json');
+        switch (type) {
+            case 0 /* JSON */: {
+                headers.append('Content-Type', 'application/json');
+                headers.append('Accept', 'application/json');
+                break;
+            }
+            case 1 /* FILES */: {
+                break;
+            }
+        }
         headers.append('Authorization', 'Basic ' + btoa(basicCredentials.username + ':' + basicCredentials.password));
         headers.append('X-Atlassian-Token', 'no-check');
         headers.append('Jira-Host', jiraHost);
         headers.append('User-Agent', 'XXX');
         const response = await this.generic('http://localhost:2343/' + path, method, headers, body);
-        return response.json();
+        if (type === 0 /* JSON */) {
+            return response.json();
+        }
+        else {
+            return response;
+        }
     }
 }
 //# sourceMappingURL=ApiController.js.map

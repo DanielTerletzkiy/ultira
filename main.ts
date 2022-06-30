@@ -1,21 +1,25 @@
 // @ts-ignore
 const {app, BrowserWindow} = require("electron");
 const path = require("path");
-require("./JiraProxy");
+const expressServer = require("./express/Server");
 
 function createWindow() {
     const win = new BrowserWindow({
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             nodeIntegration: true,
+            contextIsolation: false,
         },
         frame: false,
-        titleBarStyle: 'hidden',
+        titleBarStyle: 'customButtonsOnHover',
         titleBarOverlay: {
             color: '#242832',
-            symbolColor: '#8e6bf3',
-        }
+            symbolColor: '#A8B2FF',
+        },
+        icon: path.join(__dirname, 'public/favicon.ico')
     });
+
+    win.maximize();
 
     win.loadFile("dist/index.html");
 
@@ -24,6 +28,8 @@ function createWindow() {
         require('electron').shell.openExternal(url);
     });
 }
+
+app.setUserTasks([]);
 
 app.whenReady().then(() => {
     createWindow();
@@ -38,5 +44,9 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit();
+    }
+    try {
+        expressServer.close();
+    } catch (e) {
     }
 });

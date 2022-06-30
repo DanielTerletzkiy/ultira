@@ -1,25 +1,25 @@
 <template>
-  <d-column gap block>
-    <d-card block style="max-height: calc(100vh - 86px); overflow: hidden" v-if="currentJiraConfig">
-      <d-column gap>
-        <d-row gap style="flex: 1; max-height: 500px; min-height: 500px;">
-          <d-column block v-if="currentIssue" style="min-height: inherit; max-height: inherit">
-            <JiraInfoView :item="currentIssue"/>
+  <d-column gap block style="position:relative;">
+    <d-card v-if="selectedJiraConfig" background-color="transparent" block
+            style="max-height: calc(100vh - 62px); overflow: hidden">
+      <d-column gap :wrap="false">
+        <d-row gap :wrap="false" style="flex: 1; max-height: 500px; min-height: 500px;">
+          <d-column block :wrap="false" v-if="currentIssue" style="flex: 1; min-height: inherit; max-height: inherit">
+            <JiraInfoView/>
           </d-column>
-          <d-column block v-if="currentIssue && !!currentIssue.commitData" style="flex: 1; max-height: 500px; min-height: 500px;">
-            <JiraBranchView :item="currentIssue"/>
+          <d-column block :wrap="false" v-if="currentIssue"
+                    style="flex: 1; max-height: 500px; min-height: 500px;">
+            <JiraBranchView/>
           </d-column>
         </d-row>
-        <d-row gap style="flex: 1;" align="stretch">
-          <d-column elevation="n1" v-if="currentJiraConfig && jiraController"
-                    style="flex: 1;
-                     max-height: calc(100vh - 86px - 16px - 500px);
-                     overflow: overlay;
-                     overflow-x: hidden;
-                     min-width: fit-content;">
-            <JiraList v-model="selectedIssue"/>
+        <d-row gap :wrap="false" style="flex: 1;" align="stretch">
+          <d-column class="bottom-card" :wrap="false" style="flex: 3;" v-if="selectedJiraConfig && JiraController.issues.value">
+            <JiraList v-model="currentIssueKey" :issue-list="JiraController.issues.value"/>
           </d-column>
-          <d-column block style="flex: 2;">
+          <d-column class="bottom-card" :wrap="false" style="flex: 1;" v-if="currentIssue">
+            <JiraCommentsView/>
+          </d-column>
+          <d-column class="bottom-card" :wrap="false" style="flex: 3;" v-if="currentIssue">
             <JiraPullRequestView/>
           </d-column>
         </d-row>
@@ -29,26 +29,33 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeMount, provide, ref, watch} from "vue";
-import {useStore} from "vuex";
+import {computed, inject, onMounted, provide, ref, watch} from "vue";
+import {
+  credentialsOpen,
+  jiraConfigs,
+  projects,
+  currentIssueKey,
+  selectedJiraConfig,
+  currentIssue
+} from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
-import JiraTask from "../controller/JiraTask";
 import JiraList from "../components/JiraList.vue";
 import JiraInfoView from "../components/JiraInfoView.vue";
-import {credentialsOpen, currentJiraConfig, selectedIssue} from "../store/jira.store";
 import JiraBranchView from "../components/JiraBranchView.vue";
 import JiraPullRequestView from "../components/JiraPullRequestView.vue";
+import JiraCommentsView from "../components/JiraCommentsView.vue";
+import {JiraConfiguration} from "../../types/Jira";
+import ProjectController from "../controller/ProjectController";
+import {State} from "vuelize/src/types/Vuelize";
+import JiraConfig = JiraConfiguration.JiraConfig;
 
-const store = useStore()
-const jiraConfigs = computed(() => store.getters.jiraConfigs)
+const vuelize: Vuelize = inject('vuelize') as Vuelize;
+const currentJiraConfig = computed<JiraConfig>(() => jiraConfigs.value?.find((base: { name: string; }) => base.name === selectedJiraConfig.value) as JiraConfig);
 
-const currentIssue = computed<JiraTask | undefined>(() => jiraController.value && jiraController.value?.issues?.find((issue: JiraTask) => issue.task.key === selectedIssue.value) as JiraTask | undefined)
-
-const jiraController = ref<JiraController>();
-provide('JiraController', jiraController);
-
-watch(() => currentJiraConfig.value, setJiraBase);
+watch(() => currentIssueKey.value, connectCurrentData);
+watch(() => selectedJiraConfig.value, setJiraBase);
+watch(() => currentJiraConfig.value, () => setJiraBase(selectedJiraConfig.value), {deep: true});
 
 async function setJiraBase(name: any) {
   console.log('baseName', name)
@@ -60,24 +67,56 @@ async function setJiraBase(name: any) {
       credentialsOpen.value = true;
       return;
     }
-    const selectedJiraBase = jiraConfigs.value?.find((base: { name: string; }) => base.name === currentJiraConfig.value);
-    if (!selectedJiraBase) {
+    if (!currentJiraConfig.value) {
       credentialsOpen.value = true;
       return;
     }
-    jiraController.value = new JiraController(new JiraBaseController(selectedJiraBase.url, selectedJiraBase.name, cookieCredentials))
-    jiraController.value?.getAllIssues();
-    await store.dispatch('setCurrentJiraConfig', name);
+    selectedJiraConfig.value = name;
+    JiraController.setBase(new JiraBaseController({
+      ...currentJiraConfig.value,
+      credentials: cookieCredentials
+    }))
+    await JiraController.getAllIssues();
+    console.log(JiraController.issues.value)
+    connectCurrentData();
+
   } else {
     credentialsOpen.value = true;
   }
 }
 
-onBeforeMount(() => {
-  setJiraBase(currentJiraConfig.value)
+function connectCurrentData() {
+  if (currentIssue.value) {
+    currentIssue.value.getConnectedData()
+  }
+}
+
+onMounted(() => {
+  setJiraBase(selectedJiraConfig.value);
+  ProjectController.subscribe((resProjects) => {
+    console.log('projects: ', resProjects)
+    projects.value = resProjects;
+    vuelize.notify('Scraper', `Found ${resProjects.length} Projects`, State.Success);
+  });
+
+  ProjectController.subscribeBranches((resProjects) => {
+    console.log('projects branches: ', resProjects)
+    projects.value = resProjects;
+    vuelize.notify('Scraper', `Updated ${resProjects.length} Branches`, State.Success);
+  });
 })
 </script>
 
 <style scoped lang="scss">
+.bottom-card {
+  max-height: calc(100vh - 62px - 16px - 500px);
+  overflow: auto;
+  overflow-x: hidden;
+  //min-width: fit-content;
+  min-width: 0;
 
+  > * {
+    word-break: break-word;
+  }
+}
 </style>

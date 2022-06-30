@@ -1,37 +1,76 @@
-import ApiController from "./ApiController";
+import ApiController, {FetchContentType} from "./ApiController";
 import JiraBaseController from "./JiraBaseController";
 import JiraTask from "./JiraTask";
 import {JiraIssue} from "../../types/Jira";
+import {currentIssueKey} from "../store/jira.store";
+import {ref, Ref} from "vue";
 import Task = JiraIssue.Task;
 
 export default class JiraController extends ApiController {
-    controller: JiraBaseController;
-    issues: Array<JiraTask> = [];
-    totalIssues: number = 0;
+    static controller: JiraBaseController;
+    static issues: Ref<Array<JiraTask>> = ref([]);
+    static totalIssues: Ref<number> = ref(0);
 
-    constructor(baseController: JiraBaseController) {
-        super();
-        this.controller = baseController;
+    static setBase(baseController: JiraBaseController) {
+        JiraController.controller = baseController;
     }
 
-    async getAllIssues(): Promise<any> {
+    static async getAllIssues(): Promise<any> {
         const searchResult = await ApiController.fetchJira(
-            this.controller.url,
-            `rest/api/latest/search?jql=assignee=currentuser() OR reporter=currentuser() ORDER BY updated desc`,
+            JiraController.controller.url,
+            `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`,
             'GET',
-            this.controller.credentials);
-        //TODO make it better
-        if (this.issues) {
-            searchResult.issues.filter((issue: Task) => this.issues.find((e) => e.task.key === issue.key)?.updateSelf())
-        }
-        if (this.issues.length !== searchResult.issues.length) {
-            this.issues = searchResult.issues.map((issue: Task) => {
-                if (!this.issues.find((e) => e.task.key === issue.key)) {
-                    return new JiraTask(issue, this.controller)
-                }
+            JiraController.controller.credentials);
+
+        if (JiraController.issues.value.length > 0) {
+            JiraController.issues.value.forEach((issue) => {
+                issue.updateSelf(issue.task.key === currentIssueKey.value)
             });
         }
-        this.totalIssues = searchResult.total;
-        return {issues: this.issues, total: this.totalIssues};
+
+        for (const issue of searchResult.issues) {
+            if (JiraController.issues.value.length > 0 && JiraController.issues.value.findIndex((x) => x.task.key === issue.key) > -1) {
+                //return this.issues.find((x) => x.task.key === issue.key);
+            } else {
+                JiraController.issues.value.push(await new JiraTask(issue, JiraController.controller))
+            }
+        }
+
+        JiraController.totalIssues = searchResult.total;
+        return {issues: JiraController.issues.value, total: JiraController.totalIssues};
+    }
+
+    static async getImageBase64(url: string): Promise<string> {
+        const urlObj = new URL(url);
+
+        const response = await ApiController.fetchJira(
+            JiraController.controller.url,
+            `${urlObj.pathname.substring(1)}${urlObj.search}`,
+            'GET',
+            JiraController.controller.credentials, FetchContentType.FILES)
+
+        const contentType = response.headers.get("content-type");
+
+        switch (contentType) {
+            case "image/svg+xml":
+            case "image/svg+xml;charset=UTF-8": {
+                const text = await response.text()
+                return `data:image/svg+xml,${encodeURIComponent(text)}`;
+            }
+            default: {
+                const buffer = await response.arrayBuffer();
+                const bytes = new Uint8Array(buffer);
+                const len = bytes.byteLength;
+                let binary = "";
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return `data:image/jpeg;base64,${btoa(binary)}`;
+            }
+        }
+    }
+
+    static get issueKeys(): Array<Task['key']> {
+        return JiraController.issues.value.map((issue) => issue.task.key);
     }
 }

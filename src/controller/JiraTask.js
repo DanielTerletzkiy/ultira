@@ -1,52 +1,74 @@
 import ApiController from "./ApiController";
-import { ref } from "vue";
 export default class JiraTask extends ApiController {
-    _task;
     _controller;
-    _commitData = ref();
-    _pullRequestData = ref();
-    _workLogData = ref();
+    task;
+    commitData;
+    pullRequestData;
+    commentsData;
+    transitionData;
+    loading = false;
     constructor(task, controller) {
         super();
-        this._task = task;
+        this.task = task;
         this._controller = controller;
-        this.getConnectedData();
     }
-    async updateSelf() {
-        const url = new URL(this._task.self);
-        [this._task] = await Promise.all([
+    async updateSelf(updateConnected) {
+        const url = new URL(this.task.self);
+        [this.task] = await Promise.all([
             ApiController.fetchJira(this._controller.url, `${url.pathname.replace(/\//, '')}`, 'GET', this._controller.credentials),
-            this.getConnectedData()
+            updateConnected ? this.getConnectedData() : null
         ]);
-        return self;
+        return this;
     }
     async getConnectedData() {
-        const dataUrl = `rest/dev-status/latest/issue/detail?issueId=${this._task.id}&applicationType=bitbucket&dataType`;
-        [/*this._workLogData.value,*/ this._commitData.value, this._pullRequestData.value] = await Promise.all([
-            /*ApiController.fetchJira(
-                this._controller.url,
-                `rest/api/latest/issue/${this._task.key}/worklog`,
-                'GET',
-                this._controller.credentials),*/
-            ApiController.fetchJira(this._controller.url, `${dataUrl}=repository`, 'GET', this._controller.credentials),
-            ApiController.fetchJira(this._controller.url, `${dataUrl}=pullrequest`, 'GET', this._controller.credentials)
+        this.loading = true;
+        const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
+        const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
+        let commitData;
+        let pullRequestData;
+        [commitData, pullRequestData, this.commentsData, this.transitionData] = await Promise.all([
+            ApiController.fetchJira(this._controller.url, `${applicationUrl}=repository`, 'GET', this._controller.credentials),
+            ApiController.fetchJira(this._controller.url, `${applicationUrl}=pullrequest`, 'GET', this._controller.credentials),
+            ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/comment`, 'GET', this._controller.credentials),
+            ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/transitions`, 'GET', this._controller.credentials)
         ]);
+        if (((commitData && commitData?.detail.length > 0 && commitData?.detail[0].repositories.length > 0) &&
+            (this.hasCommits)) ||
+            !this.commitData) {
+            this.commitData = Object.assign({}, commitData);
+        }
+        if (((pullRequestData && pullRequestData?.detail.length > 0 && pullRequestData?.detail[0].pullRequests.length > 0) &&
+            (this.hasPullRequests)) ||
+            !this.pullRequestData) {
+            this.pullRequestData = Object.assign({}, pullRequestData);
+        }
+        this.loading = false;
     }
     async addWorkLog(seconds) {
-        const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this._task.key}/worklog`, 'POST', this._controller.credentials, {
+        const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/worklog`, 'POST', this._controller.credentials, 0 /* JSON */, {
             timeSpentSeconds: seconds
         });
-        await this.updateSelf();
+        await this.updateSelf(true);
         return result;
     }
-    get commitData() {
-        return this._commitData;
+    async addComment(body) {
+        const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/comment`, 'POST', this._controller.credentials, 0 /* JSON */, {
+            body
+        });
+        await this.updateSelf(true);
+        return result;
     }
-    get pullRequestData() {
-        return this._pullRequestData;
+    get hasCommits() {
+        return this.commitData && this.commitData?.detail.length > 0 && this.commitData?.detail[0].repositories.length > 0;
     }
-    get task() {
-        return this._task;
+    get commitsEmpty() {
+        return this.commitData && this.commitData?.detail.length > 0 && this.commitData?.detail[0].repositories.length === 0;
+    }
+    get hasPullRequests() {
+        return this.pullRequestData && this.pullRequestData?.detail.length > 0 && this.pullRequestData?.detail[0].pullRequests.length > 0;
+    }
+    get pullRequestsEmpty() {
+        return this.pullRequestData && this.pullRequestData?.detail.length > 0 && this.pullRequestData?.detail[0].pullRequests.length === 0;
     }
 }
 //# sourceMappingURL=JiraTask.js.map

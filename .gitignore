@@ -25,4 +25,4 @@ dist-ssr
 
 #Electron-builder output
 /dist_electron
-/ultira-win32-x64
+/release-build

@@ -1,7 +1,13 @@
+import Index from "./router/Index";
+
 const {createProxyMiddleware, fixRequestBody} = require("http-proxy-middleware");
+const ProjectScraper = require('./controller/ProjectScraper');
+const SocketIO = require('./service/SocketIO');
+const http = require('http');
 
 const express = require('express');
 const app = express();
+
 
 const cors = require('cors')
 app.use(cors())
@@ -14,6 +20,8 @@ app.use((req: any, res: any, next: any) => {
     next()
 })
 
+app.use('/api', Index)
+
 let targetInstance: string;
 
 app.post("/url", function (req: any, res: any) {
@@ -21,7 +29,7 @@ app.post("/url", function (req: any, res: any) {
     console.log('targetInstance: ', targetInstance)
 
     try {
-        app.use('/rest', createProxyMiddleware({
+        app.use('/', createProxyMiddleware({
             target: targetInstance,
             changeOrigin: true,
             protocolRewrite: "https",
@@ -35,5 +43,11 @@ app.post("/url", function (req: any, res: any) {
     res.status(200).json({url: targetInstance});
 });
 
-app.listen(2343);
-module.exports = app;
+const httpServer = http.createServer(app);
+httpServer.listen(2343);
+
+SocketIO.createInstance(httpServer)
+
+export default httpServer;
+console.log('app ready')
+
