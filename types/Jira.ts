@@ -22,7 +22,7 @@ export namespace JiraConfiguration {
     export enum ApplicationType {
         Bitbucket = "bitbucket",
         Stash = "stash",
-        GitHub = "github",
+        GitHub = "GitHub", //hmm ¯\_(ツ)_/¯
     }
 }
 

@@ -9,7 +9,7 @@
     <template v-slot:tooltip>
       Lookup Pull Request status of current Issue
     </template>
-    <d-column v-if="currentIssue?.pullRequestData?.detail&&currentIssue?.pullRequestData?.detail[0]?.pullRequests.length>0" gap
+    <d-column v-if="currentIssue.hasPullRequests" gap
               style="max-height: 100%; overflow: overlay" height="100%" :wrap="false">
       <d-card v-for="pullRequest in currentIssue.pullRequestData.detail[0]?.pullRequests" width="100%" elevation="4">
         <d-row gap class="pl-3" glow v-ripple root-tag="a" target="_blank" :href="pullRequest.url">
@@ -73,7 +73,7 @@
         </d-row>
       </d-card>
     </d-column>
-    <d-column v-else-if="currentIssue?.pullRequestData?.detail[0]?.pullRequests.length === 0" style="user-select: none">
+    <d-column v-else-if="currentIssue.pullRequestsEmpty" style="user-select: none">
       <d-card-title color="primary" class="mx-3 font-size-medium">
         <d-icon name="file-question-alt" :size="30"/>
         No Pull Requests

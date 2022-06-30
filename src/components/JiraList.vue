@@ -1,6 +1,7 @@
 <template>
-  <d-column gap block elevation="n1">
-    <d-list v-model="modelValue" @update:modelValue="onChange" width="100%" class="font-weight-bold">
+  <d-column block elevation="n1" height="100%" :wrap="false">
+    <d-list v-model="modelValue" @update:modelValue="onChange" width="100%" class="font-weight-bold"
+            style="max-height: calc(100% - 48px); overflow: hidden auto">
       <d-card v-for="group in debouncedSortedGroups" background-color="transparent" block>
         <d-card-title class="py-1 pl-3 group-header font-weight-bold font-size-medium" glow color="secondary">
           <JiraImage v-if="group.icon.type === 'image'" :url="group.icon.url" :key="group.icon.url">
@@ -32,25 +33,24 @@
       </d-card>
     </d-list>
     <d-spacer/>
-    <d-divider v-if="!hideSorter" class="mx-3"/>
-    <d-card v-if="!hideSorter" class="sort-list" outlined elevation-dark="2" elevation-light="">
+    <d-card v-if="!hideSorter" style="max-height: 48px" block elevation-dark="2" elevation-light="">
       <d-tab-list class="font-weight-bold" v-model="currentSort">
-        <d-list-item class="sort-list__item" v-for="option in sortOptions" :key="option.name" :color="option.color">
+        <d-list-item class="sort-list__item" v-for="option in sortOptions" :key="option.name" :color="option.color" height="48px">
           <d-icon :name="option.icon" :size="20"/>
           {{ option.name }}
         </d-list-item>
         <d-divider class="my-2" vertical elevation="6"/>
         <d-tooltip position="top" color="secondary" filled>
-          <d-icon-button :size="40" @click="reload">
-            <d-icon name="sync" :size="20"/>
+          <d-icon-button :size="48" @click="reload">
+            <d-icon name="sync" :size="25"/>
           </d-icon-button>
           <template v-slot:tooltip>
             Reload
           </template>
         </d-tooltip>
         <d-tooltip position="top" color="secondary" filled>
-          <d-icon-button :size="40" @click="scrollIntoView(modelValue)">
-            <d-icon name="crosshair" :size="20"/>
+          <d-icon-button :size="48" @click="scrollIntoView(modelValue)">
+            <d-icon name="crosshair" :size="25"/>
           </d-icon-button>
           <template v-slot:tooltip>
             Snipe into view
@@ -298,7 +298,7 @@ watch(currentSort, () => {
 
 .group-header {
   position: sticky;
-  top: -4px;
+  top: -8px;
   z-index: 1;
   user-select: none;
   backdrop-filter: saturate(120%) blur(10px);

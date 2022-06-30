@@ -1,7 +1,7 @@
 <template>
   <d-column gap block style="position:relative;">
     <d-card v-if="selectedJiraConfig" background-color="transparent" block
-            style="max-height: calc(100vh - 52px); overflow: hidden">
+            style="max-height: calc(100vh - 62px); overflow: hidden">
       <d-column gap :wrap="false">
         <d-row gap :wrap="false" style="flex: 1; max-height: 500px; min-height: 500px;">
           <d-column block :wrap="false" v-if="currentIssue" style="flex: 1; min-height: inherit; max-height: inherit">
@@ -109,7 +109,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .bottom-card {
-  max-height: calc(100vh - 52px - 16px - 500px);
+  max-height: calc(100vh - 62px - 16px - 500px);
   overflow: auto;
   overflow-x: hidden;
   //min-width: fit-content;

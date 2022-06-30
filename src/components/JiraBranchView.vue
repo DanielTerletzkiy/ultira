@@ -12,7 +12,7 @@
     <SlideXLeftTransition group
                           style="width: 100%; max-height: calc(500px - 50px - 8px); overflow: overlay; overflow-x: hidden"
                           :class="$vuelize.theme.dark?'dark':'light'">
-      <d-column key="content" v-if="currentIssue?.commitData?.detail&&currentIssue?.commitData?.detail[0]?.repositories.length>0"
+      <d-column key="content" v-if="currentIssue.hasCommits"
                 class="mx-2 pt-0"
                 gap :wrap="false">
         <d-card v-for="repository in currentIssue.commitData.detail[0]?.repositories" :key="repository.name" elevation="2" block
@@ -103,7 +103,7 @@
           </d-column>
         </d-card>
       </d-column>
-      <d-column key="empty" v-else-if="currentIssue?.commitData?.detail[0]?.repositories.length === 0">
+      <d-column key="empty" v-else-if="currentIssue.commitsEmpty">
         <d-column style="user-select: none">
           <d-card-title color="primary" class="mx-3">
             <d-icon name="file-question-alt" :size="30"/>

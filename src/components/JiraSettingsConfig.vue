@@ -4,7 +4,7 @@
       <d-textfield full-width v-model="modelValue.name" color="primary" filled label="Name" type="name"/>
       <d-textfield full-width v-model="modelValue.url" color="primary" filled label="Url" type="url"/>
       <d-tab-list v-model="modelValue.applicationType" color="primary" elevation="1" class="ma-1">
-        <d-list-item v-for="app in AppTypes" :key="app.toLowerCase()" class="center-item">
+        <d-list-item v-for="app in AppTypes" :key="app" class="center-item">
           {{ app }}
         </d-list-item>
       </d-tab-list>

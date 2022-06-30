@@ -32,13 +32,15 @@ export default class JiraTask extends ApiController {
             ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/comment`, 'GET', this._controller.credentials),
             ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/transitions`, 'GET', this._controller.credentials)
         ]);
-        if (((commitData && commitData?.detail[0].repositories.length > 0) &&
-            (this.commitData && this.commitData?.detail[0].repositories.length > 0)) ||
+        if (((commitData && commitData?.detail.length > 0 && commitData?.detail[0].repositories.length > 0) &&
+            (this.hasCommits)) ||
             !this.commitData) {
-            this.commitData = commitData;
+            this.commitData = Object.assign({}, commitData);
         }
-        if (((pullRequestData && pullRequestData?.detail[0].pullRequests.length > 0) && (this.pullRequestData && this.pullRequestData?.detail[0].pullRequests.length > 0)) || !this.pullRequestData) {
-            this.pullRequestData = pullRequestData;
+        if (((pullRequestData && pullRequestData?.detail.length > 0 && pullRequestData?.detail[0].pullRequests.length > 0) &&
+            (this.hasPullRequests)) ||
+            !this.pullRequestData) {
+            this.pullRequestData = Object.assign({}, pullRequestData);
         }
         this.loading = false;
     }
@@ -55,6 +57,18 @@ export default class JiraTask extends ApiController {
         });
         await this.updateSelf(true);
         return result;
+    }
+    get hasCommits() {
+        return this.commitData && this.commitData?.detail.length > 0 && this.commitData?.detail[0].repositories.length > 0;
+    }
+    get commitsEmpty() {
+        return this.commitData && this.commitData?.detail.length > 0 && this.commitData?.detail[0].repositories.length === 0;
+    }
+    get hasPullRequests() {
+        return this.pullRequestData && this.pullRequestData?.detail.length > 0 && this.pullRequestData?.detail[0].pullRequests.length > 0;
+    }
+    get pullRequestsEmpty() {
+        return this.pullRequestData && this.pullRequestData?.detail.length > 0 && this.pullRequestData?.detail[0].pullRequests.length === 0;
     }
 }
 //# sourceMappingURL=JiraTask.js.map

@@ -63,13 +63,18 @@ const baseurl = import.meta.env.BASE_URL
 </template>
 
 <style lang="scss">
+#root main {
+  overflow: hidden;
+}
+
 .d-root > div {
-  height: calc(100% - 20px) !important;
+  height: calc(100% - 30px) !important;
 }
 
 .d-root > header {
-  max-height: 20px !important;
+  max-height: 30px !important;
 }
+
 header, .d-toolbar {
   -webkit-app-region: drag;
 
