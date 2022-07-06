@@ -37,6 +37,7 @@ export default class JiraTask extends ApiController {
             commitData?.detail.length > 0 &&
             commitData?.detail[0].repositories.length > 0 &&
             this.hasCommits) ||
+            this.commitsEmpty ||
             !this.commitData) {
             this.commitData = Object.assign({}, commitData);
         }
@@ -44,6 +45,7 @@ export default class JiraTask extends ApiController {
             pullRequestData?.detail.length > 0 &&
             pullRequestData?.detail[0].pullRequests.length > 0 &&
             this.hasPullRequests) ||
+            this.pullRequestsEmpty ||
             !this.pullRequestData) {
             this.pullRequestData = Object.assign({}, pullRequestData);
         }
@@ -62,6 +64,18 @@ export default class JiraTask extends ApiController {
         });
         await this.updateSelf(true);
         return result;
+    }
+    async updateTransition(id) {
+        try {
+            await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/transitions`, "POST", this._controller.credentials, 0 /* JSON */, {
+                transition: { id },
+            });
+        }
+        catch (e) {
+            console.warn(e);
+        }
+        await this.updateSelf(true);
+        return true;
     }
     get hasCommits() {
         return (this.commitData &&
