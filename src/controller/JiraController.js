@@ -10,14 +10,16 @@ export default class JiraController extends ApiController {
         JiraController.controller = baseController;
     }
     static async getAllIssues() {
-        const searchResult = await ApiController.fetchJira(JiraController.controller.url, `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`, 'GET', JiraController.controller.credentials);
+        const searchResult = await ApiController.fetchJira(JiraController.controller.url, `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`, "GET", JiraController.controller.credentials);
         if (JiraController.issues.value.length > 0) {
             JiraController.issues.value.forEach((issue) => {
                 issue.updateSelf(issue.task.key === currentIssueKey.value);
             });
         }
         for (const issue of searchResult.issues) {
-            if (JiraController.issues.value.length > 0 && JiraController.issues.value.findIndex((x) => x.task.key === issue.key) > -1) {
+            if (JiraController.issues.value.length > 0 &&
+                JiraController.issues.value.findIndex((x) => x.task.key === issue.key) >
+                    -1) {
                 //return this.issues.find((x) => x.task.key === issue.key);
             }
             else {
@@ -25,11 +27,14 @@ export default class JiraController extends ApiController {
             }
         }
         JiraController.totalIssues = searchResult.total;
-        return { issues: JiraController.issues.value, total: JiraController.totalIssues };
+        return {
+            issues: JiraController.issues.value,
+            total: JiraController.totalIssues,
+        };
     }
     static async getImageBase64(url) {
         const urlObj = new URL(url);
-        const response = await ApiController.fetchJira(JiraController.controller.url, `${urlObj.pathname.substring(1)}${urlObj.search}`, 'GET', JiraController.controller.credentials, 1 /* FILES */);
+        const response = await ApiController.fetchJira(JiraController.controller.url, `${urlObj.pathname.substring(1)}${urlObj.search}`, "GET", JiraController.controller.credentials, 1 /* FILES */);
         const contentType = response.headers.get("content-type");
         switch (contentType) {
             case "image/svg+xml":

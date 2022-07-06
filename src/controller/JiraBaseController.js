@@ -10,7 +10,7 @@ export default class JiraBaseController extends ApiController {
         this.name = data.name;
         this.credentials = data.credentials;
         this.applicationType = data.applicationType;
-        ApiController.fetchJira(data.url, 'url', 'POST', data.credentials);
+        ApiController.fetchJira(data.url, "url", "POST", data.credentials);
     }
 }
 //# sourceMappingURL=JiraBaseController.js.map

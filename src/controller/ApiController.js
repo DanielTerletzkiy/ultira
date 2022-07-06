@@ -2,13 +2,13 @@ export default class ApiController {
     static async generic(url, method, headers, body) {
         if (!headers && body) {
             headers = new Headers();
-            headers.append('Content-Type', 'application/json');
-            headers.append('Accept', 'application/json');
+            headers.append("Content-Type", "application/json");
+            headers.append("Accept", "application/json");
         }
         const options = {
             method,
             headers,
-            body: JSON.stringify(body ?? {})
+            body: JSON.stringify(body ?? {}),
         };
         if (!body) {
             delete options.body;
@@ -19,19 +19,20 @@ export default class ApiController {
         const headers = new Headers();
         switch (type) {
             case 0 /* JSON */: {
-                headers.append('Content-Type', 'application/json');
-                headers.append('Accept', 'application/json');
+                headers.append("Content-Type", "application/json");
+                headers.append("Accept", "application/json");
                 break;
             }
             case 1 /* FILES */: {
                 break;
             }
         }
-        headers.append('Authorization', 'Basic ' + btoa(basicCredentials.username + ':' + basicCredentials.password));
-        headers.append('X-Atlassian-Token', 'no-check');
-        headers.append('Jira-Host', jiraHost);
-        headers.append('User-Agent', 'XXX');
-        const response = await this.generic('http://localhost:2343/' + path, method, headers, body);
+        headers.append("Authorization", "Basic " +
+            btoa(basicCredentials.username + ":" + basicCredentials.password));
+        headers.append("X-Atlassian-Token", "no-check");
+        headers.append("Jira-Host", jiraHost);
+        headers.append("User-Agent", "XXX");
+        const response = await this.generic("http://localhost:2343/" + path, method, headers, body);
         if (type === 0 /* JSON */) {
             return response.json();
         }

@@ -1,6 +1,6 @@
 "use strict";
 // @ts-ignore
-const electron = require('electron');
+const electron = require("electron");
 // @ts-ignore
 window.ipcRenderer = electron.ipcRenderer;
 // @ts-ignore
