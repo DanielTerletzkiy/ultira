@@ -12,6 +12,7 @@ import Task = JiraIssue.Task;
 import PullRequests = JiraPullRequests.PullRequests;
 import CommentsRoot = JiraComments.CommentsRoot;
 import TransitionsRoot = JiraTransitions.TransitionsRoot;
+import { constant } from "lodash";
 
 export default class JiraTask extends ApiController {
   private readonly _controller: JiraBaseController;
@@ -32,7 +33,8 @@ export default class JiraTask extends ApiController {
 
   async updateSelf(updateConnected: boolean) {
     const url = new URL(this.task.self);
-    [this.task] = await Promise.all([
+    let task = {};
+    [task] = await Promise.all([
       ApiController.fetchJira(
         this._controller.url,
         `${url.pathname.replace(/\//, "")}`,
@@ -41,6 +43,7 @@ export default class JiraTask extends ApiController {
       ),
       updateConnected ? this.getConnectedData() : null,
     ]);
+    this.task = Object.assign({}, task) as Task;
     return this;
   }
 
@@ -48,9 +51,8 @@ export default class JiraTask extends ApiController {
     this.loading = true;
     const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
     const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
-    let commitData;
-    let pullRequestData;
-    [commitData, pullRequestData, this.commentsData, this.transitionData] =
+    let commitData, pullRequestData, commentsData, transitionData;
+    [commitData, pullRequestData, commentsData, transitionData] =
       await Promise.all([
         ApiController.fetchJira(
           this._controller.url,
@@ -99,6 +101,9 @@ export default class JiraTask extends ApiController {
     ) {
       this.pullRequestData = Object.assign({}, pullRequestData);
     }
+
+    this.commentsData = Object.assign(commentsData);
+    this.transitionData = Object.assign(transitionData);
     this.loading = false;
   }
 
@@ -145,7 +150,7 @@ export default class JiraTask extends ApiController {
         }
       );
     } catch (e) {
-      console.warn(e)
+      console.warn(e);
     }
     await this.updateSelf(true);
     return true;

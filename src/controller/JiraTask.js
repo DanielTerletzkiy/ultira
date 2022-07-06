@@ -14,19 +14,20 @@ export default class JiraTask extends ApiController {
     }
     async updateSelf(updateConnected) {
         const url = new URL(this.task.self);
-        [this.task] = await Promise.all([
+        let task = {};
+        [task] = await Promise.all([
             ApiController.fetchJira(this._controller.url, `${url.pathname.replace(/\//, "")}`, "GET", this._controller.credentials),
             updateConnected ? this.getConnectedData() : null,
         ]);
+        this.task = Object.assign({}, task);
         return this;
     }
     async getConnectedData() {
         this.loading = true;
         const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
         const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
-        let commitData;
-        let pullRequestData;
-        [commitData, pullRequestData, this.commentsData, this.transitionData] =
+        let commitData, pullRequestData, commentsData, transitionData;
+        [commitData, pullRequestData, commentsData, transitionData] =
             await Promise.all([
                 ApiController.fetchJira(this._controller.url, `${applicationUrl}=repository`, "GET", this._controller.credentials),
                 ApiController.fetchJira(this._controller.url, `${applicationUrl}=pullrequest`, "GET", this._controller.credentials),
@@ -49,6 +50,8 @@ export default class JiraTask extends ApiController {
             !this.pullRequestData) {
             this.pullRequestData = Object.assign({}, pullRequestData);
         }
+        this.commentsData = Object.assign(commentsData);
+        this.transitionData = Object.assign(transitionData);
         this.loading = false;
     }
     async addWorkLog(seconds) {

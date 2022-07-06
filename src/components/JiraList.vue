@@ -9,6 +9,7 @@
     >
       <d-card
         v-for="group in debouncedSortedGroups"
+        :key="group.name"
         background-color="transparent"
         block
       >
@@ -101,13 +102,13 @@
           <d-icon-button :size="48" @click="reload">
             <d-icon name="sync" :size="25" />
           </d-icon-button>
-          <template v-slot:tooltip> Reload </template>
+          <template v-slot:tooltip> Reload</template>
         </d-tooltip>
         <d-tooltip position="top" color="secondary" filled>
           <d-icon-button :size="48" @click="scrollIntoView(modelValue)">
             <d-icon name="crosshair" :size="25" />
           </d-icon-button>
-          <template v-slot:tooltip> Snipe into view </template>
+          <template v-slot:tooltip> Snipe into view</template>
         </d-tooltip>
       </d-tab-list>
     </d-card>
@@ -118,9 +119,14 @@
 import JiraListItem from "./JiraListItem.vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../controller/JiraTask";
-import { computed, inject, onMounted, PropType, ref, Ref, watch } from "vue";
+import { onMounted, PropType, ref, watch } from "vue";
 import debounce from "lodash/debounce";
-import { currentSort, refreshTime } from "../store/jira.store";
+import {
+  currentIssue,
+  currentIssueKey,
+  currentSort,
+  refreshTime,
+} from "../store/jira.store";
 import { vIntersectionObserver } from "@vueuse/components";
 import { FadeTransition } from "v3-transitions";
 import JiraImage from "./JiraImage.vue";
@@ -132,6 +138,7 @@ const props = defineProps({
   hideSorter: Boolean,
   issueList: {
     type: Object as PropType<Array<JiraTask>>,
+    // eslint-disable-next-line vue/require-valid-default-prop
     default: [],
   },
 });
@@ -152,6 +159,7 @@ function scrollIntoView(id: string) {
   });
 }
 
+// eslint-disable-next-line no-undef
 let timeout: NodeJS.Timeout | null | undefined = null;
 
 async function intersectObserver([{ isIntersecting }]: any) {
@@ -212,7 +220,7 @@ const sortGroups = () => {
     items: Array<JiraTask>;
   }> = [];
 
-  props.issueList.sort((a, b) => {
+  const localIssueList = [...props.issueList].sort((a, b) => {
     const da = new Date(a.task.fields.updated);
     const db = new Date(b.task.fields.updated);
     if (da == db) {
@@ -258,7 +266,7 @@ const sortGroups = () => {
         const dateStart = new Date();
         dateStart.setHours(dateStart.getHours() - time.hours);
 
-        let items = props.issueList.filter((issue) => {
+        let items = localIssueList.filter((issue) => {
           const issueTime = new Date(issue.task.fields.updated).getTime();
           return issueTime >= dateStart.getTime();
         });
@@ -288,10 +296,10 @@ const sortGroups = () => {
       break;
     }
     case SortNames.Priority: {
-      const priorities = props.issueList
+      const priorities = localIssueList
         .filter(
           (issue, idx) =>
-            props.issueList.findIndex(
+            localIssueList.findIndex(
               (x) => x.task.fields.priority.id == issue.task.fields.priority.id
             ) == idx
         )
@@ -299,7 +307,7 @@ const sortGroups = () => {
         .sort((a, b) => parseInt(a.id) - parseInt(b.id));
 
       for (const priority of priorities) {
-        const items = props.issueList.filter(
+        const items = localIssueList.filter(
           (issue) => issue.task.fields.priority.id === priority.id
         );
         groups.push({
@@ -314,10 +322,10 @@ const sortGroups = () => {
       break;
     }
     case SortNames.Type: {
-      const types = props.issueList
+      const types = localIssueList
         .filter(
           (issue, idx) =>
-            props.issueList.findIndex(
+            localIssueList.findIndex(
               (x) =>
                 x.task.fields.issuetype.id == issue.task.fields.issuetype.id
             ) == idx
@@ -326,7 +334,7 @@ const sortGroups = () => {
         .sort((a, b) => parseInt(a.id) - parseInt(b.id));
 
       for (const type of types) {
-        const items = props.issueList.filter(
+        const items = localIssueList.filter(
           (issue) => issue.task.fields.issuetype.id === type.id
         );
         groups.push({
@@ -341,10 +349,10 @@ const sortGroups = () => {
       break;
     }
     case SortNames.Project: {
-      const projects = props.issueList
+      const projects = localIssueList
         .filter(
           (issue, idx) =>
-            props.issueList.findIndex(
+            localIssueList.findIndex(
               (x) => x.task.fields.project.id == issue.task.fields.project.id
             ) == idx
         )
@@ -352,7 +360,7 @@ const sortGroups = () => {
         .sort((a, b) => parseInt(a.id) - parseInt(b.id));
 
       for (const project of projects) {
-        const items = props.issueList.filter(
+        const items = localIssueList.filter(
           (issue) => issue.task.fields.project.id === project.id
         );
         groups.push({
@@ -392,6 +400,13 @@ watch(currentSort, () => {
   debouncedSortedGroups.value = sortGroups();
   scrollTimeout(100);
 });
+
+watch(
+  [() => currentIssueKey.value, () => currentIssue.value?.task.fields.updated],
+  () => {
+    scrollTimeout(1000);
+  }
+);
 </script>
 
 <style scoped lang="scss">
