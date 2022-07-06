@@ -11,18 +11,18 @@ function createWindow() {
             contextIsolation: false,
         },
         frame: false,
-        titleBarStyle: 'customButtonsOnHover',
+        titleBarStyle: "customButtonsOnHover",
         titleBarOverlay: {
-            color: '#242832',
-            symbolColor: '#A8B2FF',
+            color: "#242832",
+            symbolColor: "#A8B2FF",
         },
-        icon: path.join(__dirname, 'public/favicon.ico')
+        icon: path.join(__dirname, "public/favicon.ico"),
     });
     win.maximize();
     win.loadFile("dist/index.html");
-    win.webContents.on('new-window', function (e, url) {
+    win.webContents.on("new-window", function (e, url) {
         e.preventDefault();
-        require('electron').shell.openExternal(url);
+        require("electron").shell.openExternal(url);
     });
 }
 app.setUserTasks([]);
@@ -41,7 +41,6 @@ app.on("window-all-closed", () => {
     try {
         expressServer.close();
     }
-    catch (e) {
-    }
+    catch (e) { }
 });
 //# sourceMappingURL=main.js.map

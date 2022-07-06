@@ -1,5 +1,10 @@
 <template>
-  <d-card-subtitle class="content" color="secondary" :tint="10" v-html="jira2md.jira_to_html(body)"/>
+  <d-card-subtitle
+    class="content"
+    color="secondary"
+    :tint="10"
+    v-html="jira2md.jira_to_html(body)"
+  />
 </template>
 
 <script setup lang="ts">
@@ -7,8 +12,8 @@
 import jira2md from "jira2md";
 
 const props = defineProps({
-  body: String
-})
+  body: String,
+});
 </script>
 
 <style scoped lang="scss">
@@ -21,7 +26,8 @@ const props = defineProps({
   text-align-last: left;
   max-height: inherit;
 
-  ::v-deep(ul), ::v-deep(ol) {
+  ::v-deep(ul),
+  ::v-deep(ol) {
     margin-left: 24px;
   }
 

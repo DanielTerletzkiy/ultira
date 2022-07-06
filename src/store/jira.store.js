@@ -1,25 +1,29 @@
 import { createStore } from "vuex";
 import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
-import { JiraConfiguration, SortNames } from "../../types/Jira";
+import { JiraConfiguration, SortNames, } from "../../types/Jira";
 var ApplicationType = JiraConfiguration.ApplicationType;
 import JiraController from "../controller/JiraController";
 const store = createStore({
     plugins: [new VuexPersistence().plugin],
     state: {
-        currentIssueKey: '',
+        currentIssueKey: "",
         currentSort: SortNames.Latest,
-        selectedJiraConfig: '',
-        jiraConfigs: [{
+        selectedJiraConfig: "",
+        jiraConfigs: [
+            {
                 name: "sample",
                 url: "https://",
-                applicationType: ApplicationType.Bitbucket
-            }],
-        projects: [{
-                path: '',
-                project: '',
-                branch: ''
-            }],
+                applicationType: ApplicationType.Bitbucket,
+            },
+        ],
+        projects: [
+            {
+                path: "",
+                project: "",
+                branch: "",
+            },
+        ],
         searchDialogOpen: false,
         credentialsDialogOpen: false,
         refreshTime: 60,
@@ -52,7 +56,7 @@ const store = createStore({
         },
         zoomFactor(state) {
             return state.zoomFactor;
-        }
+        },
     },
     mutations: {
         setCurrentIssueKey(state, payload) {
@@ -81,20 +85,20 @@ const store = createStore({
         },
         setZoomFactor(state, payload) {
             state.zoomFactor = payload;
-        }
+        },
     },
     actions: {
         setCurrentIssueKey(context, payload) {
-            context.commit('setCurrentIssueKey', payload);
+            context.commit("setCurrentIssueKey", payload);
         },
         setCurrentSort(context, payload) {
-            context.commit('setCurrentSort', payload);
+            context.commit("setCurrentSort", payload);
         },
         setCurrentJiraConfig(context, payload) {
-            context.commit('setCurrentJiraConfig', payload);
+            context.commit("setCurrentJiraConfig", payload);
         },
         setJiraConfigs(context, payload) {
-            context.commit('setJiraConfigs', payload);
+            context.commit("setJiraConfigs", payload);
         },
         setProjects(context, payload) {
             let projects = [];
@@ -108,30 +112,31 @@ const store = createStore({
                     context.state.projects[index].branch = project.branch;
                 }
             }
-            context.commit('setProjects', projects);
+            context.commit("setProjects", projects);
         },
         setSearchDialogOpen(context, payload) {
-            context.commit('setSearchDialogOpen', payload);
+            context.commit("setSearchDialogOpen", payload);
         },
         setCredentialsDialogOpen(context, payload) {
-            context.commit('setCredentialsDialogOpen', payload);
+            context.commit("setCredentialsDialogOpen", payload);
         },
         setRefreshTime(context, payload) {
-            context.commit('setRefreshTime', payload);
+            context.commit("setRefreshTime", payload);
         },
         setZoomFactor(context, payload) {
-            context.commit('setZoomFactor', payload);
-        }
+            context.commit("setZoomFactor", payload);
+        },
     },
 });
 export default store;
-export const currentIssue = computed(() => JiraController && JiraController.issues.value?.find((issue) => issue.task.key === currentIssueKey.value));
+export const currentIssue = computed(() => JiraController &&
+    JiraController.issues.value?.find((issue) => issue.task.key === currentIssueKey.value));
 export const currentIssueKey = computed({
     get() {
         return store.getters.currentIssueKey;
     },
     set(value) {
-        store.dispatch('setCurrentIssueKey', value);
+        store.dispatch("setCurrentIssueKey", value);
     },
 });
 export const currentSort = computed({
@@ -139,7 +144,7 @@ export const currentSort = computed({
         return store.getters.currentSort;
     },
     set(value) {
-        store.dispatch('setCurrentSort', value);
+        store.dispatch("setCurrentSort", value);
     },
 });
 export const selectedJiraConfig = computed({
@@ -147,7 +152,7 @@ export const selectedJiraConfig = computed({
         return store.getters.currentJiraConfig;
     },
     set(value) {
-        store.dispatch('setCurrentJiraConfig', value);
+        store.dispatch("setCurrentJiraConfig", value);
     },
 });
 export const jiraConfigs = computed({
@@ -155,47 +160,47 @@ export const jiraConfigs = computed({
         return store.getters.jiraConfigs;
     },
     set(value) {
-        store.dispatch('setJiraConfigs', value);
-    }
+        store.dispatch("setJiraConfigs", value);
+    },
 });
 export const projects = computed({
     get() {
         return store.getters.projects;
     },
     set(value) {
-        store.dispatch('setProjects', value);
-    }
+        store.dispatch("setProjects", value);
+    },
 });
 export const searchOpen = computed({
     get() {
         return store.getters.searchDialogOpen;
     },
     set(value) {
-        store.dispatch('setSearchDialogOpen', value);
-    }
+        store.dispatch("setSearchDialogOpen", value);
+    },
 });
 export const credentialsOpen = computed({
     get() {
         return store.getters.credentialsDialogOpen;
     },
     set(value) {
-        store.dispatch('setCredentialsDialogOpen', value);
-    }
+        store.dispatch("setCredentialsDialogOpen", value);
+    },
 });
 export const refreshTime = computed({
     get() {
         return store.getters.refreshTime;
     },
     set(value) {
-        store.dispatch('setRefreshTime', value);
-    }
+        store.dispatch("setRefreshTime", value);
+    },
 });
 export const zoomFactor = computed({
     get() {
         return store.getters.zoomFactor;
     },
     set(value) {
-        store.dispatch('setZoomFactor', value);
-    }
+        store.dispatch("setZoomFactor", value);
+    },
 });
 //# sourceMappingURL=jira.store.js.map

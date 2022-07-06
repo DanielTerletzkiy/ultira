@@ -1,4 +1,4 @@
-import * as io from 'socket.io-client';
+import * as io from "socket.io-client";
 export default class SocketClient {
     static connectionString = `http://localhost:2343`;
     static ioInstance;

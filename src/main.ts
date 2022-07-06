@@ -1,18 +1,18 @@
-import {createApp} from 'vue'
-import vuelize from "vuelize/src/index"
+import { createApp } from "vue";
+import vuelize from "vuelize/src/index";
 // @ts-ignore
-import {vLongpress} from "@nanogiants/vue3-longpress";
+import { vLongpress } from "@nanogiants/vue3-longpress";
 import jiraStore from "./store/jira.store";
-import 'v3-transitions/dist/style.css'
-import App from './App.vue'
+import "v3-transitions/dist/style.css";
+import App from "./App.vue";
 import SocketClient from "./service/SocketIOClient";
-import DomListener from "./dom/DomListener"
+import DomListener from "./dom/DomListener";
 
 SocketClient.instance;
 DomListener.init();
 
 createApp(App)
-    .use(jiraStore)
-    .use(vuelize)
-    .directive('use-longpress', vLongpress)
-    .mount('#app')
+  .use(jiraStore)
+  .use(vuelize)
+  .directive("use-longpress", vLongpress)
+  .mount("#app");
