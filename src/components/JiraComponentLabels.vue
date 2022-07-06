@@ -18,6 +18,7 @@
 import { inject } from "vue";
 import { currentIssue } from "../store/jira.store";
 
+// eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 </script>
 

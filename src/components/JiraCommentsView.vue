@@ -72,6 +72,7 @@ import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraLoader from "./JiraLoader.vue";
 import { currentIssue } from "../store/jira.store";
 
+// eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 const loading = ref(false);

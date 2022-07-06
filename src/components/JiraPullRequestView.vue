@@ -8,7 +8,7 @@
         color="primary"
       />
     </template>
-    <template v-slot:title> Pull Requests </template>
+    <template v-slot:title> Pull Requests</template>
     <template v-slot:tooltip>
       Lookup Pull Request status of current Issue
     </template>
@@ -61,9 +61,9 @@
           <d-spacer />
           <d-column style="overflow: hidden" class="pa-0">
             <d-label rounded="none" width="100%">{{ pullRequest.id }}</d-label>
-            <d-label rounded="none" width="100%">{{
-              pullRequest.status
-            }}</d-label>
+            <d-label rounded="none" width="100%"
+              >{{ pullRequest.status }}
+            </d-label>
           </d-column>
         </d-row>
         <d-divider elevation="8" />
@@ -141,13 +141,10 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import { SlideYUpTransition } from "v3-transitions";
 import JiraLoader from "./JiraLoader.vue";
 import { currentIssue } from "../store/jira.store";
-
-const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 function getApprovals(reviewers: any) /*TODO export namespace bs*/ {
   return reviewers.filter(

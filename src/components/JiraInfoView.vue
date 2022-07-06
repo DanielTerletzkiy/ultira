@@ -110,11 +110,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, PropType } from "vue";
-import JiraTask from "../controller/JiraTask";
+import { computed, inject} from "vue";
 import { State } from "vuelize/src/types/Vuelize";
-//@ts-ignore
-import jira2md from "jira2md";
 import JiraController from "../controller/JiraController";
 import JiraInfoViewSidebar from "./JiraInfoViewSidebar.vue";
 import JiraMarkup from "./JiraMarkup.vue";
@@ -123,6 +120,7 @@ import { FadeTransition } from "v3-transitions";
 import JiraTransitionButtons from "./JiraTransitionButtons.vue";
 import { currentIssue } from "../store/jira.store";
 
+// eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 const issueLink = computed(

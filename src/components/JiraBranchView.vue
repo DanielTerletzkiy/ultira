@@ -203,8 +203,6 @@ import ChangeType = JiraCommits.ChangeType;
 import JiraLoader from "./JiraLoader.vue";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 
-const vuelize: Vuelize = inject("vuelize") as Vuelize;
-
 function changeTypeColor(type: ChangeType) {
   switch (type) {
     case "MODIFIED": {

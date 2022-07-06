@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, provide, ref, watch } from "vue";
+import { computed, inject, onMounted, watch } from "vue";
 import {
   credentialsOpen,
   jiraConfigs,
@@ -85,6 +85,7 @@ import ProjectController from "../controller/ProjectController";
 import { State } from "vuelize/src/types/Vuelize";
 import JiraConfig = JiraConfiguration.JiraConfig;
 
+// eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 const currentJiraConfig = computed<JiraConfig>(
   () =>

@@ -162,6 +162,7 @@ if (import.meta.env.MODE === "production") {
   factor = useZoomFactor();
 }
 
+// eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 const emit = defineEmits(["submit"]);

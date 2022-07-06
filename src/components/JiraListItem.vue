@@ -79,6 +79,7 @@ import { FadeTransition } from "v3-transitions";
 import { computed, inject, PropType } from "vue";
 import JiraTask from "../controller/JiraTask";
 
+// eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 const props = defineProps({
