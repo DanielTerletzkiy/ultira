@@ -7,8 +7,8 @@
       @click="onClick"
     />
     <template v-slot:tooltip>
-      <d-icon name="share" :size="20" />
-      <span v-if="project">{{ project.project.toUpperCase() }}</span>
+      <d-icon name="link" :size="20" />
+      <strong v-if="project">{{ project.branch.toUpperCase() }}</strong>
       <span v-else>Project not installed</span>
     </template>
   </d-tooltip>
