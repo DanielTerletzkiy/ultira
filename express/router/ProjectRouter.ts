@@ -13,9 +13,8 @@ router.get('/scrape/projects/:path', (req: any, res: any) => {
     res.send(true)
 })
 
-router.post('/scrape/branches/', (req: any, res: any) => {
-    ProjectScraper.scrapeBranches(req.body)
-    res.send(true)
+router.post('/scrape/branches/', async (req: any, res: any) => {
+    res.send(await ProjectScraper.scrapeBranches(req.body))
 })
 
 export default router

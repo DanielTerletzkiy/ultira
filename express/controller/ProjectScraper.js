@@ -15,34 +15,43 @@ module.exports = class ProjectScraper {
                 resolve(message);
             });
         });
-        projects.map((project) => {
-            project.branch = ProjectScraper.getBranch(project.path);
+        projects.map(async (project) => {
+            project.branch = await ProjectScraper.getBranch(project.path);
         });
         SocketIO.instance.emit('project/scan/complete', projects);
         ProjectScraper.projects = projects;
         return projects;
     }
-    static getBranch(path) {
+    static async getBranch(path) {
         let branch = "NONE";
         try {
             const shell = require("shelljs");
             shell.config.execPath = shell.which('node').stdout;
             shell.cd(path);
-            branch = shell.exec('git branch --show-current').replace(/(\r\n|\n|\r)/gm, "");
+            const child = shell.exec('git branch --show-current', { async: true, windowsHide: true });
+            branch = await new Promise((resolve, reject) => {
+                child.stdout.once('data', function (data) {
+                    resolve(data.replace(/(\r\n|\n|\r)/gm, ""));
+                });
+                child.once('error', function (data) {
+                    reject();
+                });
+            });
         }
         catch (e) {
             console.error(e);
         }
         return branch;
     }
-    static scrapeBranches(paths) {
+    static async scrapeBranches(paths) {
         const projectBranches = [];
-        paths.forEach((path) => {
+        for (const path of paths) {
+            const branch = await ProjectScraper.getBranch(path);
             projectBranches.push({
                 path: path,
-                branch: ProjectScraper.getBranch(path)
+                branch: branch
             });
-        });
+        }
         SocketIO.instance.emit('branches/scan/complete', projectBranches);
         return projectBranches;
     }
@@ -51,11 +60,15 @@ module.exports = class ProjectScraper {
             const shell = require("shelljs");
             shell.config.execPath = shell.which('node').stdout;
             shell.cd(project.path);
-            shell.exec(`git stash`); //sash current uncommitted files
-            if (shell.exec(`git checkout ${issue}`).code !== 0) {
-                shell.exec(`git checkout -b ${issue}`);
+            shell.exec(`git stash`, { windowsHide: true }); //sash current uncommitted files
+            if (shell.exec(`git checkout ${issue}`, { windowsHide: true }).code !== 0) {
+                shell.exec(`git checkout -b ${issue}`, { windowsHide: true });
             } //try to check out branch, create if necessary
-            shell.exec('phpstorm64 .'); //open as project in current directory
+            ProjectScraper.getBranch(project.path).then(branch => SocketIO.instance.emit('branches/scan/complete', [{
+                    path: project.path,
+                    branch,
+                }]));
+            shell.exec('phpstorm64 .', { windowsHide: true }); //open as project in current directory
             return true;
         }
         catch (e) {
