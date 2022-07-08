@@ -42,7 +42,7 @@
         +{{ i }}
       </d-icon-button>
     </d-row>
-    <d-tooltip :key="currentIssue.task.key" color="primary">
+    <d-tooltip :key="currentIssue.task.key" color="primary" position="bottom">
       <DProgressbar
         class="mx-2"
         v-model="currentIssue.task.fields.timespent"

@@ -1,6 +1,6 @@
 <template>
   <d-card class="jira-view-wrapper" elevation="1" block height="100%">
-    <d-tooltip filled color="primary">
+    <d-tooltip position="bottom" filled color="primary">
       <d-column class="header pa-0">
         <d-row class="px-2" color="primary" glow>
           <slot v-if="!!$slots.icon" name="icon" />

@@ -52,7 +52,7 @@
             {{ currentIssue.task.fields.summary }}
           </d-card-title>
           <d-card-subtitle>
-            <d-tooltip>
+            <d-tooltip position="bottom">
               <d-icon-button
                 rounded="md"
                 :size="24"
@@ -63,7 +63,7 @@
               </d-icon-button>
               <template v-slot:tooltip> Copy Key </template>
             </d-tooltip>
-            <d-tooltip>
+            <d-tooltip position="bottom">
               <d-icon-button
                 rounded="md"
                 :size="24"

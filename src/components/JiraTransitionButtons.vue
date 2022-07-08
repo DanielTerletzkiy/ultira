@@ -9,7 +9,7 @@
   >
     <d-tooltip
       v-for="transition in currentIssue.transitionData.transitions"
-      :key="transition.id"
+      :key="transition.id" position="bottom"
     >
       <d-button color="secondary" @click="onClick(transition.id)">
         {{ transition.name }}
