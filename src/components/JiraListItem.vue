@@ -95,7 +95,7 @@ const status = computed(() => {
     case "Open":
     case "Backlog":
     case "To Do": {
-      payload.color = vuelize.getColor("error", 40);
+      payload.color = "error";
       payload.icon = "database";
       break;
     }
