@@ -33,7 +33,7 @@
         >
           {{ project.branch }}
         </d-button>
-        <JiraProjectButton :repository="project.project" />
+        <JiraProjectButton :repository="project.project" tooltip-position="left"/>
       </d-row>
     </d-column>
   </d-card>

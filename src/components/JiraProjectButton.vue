@@ -7,14 +7,18 @@
       @click="onClick"
     />
     <template v-slot:tooltip>
-      <d-icon name="corner-down-right" :size="20" style="transform: rotate(45deg)"/>
+      <d-icon
+        name="corner-down-right"
+        :size="20"
+        style="transform: rotate(45deg)"
+      />
       <d-column>
         <span>
           <strong v-if="project">{{ project.branch.toUpperCase() }}</strong>
           <span v-else>Project not installed</span>
         </span>
-        <d-divider/>
-        <strong>{{currentIssueKey}}</strong>
+        <d-divider color="primary" :tint="-40"/>
+        <strong>{{ currentIssueKey }}</strong>
       </d-column>
     </template>
   </d-tooltip>
@@ -22,13 +26,14 @@
 
 <script setup lang="ts">
 import { projects, currentIssueKey } from "../store/jira.store";
-import { computed } from "vue";
+import { computed, PropType } from "vue";
 import ProjectController from "../controller/ProjectController";
 import { Project } from "../../types/Jira";
+import { Position } from "vuelize/src/types/Vuelize";
 
 const props = defineProps({
   repository: { type: String, required: true },
-  tooltipPosition: { type: String, default: "bottom" },
+  tooltipPosition: { type: String as PropType<Position>, default: "bottom" },
 });
 
 const project = computed<Project>(
