@@ -13,6 +13,12 @@ export default class ProjectController extends ApiController {
             issue,
         });
     }
+    static async openFile(project, file) {
+        return await ApiController.generic("http://localhost:2343/api/project/open/file", "POST", undefined, {
+            project,
+            file,
+        });
+    }
     static async scrape(path) {
         return await ApiController.generic("http://localhost:2343/api/project/scrape/projects/" + path, "GET");
     }

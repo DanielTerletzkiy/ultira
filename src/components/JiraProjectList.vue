@@ -42,23 +42,29 @@
           </d-row>
         </template>
         <template v-slot:default>
-          <d-column gap block>
-            <d-row
+          <d-column block>
+            <d-card
               v-for="change in project.changes"
               :key="change"
-              class="pa-0"
-              gap
+              block
+              background-color="transparent"
             >
-              <d-card-subtitle
-                v-for="(str, s) in change.split(/(D|M|A|\?\?) /)"
-                :key="str"
-                class="pa-0"
-                :color="s <= 1 ? 'primary' : ''"
-              >
-                {{ str }}
-              </d-card-subtitle>
-            </d-row>
-            <d-divider elevation="10" />
+              <d-row class="pa-0" gap>
+                <d-label
+                  v-for="(str, s) in change.slice(0, 2)"
+                  :key="str"
+                  :color="s <= 1 ? 'primary' : ''"
+                  v-show="str !== ' ' && str !== ''"
+                  :glowing="s <= 1"
+                >
+                  {{ str }}
+                </d-label>
+                <d-card-subtitle glow v-ripple @click="onFileClick(project, change.at(-1))">
+                  {{ change.at(-1) }}
+                </d-card-subtitle>
+              </d-row>
+              <d-divider elevation="8" />
+            </d-card>
           </d-column>
         </template>
       </d-accordion>
@@ -72,6 +78,7 @@ import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraController from "../controller/JiraController";
 import { computed } from "vue";
 import Project from "../model/Project";
+import ProjectController from "../controller/ProjectController";
 
 function setIssue(branch: string) {
   currentIssueKey.value = branch;
@@ -107,6 +114,10 @@ const recommendedProjects = computed<Array<Project>>(() => {
       project.branch.split("-")[0] === currentIssueKey.value.split("-")[0]
   );
 });
+
+function onFileClick(project: Project, file: string){
+  ProjectController.openFile(project, file)
+}
 </script>
 
 <style scoped lang="scss">

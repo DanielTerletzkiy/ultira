@@ -33,7 +33,6 @@ module.exports = class ProjectScraper {
         for (const path of paths) {
             const branch = await GitShell.getCurrentBranch(path);
             const changes = await GitShell.getCurrentChanges(path);
-            console.log(changes);
             projectBranches.push({
                 path,
                 branch,
@@ -52,13 +51,33 @@ module.exports = class ProjectScraper {
             if (shell.exec(`git checkout ${issue}`, { windowsHide: true }).code !== 0) {
                 shell.exec(`git checkout -b ${issue}`, { windowsHide: true });
             } //try to check out branch, create if necessary
-            GitShell.getCurrentBranch(project.path).then((branch) => SocketIO.instance.emit("branches/scan/complete", [
-                {
-                    path: project.path,
-                    branch,
-                },
-            ]));
+            Promise.all([
+                new Promise(resolve => GitShell.getCurrentBranch(project.path).then(resolve)),
+                new Promise(resolve => GitShell.getCurrentChanges(project.path).then(resolve)),
+            ])
+                .then(data => {
+                SocketIO.instance.emit("branches/scan/complete", [
+                    {
+                        path: project.path,
+                        branch: data[0],
+                        changes: data[1],
+                    },
+                ]);
+            });
             shell.exec("phpstorm64 .", { windowsHide: true }); //open as project in current directory
+            return true;
+        }
+        catch (e) {
+            console.error("error: ", e);
+            return false;
+        }
+    }
+    static openFile(project, file) {
+        try {
+            const shell = require("shelljs");
+            shell.config.execPath = shell.which("node").stdout;
+            shell.cd(project.path);
+            shell.exec("phpstorm64 " + file, { windowsHide: true }); //open as project in current directory
             return true;
         }
         catch (e) {

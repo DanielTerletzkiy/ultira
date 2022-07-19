@@ -15,13 +15,25 @@ export default class ProjectController extends ApiController {
 
   static async open(project: Project, issue: Task["key"]) {
     return await ApiController.generic(
-      "http://localhost:2343/api/project/open",
-      "POST",
-      undefined,
-      {
-        project,
-        issue,
-      }
+        "http://localhost:2343/api/project/open",
+        "POST",
+        undefined,
+        {
+          project,
+          issue,
+        }
+    );
+  }
+
+  static async openFile(project: Project, file: string) {
+    return await ApiController.generic(
+        "http://localhost:2343/api/project/open/file",
+        "POST",
+        undefined,
+        {
+          project,
+          file,
+        }
     );
   }
 

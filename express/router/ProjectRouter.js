@@ -6,6 +6,9 @@ const ProjectScraper = require("../controller/ProjectScraper");
 router.post("/open", (req, res) => {
     res.send(ProjectScraper.open(req.body.project, req.body.issue));
 });
+router.post("/open/file", (req, res) => {
+    res.send(ProjectScraper.openFile(req.body.project, req.body.file));
+});
 router.get("/scrape/projects/:path", (req, res) => {
     ProjectScraper.scrape(req.params.path);
     res.send(true);

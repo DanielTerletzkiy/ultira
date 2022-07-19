@@ -8,6 +8,10 @@ router.post("/open", (req: any, res: any) => {
   res.send(ProjectScraper.open(req.body.project as Project, req.body.issue));
 });
 
+router.post("/open/file", (req: any, res: any) => {
+  res.send(ProjectScraper.openFile(req.body.project as Project, req.body.file));
+});
+
 router.get("/scrape/projects/:path", (req: any, res: any) => {
   ProjectScraper.scrape(req.params.path);
   res.send(true);
