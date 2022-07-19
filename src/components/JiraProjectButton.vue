@@ -46,7 +46,7 @@ import Project from "../model/Project";
 
 const props = defineProps({
   repository: { type: String, required: true },
-  tooltipPosition: { type: String as PropType<Position>, default: "bottom" },
+  tooltipPosition: { type: String as PropType<Position>, default: "left" },
 });
 
 const project = computed<Project>(
@@ -57,7 +57,7 @@ const project = computed<Project>(
     ) as Project
 );
 
-const hasChanges = computed<boolean>(() => project.value.changes.length > 0);
+const hasChanges = computed<boolean>(() => project.value && project.value?.changes?.length > 0);
 
 function onClick() {
   ProjectController.open(project.value, currentIssueKey.value);
