@@ -1,6 +1,6 @@
 import ApiController, { FetchContentType } from "./ApiController";
 import JiraBaseController from "./JiraBaseController";
-import JiraTask from "./JiraTask";
+import JiraTask from "../model/JiraTask";
 import { JiraIssue } from "../../types/Jira";
 import { currentIssueKey } from "../store/jira.store";
 import { ref, Ref } from "vue";

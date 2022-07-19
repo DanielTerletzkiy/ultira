@@ -8,8 +8,8 @@
         color="primary"
       />
     </template>
-    <template v-slot:title> Branches & Commits </template>
-    <template v-slot:tooltip> View and Open Branches & Commits </template>
+    <template v-slot:title> Branches & Commits</template>
+    <template v-slot:tooltip> View and Open Branches & Commits</template>
     <SlideXLeftTransition
       group
       style="
@@ -40,7 +40,7 @@
                 <d-card-title class="font-size-medium">
                   {{ repository.name }}
                 </d-card-title>
-                <d-card-subtitle> Repository </d-card-subtitle>
+                <d-card-subtitle> Repository</d-card-subtitle>
               </d-column>
               <d-column>
                 <d-card-title
@@ -49,7 +49,7 @@
                 >
                   {{ repository.commits.length.toString().padStart(2, "0") }}
                 </d-card-title>
-                <d-card-subtitle> Commits </d-card-subtitle>
+                <d-card-subtitle> Commits</d-card-subtitle>
               </d-column>
               <d-spacer />
               <JiraProjectButton :repository="repository.name" />
@@ -104,12 +104,6 @@
                       background-color="transparent"
                     >
                       <d-row block gap justify="start">
-                        <d-label
-                          rounded="pill"
-                          :color="changeTypeColor(file.changeType)"
-                        >
-                          {{ file.changeType }}
-                        </d-label>
                         <d-column
                           v-if="file.linesAdded || file.linesRemoved"
                           class="pa-0"
@@ -128,7 +122,7 @@
                               <d-icon name="plus" :size="14" />
                               {{ file.linesAdded }}
                             </d-card-subtitle>
-                            <template v-slot:tooltip> Lines added </template>
+                            <template v-slot:tooltip> Lines added</template>
                           </d-tooltip>
                           <d-tooltip color="error" filled position="right">
                             <d-card-subtitle
@@ -140,7 +134,7 @@
                               <d-icon name="minus" :size="14" />
                               {{ file.linesRemoved }}
                             </d-card-subtitle>
-                            <template v-slot:tooltip> Lines deleted </template>
+                            <template v-slot:tooltip> Lines deleted</template>
                           </d-tooltip>
                         </d-column>
                         <d-card-subtitle
@@ -152,6 +146,10 @@
                         >
                           {{ file.path }}
                         </d-card-subtitle>
+                        <d-spacer/>
+                        <d-label :color="changeTypeColor(file.changeType)">
+                          {{ file.changeType }}
+                        </d-label>
                       </d-row>
                       <d-divider elevation="6" />
                     </d-card>
@@ -216,7 +214,7 @@ function changeTypeColor(type: ChangeType) {
     }
     case "MOVED":
     case "COPIED": {
-      return "warning";
+      return "changes";
     }
     case "UNKNOWN": {
       return "secondary";

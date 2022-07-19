@@ -6,11 +6,11 @@ export enum SortNames {
   Project = "Project",
 }
 
-export interface Project {
+/*export interface Project {
   path: string;
   project: string;
   branch: string;
-}
+}*/
 
 export namespace JiraConfiguration {
   export interface JiraConfig {

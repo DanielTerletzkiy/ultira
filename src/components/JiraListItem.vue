@@ -77,7 +77,7 @@
 import { VeProgress } from "vue-ellipse-progress";
 import { FadeTransition } from "v3-transitions";
 import { computed, inject, PropType } from "vue";
-import JiraTask from "../controller/JiraTask";
+import JiraTask from "../model/JiraTask";
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;

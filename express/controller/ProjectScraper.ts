@@ -1,69 +1,53 @@
-import { JiraIssue, Project } from "../../types/Jira";
+import { JiraIssue } from "../../types/Jira";
 import Task = JiraIssue.Task;
-import shell from "shelljs";
+import Project from "../../src/model/Project";
 
 const Worker = require("worker_threads").Worker;
 const path = require("path");
 const SocketIO = require("../service/SocketIO");
+const GitShell = require("./GitShell");
 
 module.exports = class ProjectScraper {
   static projects: Array<Project>;
 
   static async scrape(startDirectory: string = "PhpstormProjects") {
-    console.log("starting worker on: ", __filename);
     const worker = new Worker(
       path.join(__dirname, "..", "worker/ProjectScrapperWorker.js"),
       {
         workerData: startDirectory,
       }
     );
-    const projects = (await new Promise((resolve, reject) => {
+    let projects = (await new Promise((resolve, reject) => {
       worker.once("message", (message: Array<Project>) => {
-        resolve(message);
+        const projects = message.map((object) => new Project(object));
+        resolve(projects);
       });
     })) as Array<Project>;
-    projects.map(async (project) => {
-      project.branch = await ProjectScraper.getBranch(project.path);
-    });
+    projects = await Promise.all(
+      projects.map(async (project) => {
+        project.branch = await GitShell.getCurrentBranch(project.path);
+        return project;
+      })
+    );
     SocketIO.instance.emit("project/scan/complete", projects);
     ProjectScraper.projects = projects;
     return projects;
-  }
-
-  static async getBranch(path: Project["path"]): Promise<string> {
-    let branch = "NONE";
-    try {
-      const shell = require("shelljs");
-      shell.config.execPath = shell.which("node").stdout;
-      shell.cd(path);
-      const child = shell.exec("git branch --show-current", {
-        async: true,
-        windowsHide: true,
-      });
-      branch = await new Promise((resolve, reject) => {
-        child.stdout.once("data", function (data: string) {
-          resolve(data.replace(/(\r\n|\n|\r)/gm, ""));
-        });
-        child.once("error", function (data: string) {
-          reject();
-        });
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    return branch;
   }
 
   static async scrapeBranches(paths: Array<Project["path"]>) {
     const projectBranches: Array<{
       path: Project["path"];
       branch: Project["branch"];
+      changes: Project["changes"];
     }> = [];
     for (const path of paths) {
-      const branch = await ProjectScraper.getBranch(path);
+      const branch = await GitShell.getCurrentBranch(path);
+      const changes = await GitShell.getCurrentChanges(path);
+      console.log(changes)
       projectBranches.push({
-        path: path,
-        branch: branch,
+        path,
+        branch,
+        changes,
       });
     }
     SocketIO.instance.emit("branches/scan/complete", projectBranches);
@@ -81,13 +65,14 @@ module.exports = class ProjectScraper {
       ) {
         shell.exec(`git checkout -b ${issue}`, { windowsHide: true });
       } //try to check out branch, create if necessary
-      ProjectScraper.getBranch(project.path).then((branch) =>
-        SocketIO.instance.emit("branches/scan/complete", [
-          {
-            path: project.path,
-            branch,
-          },
-        ])
+      GitShell.getCurrentBranch(project.path).then(
+        (branch: string) =>
+          SocketIO.instance.emit("branches/scan/complete", [
+            {
+              path: project.path,
+              branch,
+            },
+          ])
       );
       shell.exec("phpstorm64 .", { windowsHide: true }); //open as project in current directory
       return true;
@@ -97,3 +82,5 @@ module.exports = class ProjectScraper {
     }
   }
 };
+
+export {};

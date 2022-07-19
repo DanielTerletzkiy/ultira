@@ -22,6 +22,7 @@ const store = createStore({
                 path: "",
                 project: "",
                 branch: "",
+                changes: [""]
             },
         ],
         searchDialogOpen: false,
@@ -101,7 +102,7 @@ const store = createStore({
             context.commit("setJiraConfigs", payload);
         },
         setProjects(context, payload) {
-            let projects = [];
+            const projects = [];
             for (const project of payload) {
                 const index = context.state.projects.findIndex((x) => x.path === project.path);
                 if (index === -1) {
@@ -110,6 +111,7 @@ const store = createStore({
                 }
                 if (index > -1) {
                     context.state.projects[index].branch = project.branch;
+                    context.state.projects[index].changes = project.changes;
                 }
             }
             context.commit("setProjects", projects);

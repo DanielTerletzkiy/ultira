@@ -1,58 +1,43 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const Project_1 = __importDefault(require("../../src/model/Project"));
 const Worker = require("worker_threads").Worker;
 const path = require("path");
 const SocketIO = require("../service/SocketIO");
+const GitShell = require("./GitShell");
 module.exports = class ProjectScraper {
     static projects;
     static async scrape(startDirectory = "PhpstormProjects") {
-        console.log("starting worker on: ", __filename);
         const worker = new Worker(path.join(__dirname, "..", "worker/ProjectScrapperWorker.js"), {
             workerData: startDirectory,
         });
-        const projects = (await new Promise((resolve, reject) => {
+        let projects = (await new Promise((resolve, reject) => {
             worker.once("message", (message) => {
-                resolve(message);
+                const projects = message.map((object) => new Project_1.default(object));
+                resolve(projects);
             });
         }));
-        projects.map(async (project) => {
-            project.branch = await ProjectScraper.getBranch(project.path);
-        });
+        projects = await Promise.all(projects.map(async (project) => {
+            project.branch = await GitShell.getCurrentBranch(project.path);
+            return project;
+        }));
         SocketIO.instance.emit("project/scan/complete", projects);
         ProjectScraper.projects = projects;
         return projects;
     }
-    static async getBranch(path) {
-        let branch = "NONE";
-        try {
-            const shell = require("shelljs");
-            shell.config.execPath = shell.which("node").stdout;
-            shell.cd(path);
-            const child = shell.exec("git branch --show-current", {
-                async: true,
-                windowsHide: true,
-            });
-            branch = await new Promise((resolve, reject) => {
-                child.stdout.once("data", function (data) {
-                    resolve(data.replace(/(\r\n|\n|\r)/gm, ""));
-                });
-                child.once("error", function (data) {
-                    reject();
-                });
-            });
-        }
-        catch (e) {
-            console.error(e);
-        }
-        return branch;
-    }
     static async scrapeBranches(paths) {
         const projectBranches = [];
         for (const path of paths) {
-            const branch = await ProjectScraper.getBranch(path);
+            const branch = await GitShell.getCurrentBranch(path);
+            const changes = await GitShell.getCurrentChanges(path);
+            console.log(changes);
             projectBranches.push({
-                path: path,
-                branch: branch,
+                path,
+                branch,
+                changes,
             });
         }
         SocketIO.instance.emit("branches/scan/complete", projectBranches);
@@ -67,7 +52,7 @@ module.exports = class ProjectScraper {
             if (shell.exec(`git checkout ${issue}`, { windowsHide: true }).code !== 0) {
                 shell.exec(`git checkout -b ${issue}`, { windowsHide: true });
             } //try to check out branch, create if necessary
-            ProjectScraper.getBranch(project.path).then((branch) => SocketIO.instance.emit("branches/scan/complete", [
+            GitShell.getCurrentBranch(project.path).then((branch) => SocketIO.instance.emit("branches/scan/complete", [
                 {
                     path: project.path,
                     branch,

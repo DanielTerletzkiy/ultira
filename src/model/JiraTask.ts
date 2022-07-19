@@ -1,5 +1,5 @@
-import ApiController, { FetchContentType } from "./ApiController";
-import JiraBaseController from "./JiraBaseController";
+import ApiController, { FetchContentType } from "../controller/ApiController";
+import JiraBaseController from "../controller/JiraBaseController";
 import {
   JiraComments,
   JiraCommits,
@@ -12,7 +12,6 @@ import Task = JiraIssue.Task;
 import PullRequests = JiraPullRequests.PullRequests;
 import CommentsRoot = JiraComments.CommentsRoot;
 import TransitionsRoot = JiraTransitions.TransitionsRoot;
-import { constant } from "lodash";
 
 export default class JiraTask extends ApiController {
   private readonly _controller: JiraBaseController;
@@ -51,7 +50,10 @@ export default class JiraTask extends ApiController {
     this.loading = true;
     const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
     const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
-    let commitData, pullRequestData, commentsData, transitionData;
+    let commitData: Commits | undefined = undefined,
+      pullRequestData: PullRequests | undefined = undefined,
+      commentsData: CommentsRoot | undefined = undefined,
+      transitionData: TransitionsRoot | undefined = undefined;
     [commitData, pullRequestData, commentsData, transitionData] =
       await Promise.all([
         ApiController.fetchJira(
@@ -102,8 +104,12 @@ export default class JiraTask extends ApiController {
       this.pullRequestData = Object.assign({}, pullRequestData);
     }
 
-    this.commentsData = Object.assign(commentsData);
-    this.transitionData = Object.assign(transitionData);
+    if (commentsData) {
+      this.commentsData = Object.assign(commentsData);
+    }
+    if (transitionData) {
+      this.transitionData = Object.assign(transitionData);
+    }
     this.loading = false;
   }
 

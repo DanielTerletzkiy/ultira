@@ -1,4 +1,4 @@
-import ApiController from "./ApiController";
+import ApiController from "../controller/ApiController";
 export default class JiraTask extends ApiController {
     _controller;
     task;
@@ -26,7 +26,7 @@ export default class JiraTask extends ApiController {
         this.loading = true;
         const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
         const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
-        let commitData, pullRequestData, commentsData, transitionData;
+        let commitData = undefined, pullRequestData = undefined, commentsData = undefined, transitionData = undefined;
         [commitData, pullRequestData, commentsData, transitionData] =
             await Promise.all([
                 ApiController.fetchJira(this._controller.url, `${applicationUrl}=repository`, "GET", this._controller.credentials),
@@ -50,8 +50,12 @@ export default class JiraTask extends ApiController {
             !this.pullRequestData) {
             this.pullRequestData = Object.assign({}, pullRequestData);
         }
-        this.commentsData = Object.assign(commentsData);
-        this.transitionData = Object.assign(transitionData);
+        if (commentsData) {
+            this.commentsData = Object.assign(commentsData);
+        }
+        if (transitionData) {
+            this.transitionData = Object.assign(transitionData);
+        }
         this.loading = false;
     }
     async addWorkLog(seconds) {
