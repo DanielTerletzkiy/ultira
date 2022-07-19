@@ -4,7 +4,7 @@
       <d-column class="header pa-0">
         <d-row class="px-2" color="primary" glow>
           <slot v-if="!!$slots.icon" name="icon" />
-          <d-column class="pa-0">
+          <d-column class="pa-0" block>
             <d-card-title class="title font-size-medium" height="50px">
               <slot name="title" />
             </d-card-title>

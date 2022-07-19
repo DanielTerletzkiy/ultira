@@ -6,6 +6,11 @@ export enum SortNames {
   Project = "Project",
 }
 
+export enum ViewSwitch {
+  Local = 'Local',
+  Server = 'Server',
+}
+
 /*export interface Project {
   path: string;
   project: string;

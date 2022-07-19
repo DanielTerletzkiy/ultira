@@ -32,7 +32,11 @@ module.exports = class GitShell {
     static async getCurrentChanges(path) {
         const changes = await GitShell.exec(path, "git status -s");
         if (changes) {
-            return changes.split(/\r\n|\n|\r/);
+            const output = changes
+                .split(/\r\n|\n|\r/)
+                .map((change) => change.split(/(D|M|A|\?\?) /));
+            output.pop();
+            return output;
         }
         return [];
     }

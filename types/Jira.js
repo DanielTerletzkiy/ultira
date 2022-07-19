@@ -6,6 +6,16 @@ export var SortNames;
     SortNames["Type"] = "Type";
     SortNames["Project"] = "Project";
 })(SortNames || (SortNames = {}));
+export var ViewSwitch;
+(function (ViewSwitch) {
+    ViewSwitch["Local"] = "Local";
+    ViewSwitch["Server"] = "Server";
+})(ViewSwitch || (ViewSwitch = {}));
+/*export interface Project {
+  path: string;
+  project: string;
+  branch: string;
+}*/
 export var JiraConfiguration;
 (function (JiraConfiguration) {
     let ApplicationType;
