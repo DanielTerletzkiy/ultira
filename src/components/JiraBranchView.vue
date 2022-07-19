@@ -8,7 +8,24 @@
         color="primary"
       />
     </template>
-    <template v-slot:title> Branches & Commits</template>
+    <template v-slot:title>
+      Branches & Commits
+      <d-spacer />
+      <d-tab-list
+        v-if="currentIssue.hasCommits"
+        v-model="currentViewSwitch"
+        color="primary"
+        show-indicator
+      >
+        <d-list-item
+          v-for="option in viewSwitchKeys"
+          :key="option"
+          height="40px"
+          style="font-size: 1.2rem"
+          >{{ option }}
+        </d-list-item>
+      </d-tab-list>
+    </template>
     <template v-slot:tooltip> View and Open Branches & Commits</template>
     <SlideXLeftTransition
       group
@@ -22,7 +39,9 @@
     >
       <d-column
         key="content"
-        v-if="currentIssue.hasCommits"
+        v-if="
+          currentIssue.hasCommits && currentViewSwitch === ViewSwitch.Server
+        "
         class="mx-2 pt-0"
         gap
         :wrap="false"
@@ -146,7 +165,7 @@
                         >
                           {{ file.path }}
                         </d-card-subtitle>
-                        <d-spacer/>
+                        <d-spacer />
                         <d-label :color="changeTypeColor(file.changeType)">
                           {{ file.changeType }}
                         </d-label>
@@ -160,9 +179,9 @@
           </d-column>
         </d-card>
       </d-column>
-      <d-column key="empty" v-else-if="currentIssue.commitsEmpty">
+      <d-column key="empty" v-else-if="currentIssue.commitsEmpty || currentViewSwitch === ViewSwitch.Local">
         <d-column style="user-select: none">
-          <d-card-title color="primary" class="mx-3">
+          <d-card-title color="primary" class="mx-3" v-if="!currentIssue.hasCommits">
             <d-icon name="file-question-alt" :size="30" />
             Empty
           </d-card-title>
@@ -188,9 +207,8 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
 import { SlideXLeftTransition } from "v3-transitions";
-import { JiraCommits } from "../../types/Jira";
+import { JiraCommits, ViewSwitch } from "../../types/Jira";
 import JiraUserItem from "./JiraUserItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
@@ -200,6 +218,7 @@ import { currentIssueKey, currentIssue } from "../store/jira.store";
 import ChangeType = JiraCommits.ChangeType;
 import JiraLoader from "./JiraLoader.vue";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
+import { ref } from "vue";
 
 function changeTypeColor(type: ChangeType) {
   switch (type) {
@@ -221,6 +240,9 @@ function changeTypeColor(type: ChangeType) {
     }
   }
 }
+
+const viewSwitchKeys = Object.keys(ViewSwitch);
+const currentViewSwitch = ref<ViewSwitch>(ViewSwitch.Server);
 </script>
 
 <style scoped lang="scss">
