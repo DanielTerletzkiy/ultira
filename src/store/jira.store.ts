@@ -4,14 +4,14 @@ import { computed } from "vue";
 import {
   JiraConfiguration,
   JiraIssue,
-  Project,
   SortNames,
 } from "../../types/Jira";
 import ApplicationType = JiraConfiguration.ApplicationType;
 import JiraConfig = JiraConfiguration.JiraConfig;
 import Task = JiraIssue.Task;
-import JiraTask from "../controller/JiraTask";
+import JiraTask from "../model/JiraTask";
 import JiraController from "../controller/JiraController";
+import Project from "../model/Project";
 
 const store = createStore({
   plugins: [new VuexPersistence().plugin],
@@ -31,6 +31,7 @@ const store = createStore({
         path: "",
         project: "",
         branch: "",
+        changes: [""]
       },
     ],
     searchDialogOpen: false,
@@ -110,7 +111,7 @@ const store = createStore({
       context.commit("setJiraConfigs", payload);
     },
     setProjects(context, payload: Array<Project>) {
-      let projects: Array<Project> = [];
+      const projects: Array<Project> = [];
       for (const project of payload) {
         const index = context.state.projects.findIndex(
           (x) => x.path === project.path
@@ -121,6 +122,7 @@ const store = createStore({
         }
         if (index > -1) {
           context.state.projects[index].branch = project.branch;
+          context.state.projects[index].changes = project.changes;
         }
       }
       context.commit("setProjects", projects);

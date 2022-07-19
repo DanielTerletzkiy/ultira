@@ -164,9 +164,8 @@ if (import.meta.env.MODE === "production") {
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
-
-const emit = defineEmits(["submit"]);
-const props = defineProps({
+defineEmits(["submit"]);
+defineProps({
   open: Boolean,
 });
 
@@ -203,6 +202,8 @@ function addProject() {
   projects.value.push({
     project: "",
     path: "",
+    branch: "master",
+    changes: []
   });
 }
 
@@ -215,11 +216,6 @@ const scrapePath = ref("");
 function startScraper(path: string) {
   ProjectController.scrape(path);
 }
-
-function onSubmit() {
-  emit("submit", null);
-}
-
 const currentTheme = computed(() => (vuelize.theme.dark ? "dark" : "light"));
 watch(
   () => vuelize.theme.themes[currentTheme.value].primary,

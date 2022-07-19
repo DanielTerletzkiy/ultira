@@ -1,5 +1,6 @@
 import SocketClient from "../service/SocketIOClient";
-import { JiraIssue, Project } from "../../types/Jira";
+import Project from "../model/Project";
+import { JiraIssue } from "../../types/Jira";
 import ApiController from "./ApiController";
 import Task = JiraIssue.Task;
 

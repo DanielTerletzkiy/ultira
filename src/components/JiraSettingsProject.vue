@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { PropType, watch } from "vue";
-import { Project } from "../../types/Jira";
+import Project from "../model/Project";
 
 const emit = defineEmits(["remove", "update:modelValue"]);
 const props = defineProps({

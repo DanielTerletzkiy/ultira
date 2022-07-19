@@ -13,4 +13,4 @@ router.get("/scrape/projects/:path", (req, res) => {
 router.post("/scrape/branches/", async (req, res) => {
     res.send(await ProjectScraper.scrapeBranches(req.body));
 });
-exports.default = router;
+module.exports = router;

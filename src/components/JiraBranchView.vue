@@ -216,7 +216,7 @@ function changeTypeColor(type: ChangeType) {
     }
     case "MOVED":
     case "COPIED": {
-      return "warning";
+      return "changes";
     }
     case "UNKNOWN": {
       return "secondary";

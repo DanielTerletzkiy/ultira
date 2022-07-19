@@ -69,7 +69,6 @@
 <script setup lang="ts">
 import JiraUserItem from "./JiraUserItem.vue";
 import { ref } from "vue";
-import JiraTask from "../controller/JiraTask";
 //TODO WTH? not registered with vite?
 import DProgressbar from "vuelize/src/components/progress/DProgressbar.vue";
 import JiraComponentLabels from "./JiraComponentLabels.vue";

@@ -15,6 +15,7 @@
         width="auto"
         class="px-3"
         glow
+        gap
       >
         <d-column class="project">
           <d-card-title class="title">
@@ -33,7 +34,10 @@
         >
           {{ project.branch }}
         </d-button>
-        <JiraProjectButton :repository="project.project" tooltip-position="left"/>
+        <JiraProjectButton
+          :repository="project.project"
+          tooltip-position="left"
+        />
       </d-row>
     </d-column>
   </d-card>
@@ -44,7 +48,7 @@ import { projects, currentIssueKey } from "../store/jira.store";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraController from "../controller/JiraController";
 import { computed } from "vue";
-import { Project } from "../../types/Jira";
+import Project from "../model/Project";
 
 function setIssue(branch: string) {
   currentIssueKey.value = branch;

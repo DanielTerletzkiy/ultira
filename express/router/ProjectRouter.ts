@@ -1,4 +1,4 @@
-import { Project } from "../../types/Jira";
+import Project from "../../src/model/Project";
 
 const express = require("express");
 const router = express.Router();
@@ -17,4 +17,4 @@ router.post("/scrape/branches/", async (req: any, res: any) => {
   res.send(await ProjectScraper.scrapeBranches(req.body));
 });
 
-export default router;
+module.exports = router;

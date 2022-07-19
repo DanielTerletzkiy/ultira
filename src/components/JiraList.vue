@@ -118,7 +118,7 @@
 <script setup lang="ts">
 import JiraListItem from "./JiraListItem.vue";
 import JiraController from "../controller/JiraController";
-import JiraTask from "../controller/JiraTask";
+import JiraTask from "../model/JiraTask";
 import { onMounted, PropType, ref, watch } from "vue";
 import debounce from "lodash/debounce";
 import {
@@ -194,7 +194,7 @@ const sortOptions = [
   {
     name: SortNames.Priority,
     icon: "exclamation-triangle",
-    color: "warning",
+    color: "changes",
   },
   {
     name: SortNames.Type,

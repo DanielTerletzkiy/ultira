@@ -1,5 +1,5 @@
 import ApiController from "./ApiController";
-import JiraTask from "./JiraTask";
+import JiraTask from "../model/JiraTask";
 import { currentIssueKey } from "../store/jira.store";
 import { ref } from "vue";
 export default class JiraController extends ApiController {
