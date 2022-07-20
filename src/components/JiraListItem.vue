@@ -48,18 +48,28 @@
               loading
             />
           </FadeTransition>
-          <d-image
-            width="16px"
-            height="16px"
-            :src="item.task.fields.priority.iconUrl"
-            rounded="md"
-          />
-          <d-image
-            width="16px"
-            height="16px"
-            :src="item.task.fields.issuetype.iconUrl"
-            rounded="md"
-          />
+          <d-tooltip position="left">
+            <d-image
+              width="16px"
+              height="16px"
+              :src="item.task.fields.priority.iconUrl"
+              rounded="md"
+            />
+            <template v-slot:tooltip>
+              Priority: <strong>{{ item.task.fields.priority.name }}</strong>
+            </template>
+          </d-tooltip>
+          <d-tooltip position="left">
+            <d-image
+              width="16px"
+              height="16px"
+              :src="item.task.fields.issuetype.iconUrl"
+              rounded="md"
+            />
+            <template v-slot:tooltip>
+              Type: <strong>{{ item.task.fields.issuetype.name }}</strong>
+            </template>
+          </d-tooltip>
         </d-card-subtitle>
         <d-card-subtitle class="sub">
           <span class="key">{{ item.task.key }}</span>
