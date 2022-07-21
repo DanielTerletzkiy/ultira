@@ -6,9 +6,8 @@
       block
       style="max-height: calc(100vh - 62px); overflow: hidden"
     >
-      <d-column gap :wrap="false">
+      <d-column :wrap="false">
         <d-row
-          gap
           :wrap="false"
           style="flex: 1; max-height: 500px; min-height: 500px"
         >
@@ -29,7 +28,7 @@
             <JiraBranchView />
           </d-column>
         </d-row>
-        <d-row gap :wrap="false" style="flex: 1" align="stretch">
+        <d-row :wrap="false" style="flex: 1" align="stretch">
           <d-column
             class="bottom-card"
             :wrap="false"
@@ -165,10 +164,9 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .bottom-card {
-  max-height: calc(100vh - 62px - 16px - 500px);
+  max-height: calc(100vh - 62px - 8px - 500px);
   overflow: auto;
   overflow-x: hidden;
-  //min-width: fit-content;
   min-width: 0;
 
   > * {
