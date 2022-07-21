@@ -27,7 +27,12 @@ module.exports = class GitShell {
         return output;
     }
     static async getCurrentBranch(path) {
-        return (await GitShell.exec(path, "git branch --show-current")).replace(/(\r\n|\n|\r)/gm, "");
+        try {
+            return (await GitShell.exec(path, "git branch --show-current")).replace(/(\r\n|\n|\r)/gm, "");
+        }
+        catch (e) {
+            return "none";
+        }
     }
     static async getCurrentChanges(path) {
         const changes = await GitShell.exec(path, "git status -s");

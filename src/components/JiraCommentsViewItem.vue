@@ -4,7 +4,7 @@
     <d-divider class="mx-3" elevation="6" />
     <d-card-subtitle>
       <JiraUserItem :user="comment.author">
-        {{ new Date(comment.created).toLocaleString("de-DE") }}
+        {{ new Date(comment.created).toLocaleString(undefined) }}
       </JiraUserItem>
     </d-card-subtitle>
   </d-card>

@@ -74,7 +74,7 @@
         <d-card-subtitle class="sub">
           <span class="key">{{ item.task.key }}</span>
           <d-spacer />
-          {{ new Date(item.task.fields.updated).toLocaleString("DE-de") }}
+          {{ new Date(item.task.fields.updated).toLocaleString(undefined) }}
         </d-card-subtitle>
       </d-column>
     </d-row>

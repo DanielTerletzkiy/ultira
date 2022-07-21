@@ -59,7 +59,10 @@
                 <d-card-title class="font-size-medium">
                   {{ repository.name }}
                 </d-card-title>
-                <d-card-subtitle> Repository</d-card-subtitle>
+                <d-card-subtitle
+                  >Repository
+                  <JiraLinkIconButton v-if="repository.url" :url="repository.url" color="inherit"/>
+                </d-card-subtitle>
               </d-column>
               <d-column>
                 <d-card-title
@@ -71,7 +74,11 @@
                 <d-card-subtitle> Commits</d-card-subtitle>
               </d-column>
               <d-spacer />
-              <JiraProjectButton :repository="repository.name" />
+              <JiraProjectButton
+                :repository="
+                  repository.name.match(new RegExp('.*(/|^)(.*)')).pop()
+                "
+              />
             </d-row>
           </d-card>
           <d-column class="pa-2" gap>
@@ -83,16 +90,7 @@
               <template v-slot:header>
                 <JiraMarkup :body="commit.message" />
                 <d-spacer />
-                <d-icon-button
-                  root-tag="a"
-                  target="_blank"
-                  :href="commit.url"
-                  color="primary"
-                  style="margin: -6px 0"
-                  :size="30"
-                >
-                  <d-icon name="external-link-alt" :size="20" />
-                </d-icon-button>
+                <JiraLinkIconButton :url="commit.url" />
               </template>
               <template v-slot:default>
                 <d-row gap :wrap="false" block>
@@ -103,7 +101,7 @@
                         <d-icon name="plus" :size="20" color="primary" />
                         {{
                           new Date(commit.authorTimestamp).toLocaleString(
-                            "DE-de"
+                            undefined
                           )
                         }}
                       </d-card-subtitle>
@@ -179,9 +177,18 @@
           </d-column>
         </d-card>
       </d-column>
-      <d-column key="empty" v-else-if="currentIssue.commitsEmpty || currentViewSwitch === ViewSwitch.Local">
+      <d-column
+        key="empty"
+        v-else-if="
+          currentIssue.commitsEmpty || currentViewSwitch === ViewSwitch.Local
+        "
+      >
         <d-column style="user-select: none">
-          <d-card-title color="primary" class="mx-3" v-if="!currentIssue.hasCommits">
+          <d-card-title
+            color="primary"
+            class="mx-3"
+            v-if="!currentIssue.hasCommits"
+          >
             <d-icon name="file-question-alt" :size="30" />
             Empty
           </d-card-title>
@@ -214,11 +221,12 @@ import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraProjectList from "./JiraProjectList.vue";
-import { currentIssueKey, currentIssue } from "../store/jira.store";
-import ChangeType = JiraCommits.ChangeType;
+import { currentIssue, currentIssueKey } from "../store/jira.store";
 import JiraLoader from "./JiraLoader.vue";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 import { ref } from "vue";
+import JiraLinkIconButton from "./JiraLinkIconButton.vue";
+import ChangeType = JiraCommits.ChangeType;
 
 function changeTypeColor(type: ChangeType) {
   switch (type) {
