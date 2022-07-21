@@ -32,10 +32,14 @@ module.exports = class GitShell {
   public static async getCurrentBranch(
     path: Project["path"]
   ): Promise<Project["branch"]> {
-    return (await GitShell.exec(path, "git branch --show-current")).replace(
-      /(\r\n|\n|\r)/gm,
-      ""
-    );
+    try {
+      return (await GitShell.exec(path, "git branch --show-current")).replace(
+        /(\r\n|\n|\r)/gm,
+        ""
+      );
+    } catch (e) {
+      return "none";
+    }
   }
 
   public static async getCurrentChanges(

@@ -29,7 +29,9 @@
             <d-spacer />
             <d-button
               v-if="project.branch"
-              color="secondary"
+              :color="
+                project.branch === currentIssueKey ? 'primary' : 'secondary'
+              "
               :disabled="!issueExists(project.branch)"
               @click="setIssue(project.branch)"
             >
@@ -59,7 +61,11 @@
                 >
                   {{ str }}
                 </d-label>
-                <d-card-subtitle glow v-ripple @click="onFileClick(project, change.at(-1))">
+                <d-card-subtitle
+                  glow
+                  v-ripple
+                  @click="onFileClick(project, change.at(-1))"
+                >
                   {{ change.at(-1) }}
                 </d-card-subtitle>
               </d-row>
@@ -115,8 +121,8 @@ const recommendedProjects = computed<Array<Project>>(() => {
   );
 });
 
-function onFileClick(project: Project, file: string){
-  ProjectController.openFile(project, file)
+function onFileClick(project: Project, file: string) {
+  ProjectController.openFile(project, file);
 }
 </script>
 

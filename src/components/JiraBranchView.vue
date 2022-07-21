@@ -71,7 +71,7 @@
                 <d-card-subtitle> Commits</d-card-subtitle>
               </d-column>
               <d-spacer />
-              <JiraProjectButton :repository="repository.name" />
+              <JiraProjectButton :repository="repository.name.match(new RegExp('.*(/|^)(.*)')).pop()" />
             </d-row>
           </d-card>
           <d-column class="pa-2" gap>
@@ -103,7 +103,7 @@
                         <d-icon name="plus" :size="20" color="primary" />
                         {{
                           new Date(commit.authorTimestamp).toLocaleString(
-                            "DE-de"
+                            undefined
                           )
                         }}
                       </d-card-subtitle>

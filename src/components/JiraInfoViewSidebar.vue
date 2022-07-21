@@ -20,11 +20,11 @@
     </d-column>
     <d-card-subtitle>
       <d-icon name="plus" :size="20" color="primary" />
-      {{ new Date(currentIssue.task.fields.created).toLocaleString("DE-de") }}
+      {{ new Date(currentIssue.task.fields.created).toLocaleString(undefined) }}
     </d-card-subtitle>
     <d-card-subtitle>
       <d-icon name="edit-alt" :size="20" color="primary" />
-      {{ new Date(currentIssue.task.fields.updated).toLocaleString("DE-de") }}
+      {{ new Date(currentIssue.task.fields.updated).toLocaleString(undefined) }}
     </d-card-subtitle>
     <d-divider class="mx-3" elevation="10" />
     <d-card-subtitle class="pb-0">
