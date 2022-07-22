@@ -25,8 +25,8 @@
           >{{ option }}
         </d-list-item>
       </d-tab-list>
+      <JiraProjectBranchRefreshButton />
     </template>
-    <template v-slot:tooltip> View and Open Branches & Commits</template>
     <SlideXLeftTransition
       group
       style="
@@ -61,7 +61,11 @@
                 </d-card-title>
                 <d-card-subtitle
                   >Repository
-                  <JiraLinkIconButton v-if="repository.url" :url="repository.url" color="inherit"/>
+                  <JiraLinkIconButton
+                    v-if="repository.url"
+                    :url="repository.url"
+                    color="inherit"
+                  />
                 </d-card-subtitle>
               </d-column>
               <d-column>
@@ -184,14 +188,6 @@
         "
       >
         <d-column style="user-select: none">
-          <d-card-title
-            color="primary"
-            class="mx-3"
-            v-if="!currentIssue.hasCommits"
-          >
-            <d-icon name="file-question-alt" :size="30" />
-            Empty
-          </d-card-title>
           <d-card-subtitle class="ml-4">
             Select Project below to
             <d-card-subtitle
@@ -202,8 +198,6 @@
               <d-icon name="brackets-curly" :size="18" />
               git stash && git checkout -b {{ currentIssueKey }}
             </d-card-subtitle>
-            <d-spacer />
-            <JiraProjectBranchRefreshButton />
           </d-card-subtitle>
         </d-column>
         <JiraProjectList />

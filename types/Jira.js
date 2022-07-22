@@ -8,8 +8,8 @@ export var SortNames;
 })(SortNames || (SortNames = {}));
 export var ViewSwitch;
 (function (ViewSwitch) {
-    ViewSwitch["Local"] = "Local";
     ViewSwitch["Server"] = "Server";
+    ViewSwitch["Local"] = "Local";
 })(ViewSwitch || (ViewSwitch = {}));
 /*export interface Project {
   path: string;

@@ -4,58 +4,41 @@
       v-if="selectedJiraConfig"
       background-color="transparent"
       block
-      style="max-height: calc(100vh - 62px); overflow: hidden"
     >
       <d-column :wrap="false">
         <d-row
           :wrap="false"
           style="flex: 1; max-height: 500px; min-height: 500px"
         >
-          <d-column
-            block
-            :wrap="false"
+          <JiraInfoView
             v-if="currentIssue"
+            class="card"
             style="flex: 1; min-height: inherit; max-height: inherit"
-          >
-            <JiraInfoView />
-          </d-column>
-          <d-column
-            block
-            :wrap="false"
+          />
+          <JiraBranchView
             v-if="currentIssue"
+            class="card"
             style="flex: 1; max-height: 500px; min-height: 500px"
-          >
-            <JiraBranchView />
-          </d-column>
+          />
         </d-row>
         <d-row :wrap="false" style="flex: 1" align="stretch">
-          <d-column
-            class="bottom-card"
-            :wrap="false"
+          <JiraList
+            class="card card--bottom"
             style="flex: 3"
             v-if="selectedJiraConfig && JiraController.issues.value"
-          >
-            <JiraList
-              v-model="currentIssueKey"
-              :issue-list="JiraController.issues.value"
-            />
-          </d-column>
-          <d-column
-            class="bottom-card"
-            :wrap="false"
+            v-model="currentIssueKey"
+            :issue-list="JiraController.issues.value"
+          />
+          <JiraCommentsView
+            class="card card--bottom"
             style="flex: 1"
             v-if="currentIssue"
-          >
-            <JiraCommentsView />
-          </d-column>
-          <d-column
-            class="bottom-card"
-            :wrap="false"
+          />
+          <JiraPullRequestView
+            class="card card--bottom"
             style="flex: 3"
             v-if="currentIssue"
-          >
-            <JiraPullRequestView />
-          </d-column>
+          />
         </d-row>
       </d-column>
     </d-card>
@@ -163,11 +146,15 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.bottom-card {
-  max-height: calc(100vh - 62px - 8px - 500px);
-  overflow: auto;
-  overflow-x: hidden;
-  min-width: 0;
+.card {
+  margin: 6px 3px;
+  &--bottom {
+    max-height: calc(100vh - 84px - 500px);
+    overflow: auto;
+    overflow-x: hidden;
+    min-width: 0;
+    flex: 1;
+  }
 
   > * {
     word-break: break-word;
