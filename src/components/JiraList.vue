@@ -1,5 +1,5 @@
 <template>
-  <d-column block elevation="n1" height="100%" :wrap="false">
+  <d-column block elevation="n1" height="100%" class="pa-0" :wrap="false">
     <d-list
       v-model="modelValue"
       @update:modelValue="onChange"

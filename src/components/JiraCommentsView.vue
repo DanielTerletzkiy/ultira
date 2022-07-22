@@ -1,15 +1,17 @@
 <template>
   <JiraViewWrapper class="jira-comments">
-    <template v-slot:icon>
-      <d-icon
-        name="comment-message"
-        :size="30"
-        icon-style="monochrome"
-        color="primary"
-      />
+    <template v-slot:icon="{hidden}">
+      <d-badge :value="hidden && currentIssue?.commentsData?.comments.length > 0" color="primary" background-color="primary">
+        <d-icon
+          name="comment-message"
+          :size="30"
+          icon-style="monochrome"
+          color="primary"
+        />
+        <template v-slot:content>{{currentIssue?.commentsData?.comments.length}}</template>
+      </d-badge>
     </template>
-    <template v-slot:title> Comments </template>
-    <template v-slot:tooltip> Read and write Issue Comments </template>
+    <template v-slot:title> Comments</template>
     <d-column
       key="content"
       v-if="

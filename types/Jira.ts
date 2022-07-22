@@ -7,8 +7,8 @@ export enum SortNames {
 }
 
 export enum ViewSwitch {
-  Local = 'Local',
   Server = 'Server',
+  Local = 'Local',
 }
 
 /*export interface Project {

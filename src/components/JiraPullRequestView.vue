@@ -9,9 +9,6 @@
       />
     </template>
     <template v-slot:title> Pull Requests</template>
-    <template v-slot:tooltip>
-      Lookup Pull Request status of current Issue
-    </template>
     <d-column
       v-if="currentIssue.hasPullRequests"
       gap
