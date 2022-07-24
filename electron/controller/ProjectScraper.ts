@@ -30,7 +30,7 @@ module.exports = class ProjectScraper {
         return project;
       })
     );
-    SocketIO.instance.emit("project/scan/complete", projects);
+    //SocketIO.instance.emit("project/scan/complete", projects);
     ProjectScraper.projects = projects;
     return projects;
   }
@@ -50,7 +50,7 @@ module.exports = class ProjectScraper {
         changes,
       });
     }
-    SocketIO.instance.emit("branches/scan/complete", projectBranches);
+    //SocketIO.instance.emit("branches/scan/complete", projectBranches);
     return projectBranches;
   }
 
@@ -70,13 +70,13 @@ module.exports = class ProjectScraper {
           new Promise(resolve => GitShell.getCurrentChanges(project.path).then(resolve)),
       ])
           .then(data => {
-            SocketIO.instance.emit("branches/scan/complete", [
+            /*SocketIO.instance.emit("branches/scan/complete", [ TODO
               {
                 path: project.path,
                 branch: data[0],
                 changes: data[1],
               },
-            ])
+            ])*/
           });
       shell.exec("phpstorm64 .", { windowsHide: true }); //open as project in current directory
       return true;

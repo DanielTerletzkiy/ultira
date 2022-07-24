@@ -22,7 +22,7 @@ app.use((req: any, res: any, next: any) => {
   next();
 });
 
-app.use("/api", Index);
+//app.use("/api", Index);
 
 let targetInstance: string;
 
