@@ -415,7 +415,7 @@ watch(
   top: -8px;
   z-index: 1;
   user-select: none;
-  backdrop-filter: saturate(120%) blur(10px);
+  backdrop-filter: blur(10px);
 
   &__divider {
     background: linear-gradient(

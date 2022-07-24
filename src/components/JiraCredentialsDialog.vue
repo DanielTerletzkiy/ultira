@@ -1,6 +1,7 @@
 <template>
   <d-dialog
     :modelValue="open"
+    style="position:fixed;"
     @update:modelValue="(e) => $emit('update:open', e)"
   >
     <d-card class="pa-2 pt-1">

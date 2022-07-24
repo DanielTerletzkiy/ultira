@@ -42,12 +42,15 @@ const baseurl = import.meta.env.BASE_URL;
                 <div />
               </d-avatar>
             </d-icon-button>
-            <template v-slot:tooltip> Settings </template>
+            <template v-slot:tooltip> Settings</template>
           </d-tooltip>
         </d-row>
         <DCardTitle color="primary" class="title font-size-small">
           ULTIRA
         </DCardTitle>
+        <d-card-title class="title font-size-small">
+          <kbd>CTR</kbd> + <kbd>SHIFT</kbd> + <kbd>S</kbd> = search
+        </d-card-title>
         <JiraBaseSelector />
         <d-spacer />
         <d-row class="action" gap width="auto">
@@ -92,6 +95,30 @@ header,
 
   .action {
     -webkit-app-region: no-drag;
+  }
+
+  kbd {
+    $border-color: #727272;
+    $font-color: #949494;
+    position: relative;
+    user-select: none;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: $font-color;
+    border: rgba(lighten($border-color, 20), 0.3) 1px solid;
+    box-shadow: 2px 3px 0 rgba(lighten($border-color, 20), 0.3);
+    min-width: 18px;
+    padding: 0 4px;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all 0.2s;
+
+
+    &:hover {
+      $hover-border-color: rgba(lighten($border-color, 40), 0.3);
+      border: $hover-border-color 1px solid;
+      box-shadow: 0 0 0 transparent;
+    }
   }
 }
 

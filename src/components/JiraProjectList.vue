@@ -144,7 +144,7 @@ function onFileClick(project: Project, file: string) {
   top: 0;
   z-index: 1;
   user-select: none;
-  backdrop-filter: saturate(120%) blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 ::v-deep(.d-accordion .d-title) {
