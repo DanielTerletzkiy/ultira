@@ -4,7 +4,7 @@ import { computed } from "vue";
 import {
   JiraConfiguration,
   JiraIssue,
-  SortNames,
+  SortNames
 } from "../../types/Jira";
 import ApplicationType = JiraConfiguration.ApplicationType;
 import JiraConfig = JiraConfiguration.JiraConfig;
@@ -23,8 +23,8 @@ const store = createStore({
       {
         name: "sample",
         url: "https://",
-        applicationType: ApplicationType.Bitbucket,
-      },
+        applicationType: ApplicationType.Bitbucket
+      }
     ],
     projects: [
       {
@@ -32,12 +32,12 @@ const store = createStore({
         project: "",
         branch: "",
         changes: [""]
-      },
+      }
     ],
     searchDialogOpen: false,
     credentialsDialogOpen: false,
     refreshTime: 60,
-    zoomFactor: 1,
+    zoomFactor: 1
   },
   getters: {
     currentIssueKey(state): Task["key"] | undefined {
@@ -53,6 +53,7 @@ const store = createStore({
       return state.jiraConfigs;
     },
     projects(state): Array<Project> {
+      //@ts-ignore
       return state.projects;
     },
     searchDialogOpen(state): boolean {
@@ -66,7 +67,7 @@ const store = createStore({
     },
     zoomFactor(state): number {
       return state.zoomFactor;
-    },
+    }
   },
   mutations: {
     setCurrentIssueKey(state, payload: Task["key"]) {
@@ -82,6 +83,7 @@ const store = createStore({
       state.jiraConfigs = payload;
     },
     setProjects(state, payload: Array<Project>) {
+      // @ts-ignore
       state.projects.push(...payload);
     },
     setSearchDialogOpen(state, payload: boolean) {
@@ -95,7 +97,7 @@ const store = createStore({
     },
     setZoomFactor(state, payload: number) {
       state.zoomFactor = payload;
-    },
+    }
   },
   actions: {
     setCurrentIssueKey(context, payload: Task["key"]) {
@@ -122,6 +124,7 @@ const store = createStore({
         }
         if (index > -1) {
           context.state.projects[index].branch = project.branch;
+          // @ts-ignore
           context.state.projects[index].changes = project.changes;
         }
       }
@@ -138,8 +141,8 @@ const store = createStore({
     },
     setZoomFactor(context, payload: number) {
       context.commit("setZoomFactor", payload);
-    },
-  },
+    }
+  }
 });
 
 export default store;
@@ -158,7 +161,7 @@ export const currentIssueKey = computed<Task["key"]>({
   },
   set(value: Task["key"]) {
     store.dispatch("setCurrentIssueKey", value);
-  },
+  }
 });
 
 export const currentSort = computed({
@@ -167,7 +170,7 @@ export const currentSort = computed({
   },
   set(value: SortNames) {
     store.dispatch("setCurrentSort", value);
-  },
+  }
 });
 
 export const selectedJiraConfig = computed({
@@ -176,7 +179,7 @@ export const selectedJiraConfig = computed({
   },
   set(value) {
     store.dispatch("setCurrentJiraConfig", value);
-  },
+  }
 });
 
 export const jiraConfigs = computed<Array<JiraConfig>>({
@@ -185,7 +188,7 @@ export const jiraConfigs = computed<Array<JiraConfig>>({
   },
   set(value) {
     store.dispatch("setJiraConfigs", value);
-  },
+  }
 });
 
 export const projects = computed<Array<Project>>({
@@ -194,7 +197,7 @@ export const projects = computed<Array<Project>>({
   },
   set(value) {
     store.dispatch("setProjects", value);
-  },
+  }
 });
 
 export const searchOpen = computed<boolean>({
@@ -203,7 +206,7 @@ export const searchOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setSearchDialogOpen", value);
-  },
+  }
 });
 
 export const credentialsOpen = computed<boolean>({
@@ -212,7 +215,7 @@ export const credentialsOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setCredentialsDialogOpen", value);
-  },
+  }
 });
 
 export const refreshTime = computed<number>({
@@ -221,7 +224,7 @@ export const refreshTime = computed<number>({
   },
   set(value: number) {
     store.dispatch("setRefreshTime", value);
-  },
+  }
 });
 
 export const zoomFactor = computed<number>({
@@ -230,5 +233,5 @@ export const zoomFactor = computed<number>({
   },
   set(value: number) {
     store.dispatch("setZoomFactor", value);
-  },
+  }
 });
