@@ -3,7 +3,6 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const expressServer = require("./electron/Server");
 require("./electron/router/ProjectRouter");
-//TODO look here https://www.tutorialspoint.com/electron/electron_inter_process_communication.htm#:~:text=The%20ipcMain%20module%20is%20used,be%20emitted%20to%20this%20module.
 
 let win;
 
@@ -12,22 +11,25 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: false
     },
     frame: false,
     titleBarStyle: "customButtonsOnHover",
     titleBarOverlay: {
       color: "#242832",
-      symbolColor: "#A8B2FF",
+      symbolColor: "#A8B2FF"
     },
-    icon: path.join(__dirname, "public/favicon.ico"),
+    icon: path.join(__dirname, "public/favicon.ico")
   });
 
   win.maximize();
+  if (process.env["NODE_ENV"] === "development") {
+    win.loadURL("http://localhost:3000");
+  } else {
+    win.loadFile("dist/index.html");
+  }
 
-  win.loadFile("dist/index.html");
-
-  win.webContents.on("new-window", function (e: Event, url: string) {
+  win.webContents.on("new-window", function(e: Event, url: string) {
     e.preventDefault();
     require("electron").shell.openExternal(url);
   });
@@ -51,5 +53,6 @@ app.on("window-all-closed", () => {
   }
   try {
     expressServer.close();
-  } catch (e) {}
+  } catch (e) {
+  }
 });

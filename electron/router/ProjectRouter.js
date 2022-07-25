@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { ipcMain } = require("electron");
 const ProjectScraper = require("../controller/ProjectScraper");
 ipcMain.on("open/project", (event, arg) => {
-    event.sender.send("result/open/project", ProjectScraper.open(arg.project, arg.issue));
+    event.sender.send("result/open/project", ProjectScraper.open(arg.path, arg.issue, event));
 });
 ipcMain.on("open/file", (event, arg) => {
-    event.sender.send("result/open/file", ProjectScraper.open(arg.project, arg.issue));
+    event.sender.send("result/open/file", ProjectScraper.openFile(arg.path, arg.file));
 });
 ipcMain.on("scrape/directory", async (event, arg) => {
     const result = await ProjectScraper.scrape(arg.path);

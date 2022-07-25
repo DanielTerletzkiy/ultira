@@ -5,7 +5,7 @@
   >
     <d-card width="700px">
       <d-card class="pa-2 pt-1" block>
-        <d-card-title> Ultira Settings </d-card-title>
+        <d-card-title> Ultira Settings</d-card-title>
         <d-divider />
       </d-card>
       <d-column
@@ -46,7 +46,7 @@
             type="number"
             min="15"
           >
-            <template v-slot:suffix> seconds </template>
+            <template v-slot:suffix> seconds</template>
           </d-textfield>
           <d-card-subtitle class="pl-0 pb-0 font-weight-bold">
             Zoom
@@ -149,7 +149,7 @@ import {
   jiraConfigs,
   projects,
   refreshTime,
-  zoomFactor,
+  zoomFactor
 } from "../store/jira.store";
 import { JiraConfiguration } from "../../types/Jira";
 import { useZoomFactor } from "@vueuse/electron";
@@ -157,16 +157,13 @@ import ProjectController from "../controller/ProjectController";
 import ApplicationType = JiraConfiguration.ApplicationType;
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 
-let factor: any;
-if (import.meta.env.MODE === "production") {
-  factor = useZoomFactor();
-}
+const factor = useZoomFactor();
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 defineEmits(["submit"]);
 defineProps({
-  open: Boolean,
+  open: Boolean
 });
 
 const store = useStore();
@@ -182,7 +179,7 @@ function addConfig() {
   jiraConfigs.value.push({
     name: "",
     url: "",
-    applicationType: ApplicationType.Bitbucket,
+    applicationType: ApplicationType.Bitbucket
   });
 }
 
@@ -216,6 +213,7 @@ const scrapePath = ref("");
 function startScraper(path: string) {
   ProjectController.scrape(path);
 }
+
 const currentTheme = computed(() => (vuelize.theme.dark ? "dark" : "light"));
 watch(
   () => vuelize.theme.themes[currentTheme.value].primary,
@@ -239,12 +237,10 @@ watch(
 );
 
 function setElectronZoom(value: string | number) {
-  if (import.meta.env.MODE === "production") {
-    if (typeof value === "string") {
-      factor.value = parseFloat(value);
-    } else {
-      factor.value = value;
-    }
+  if (typeof value === "string") {
+    factor.value = parseFloat(value);
+  } else {
+    factor.value = value;
   }
 }
 

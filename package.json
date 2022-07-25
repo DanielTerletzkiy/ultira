@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "build": "vite build",
-    "dev": "concurrently \"cross-env APP_ENV=development&& vite\" \"npm run node\" ",
+    "dev": "concurrently \"cross-env NODE_ENV=development&& vite\" \"npm run node\" ",
     "node": "nodemon electron/Server.js",
-    "electron:start": "cross-env APP_ENV=production&&npm run build && electron .",
-    "electron:package": "cross-env APP_ENV=production&&npm run build && npx electron-packager . --overwrite --out=release-build --icon=dist/favicon.ico",
+    "electron:start": "cross-env NODE_ENV=development concurrently \"vite\" \"electron .\" ",
+    "electron:package": "cross-env NODE_ENV=production&&npm run build && npx electron-packager . --overwrite --out=release-build --icon=dist/favicon.ico",
     "preview": "vite preview"
   },
   "main": "main.js",

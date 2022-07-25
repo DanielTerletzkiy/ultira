@@ -8,20 +8,20 @@ const ProjectScraper = require("../controller/ProjectScraper");
 
 ipcMain.on(
   "open/project",
-  (event: any, arg: { project: Project; issue: Task["key"] }) => {
+  (event: any, arg: { path: string; issue: Task["key"] }) => {
     event.sender.send(
       "result/open/project",
-      ProjectScraper.open(arg.project, arg.issue)
+      ProjectScraper.open(arg.path, arg.issue, event)
     );
   }
 );
 
 ipcMain.on(
   "open/file",
-  (event: any, arg: { project: Project; issue: Task["key"] }) => {
+  (event: any, arg: { path: string; file: string }) => {
     event.sender.send(
       "result/open/file",
-      ProjectScraper.open(arg.project, arg.issue)
+      ProjectScraper.openFile(arg.path, arg.file)
     );
   }
 );

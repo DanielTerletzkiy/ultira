@@ -54,30 +54,30 @@ module.exports = class ProjectScraper {
     return projectBranches;
   }
 
-  static open(project: Project, issue: Task["key"]) {
+  static open(path: string, issue: Task["key"], event?: any) {
     try {
       const shell = require("shelljs");
       shell.config.execPath = shell.which("node").stdout;
-      shell.cd(project.path);
+      shell.cd(path);
       shell.exec(`git stash`, { windowsHide: true }); //sash current uncommitted files
       if (
         shell.exec(`git checkout ${issue}`, { windowsHide: true }).code !== 0
       ) {
         shell.exec(`git checkout -b ${issue}`, { windowsHide: true });
       } //try to check out branch, create if necessary
-      Promise.all([
-          new Promise(resolve => GitShell.getCurrentBranch(project.path).then(resolve)),
-          new Promise(resolve => GitShell.getCurrentChanges(project.path).then(resolve)),
-      ])
+      if(event) {
+        Promise.all([
+          new Promise(resolve => GitShell.getCurrentBranch(path).then(resolve)),
+          new Promise(resolve => GitShell.getCurrentChanges(path).then(resolve)),
+        ])
           .then(data => {
-            /*SocketIO.instance.emit("branches/scan/complete", [ TODO
-              {
-                path: project.path,
-                branch: data[0],
-                changes: data[1],
-              },
-            ])*/
+            event.sender.send("result/scrape/branches", [{
+              path: path,
+              branch: data[0],
+              changes: data[1],
+            }],)
           });
+      }
       shell.exec("phpstorm64 .", { windowsHide: true }); //open as project in current directory
       return true;
     } catch (e) {
@@ -86,11 +86,11 @@ module.exports = class ProjectScraper {
     }
   }
 
-  static openFile(project: Project, file: string){
+  static openFile(path: string, file: string){
     try {
       const shell = require("shelljs");
       shell.config.execPath = shell.which("node").stdout;
-      shell.cd(project.path);
+      shell.cd(path);
       shell.exec("phpstorm64 "+ file, { windowsHide: true }); //open as project in current directory
       return true;
     } catch (e) {

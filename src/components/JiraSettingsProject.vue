@@ -19,6 +19,7 @@
         placeholder="Valid Path to Project Folder"
         type="path"
       />
+      {{modelValue.branch}}
     </d-column>
     <d-icon-button height="initial" type="button" color="error" @click="remove">
       <d-icon name="times" />

@@ -1,29 +1,25 @@
-import SocketClient from "../service/SocketIOClient";
 import ApiController from "./ApiController";
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 export default class ProjectController extends ApiController {
     static subscribe(callback) {
-        SocketClient.instance.on("project/scan/complete", callback);
+        ipcRenderer.on("result/scrape/directory", (event, arg) => callback(arg));
     }
     static subscribeBranches(callback) {
-        SocketClient.instance.on("branches/scan/complete", callback);
+        ipcRenderer.on("result/scrape/branches", (event, arg) => callback(arg));
     }
-    static async open(project, issue) {
-        return await ApiController.generic("http://localhost:2343/api/project/open", "POST", undefined, {
-            project,
-            issue,
-        });
+    static open(project, issue) {
+        return ipcRenderer.send("open/project", { path: project.path, issue });
     }
-    static async openFile(project, file) {
-        return await ApiController.generic("http://localhost:2343/api/project/open/file", "POST", undefined, {
-            project,
-            file,
-        });
+    static openFile(project, file) {
+        console.log(project, file);
+        return ipcRenderer.send("open/file", { path: project.path, file });
     }
-    static async scrape(path) {
-        return await ApiController.generic("http://localhost:2343/api/project/scrape/projects/" + path, "GET");
+    static scrape(path) {
+        return ipcRenderer.send("scrape/directory", { path });
     }
-    static async scrapeBranches(paths) {
-        return await ApiController.generic("http://localhost:2343/api/project/scrape/branches", "POST", undefined, paths);
+    static async scrapeBranches(projectPaths) {
+        return ipcRenderer.send("scrape/branches", { projectPaths });
     }
 }
 //# sourceMappingURL=ProjectController.js.map
