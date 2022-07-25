@@ -40,7 +40,8 @@ import { JiraConfiguration } from "../../types/Jira";
 import JiraConfig = JiraConfiguration.JiraConfig;
 import ApplicationType = JiraConfiguration.ApplicationType;
 
-const AppTypes = Object.keys(ApplicationType);
+//@ts-ignore
+const AppTypes = Object.keys(ApplicationType).map((type) => ApplicationType[type]);
 
 const emit = defineEmits(["remove", "update:modelValue"]);
 const props = defineProps({
