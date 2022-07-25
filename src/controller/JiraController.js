@@ -32,6 +32,9 @@ export default class JiraController extends ApiController {
             total: JiraController.totalIssues,
         };
     }
+    static clearIssues() {
+        JiraController.issues.value = [];
+    }
     static async getImageBase64(url) {
         const urlObj = new URL(url);
         const response = await ApiController.fetchJira(JiraController.controller.url, `${urlObj.pathname.substring(1)}${urlObj.search}`, "GET", JiraController.controller.credentials, 1 /* FILES */);

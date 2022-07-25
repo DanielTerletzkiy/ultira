@@ -2,7 +2,7 @@ import Index from "./router/Index";
 
 const {
   createProxyMiddleware,
-  fixRequestBody,
+  fixRequestBody
 } = require("http-proxy-middleware");
 const ProjectScraper = require("./controller/ProjectScraper");
 const SocketIO = require("./service/SocketIO");
@@ -16,21 +16,26 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use((req: any, res: any, next: any) => {
-  //delete api hindering headers
-  delete req.headers["user-agent"];
-  next();
-});
-
 app.use("/api", Index);
 
 let targetInstance: string;
 
-app.post("/url", function (req: any, res: any) {
+app.post("/url", function(req: any, res: any) {
   targetInstance = req.headers["jira-host"] as string;
   console.log("targetInstance: ", targetInstance);
 
+  app._router.stack.map((layer: any, i: number) => layer.regexp.fast_slash && layer.name === "<anonymous>" ? i : "").filter(String).forEach((i: number) => {
+    console.log(i);
+    app._router.stack.splice(i, 1);
+  });
+
   try {
+    app.use((req: any, res: any, next: any) => {
+      //delete api hindering headers
+      delete req.headers["user-agent"];
+      next();
+    });
+
     app.use(
       "/",
       createProxyMiddleware({
@@ -38,7 +43,7 @@ app.post("/url", function (req: any, res: any) {
         changeOrigin: true,
         protocolRewrite: "https",
         secure: false,
-        onProxyReq: fixRequestBody,
+        onProxyReq: fixRequestBody
       })
     );
   } catch (e) {

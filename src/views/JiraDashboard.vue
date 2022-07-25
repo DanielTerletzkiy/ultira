@@ -79,7 +79,7 @@ const currentJiraConfig = computed<JiraConfig>(
 watch(() => currentIssueKey.value, connectCurrentData);
 watch(() => selectedJiraConfig.value, setJiraBase);
 watch(
-  () => currentJiraConfig.value,
+  () => jiraConfigs.value,
   () => setJiraBase(selectedJiraConfig.value),
   { deep: true }
 );
@@ -100,7 +100,8 @@ async function setJiraBase(name: any) {
       credentialsOpen.value = true;
       return;
     }
-    selectedJiraConfig.value = name;
+    //selectedJiraConfig.value = name;
+    JiraController.clearIssues();
     JiraController.setBase(
       new JiraBaseController({
         ...currentJiraConfig.value,

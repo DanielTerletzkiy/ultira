@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
-import { JiraConfiguration, SortNames, } from "../../types/Jira";
+import { JiraConfiguration, SortNames } from "../../types/Jira";
 var ApplicationType = JiraConfiguration.ApplicationType;
 import JiraController from "../controller/JiraController";
 const store = createStore({
@@ -14,8 +14,8 @@ const store = createStore({
             {
                 name: "sample",
                 url: "https://",
-                applicationType: ApplicationType.Bitbucket,
-            },
+                applicationType: ApplicationType.Bitbucket
+            }
         ],
         projects: [
             {
@@ -23,12 +23,12 @@ const store = createStore({
                 project: "",
                 branch: "",
                 changes: [""]
-            },
+            }
         ],
         searchDialogOpen: false,
         credentialsDialogOpen: false,
         refreshTime: 60,
-        zoomFactor: 1,
+        zoomFactor: 1
     },
     getters: {
         currentIssueKey(state) {
@@ -44,6 +44,7 @@ const store = createStore({
             return state.jiraConfigs;
         },
         projects(state) {
+            //@ts-ignore
             return state.projects;
         },
         searchDialogOpen(state) {
@@ -57,7 +58,7 @@ const store = createStore({
         },
         zoomFactor(state) {
             return state.zoomFactor;
-        },
+        }
     },
     mutations: {
         setCurrentIssueKey(state, payload) {
@@ -73,6 +74,7 @@ const store = createStore({
             state.jiraConfigs = payload;
         },
         setProjects(state, payload) {
+            // @ts-ignore
             state.projects.push(...payload);
         },
         setSearchDialogOpen(state, payload) {
@@ -86,7 +88,7 @@ const store = createStore({
         },
         setZoomFactor(state, payload) {
             state.zoomFactor = payload;
-        },
+        }
     },
     actions: {
         setCurrentIssueKey(context, payload) {
@@ -111,6 +113,7 @@ const store = createStore({
                 }
                 if (index > -1) {
                     context.state.projects[index].branch = project.branch;
+                    // @ts-ignore
                     context.state.projects[index].changes = project.changes;
                 }
             }
@@ -127,8 +130,8 @@ const store = createStore({
         },
         setZoomFactor(context, payload) {
             context.commit("setZoomFactor", payload);
-        },
-    },
+        }
+    }
 });
 export default store;
 export const currentIssue = computed(() => JiraController &&
@@ -139,7 +142,7 @@ export const currentIssueKey = computed({
     },
     set(value) {
         store.dispatch("setCurrentIssueKey", value);
-    },
+    }
 });
 export const currentSort = computed({
     get() {
@@ -147,7 +150,7 @@ export const currentSort = computed({
     },
     set(value) {
         store.dispatch("setCurrentSort", value);
-    },
+    }
 });
 export const selectedJiraConfig = computed({
     get() {
@@ -155,7 +158,7 @@ export const selectedJiraConfig = computed({
     },
     set(value) {
         store.dispatch("setCurrentJiraConfig", value);
-    },
+    }
 });
 export const jiraConfigs = computed({
     get() {
@@ -163,7 +166,7 @@ export const jiraConfigs = computed({
     },
     set(value) {
         store.dispatch("setJiraConfigs", value);
-    },
+    }
 });
 export const projects = computed({
     get() {
@@ -171,7 +174,7 @@ export const projects = computed({
     },
     set(value) {
         store.dispatch("setProjects", value);
-    },
+    }
 });
 export const searchOpen = computed({
     get() {
@@ -179,7 +182,7 @@ export const searchOpen = computed({
     },
     set(value) {
         store.dispatch("setSearchDialogOpen", value);
-    },
+    }
 });
 export const credentialsOpen = computed({
     get() {
@@ -187,7 +190,7 @@ export const credentialsOpen = computed({
     },
     set(value) {
         store.dispatch("setCredentialsDialogOpen", value);
-    },
+    }
 });
 export const refreshTime = computed({
     get() {
@@ -195,7 +198,7 @@ export const refreshTime = computed({
     },
     set(value) {
         store.dispatch("setRefreshTime", value);
-    },
+    }
 });
 export const zoomFactor = computed({
     get() {
@@ -203,6 +206,6 @@ export const zoomFactor = computed({
     },
     set(value) {
         store.dispatch("setZoomFactor", value);
-    },
+    }
 });
 //# sourceMappingURL=jira.store.js.map
