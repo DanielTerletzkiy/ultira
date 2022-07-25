@@ -4,52 +4,33 @@ import { JiraIssue } from "../../types/Jira";
 import ApiController from "./ApiController";
 import Task = JiraIssue.Task;
 
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
+
 export default class ProjectController extends ApiController {
   static subscribe(callback: (data: Array<Project>) => void) {
-    SocketClient.instance.on("project/scan/complete", callback);
+    ipcRenderer.on("result/scrape/directory", (event, arg) => callback(arg));
   }
 
   static subscribeBranches(callback: (data: Array<Project>) => void) {
-    SocketClient.instance.on("branches/scan/complete", callback);
+    ipcRenderer.on("result/scrape/branches", (event, arg) => callback(arg));
   }
 
-  static async open(project: Project, issue: Task["key"]) {
-    return await ApiController.generic(
-        "http://localhost:2343/api/project/open",
-        "POST",
-        undefined,
-        {
-          project,
-          issue,
-        }
-    );
+  static open(project: Project, issue: Task["key"]) {
+    return ipcRenderer.send("open/project", { path: project.path, issue });
   }
 
-  static async openFile(project: Project, file: string) {
-    return await ApiController.generic(
-        "http://localhost:2343/api/project/open/file",
-        "POST",
-        undefined,
-        {
-          project,
-          file,
-        }
-    );
+  static openFile(project: Project, file: string) {
+    console.log(project, file)
+    return ipcRenderer.send("open/file", { path: project.path, file });
   }
 
-  static async scrape(path: Project["path"]) {
-    return await ApiController.generic(
-      "http://localhost:2343/api/project/scrape/projects/" + path,
-      "GET"
-    );
+  static scrape(path: Project["path"]) {
+    return ipcRenderer.send("scrape/directory", { path });
   }
 
-  static async scrapeBranches(paths: Array<Project["path"]>) {
-    return await ApiController.generic(
-      "http://localhost:2343/api/project/scrape/branches",
-      "POST",
-      undefined,
-      paths
-    );
+  static async scrapeBranches(projectPaths: Array<Project["path"]>) {
+    return ipcRenderer.send("scrape/branches", { projectPaths });
+
   }
 }

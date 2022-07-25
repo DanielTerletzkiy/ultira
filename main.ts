@@ -1,29 +1,35 @@
 // @ts-ignore
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
-const expressServer = require("./express/Server");
+const expressServer = require("./electron/Server");
+require("./electron/router/ProjectRouter");
+
+let win;
 
 function createWindow() {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: false
     },
     frame: false,
     titleBarStyle: "customButtonsOnHover",
     titleBarOverlay: {
       color: "#242832",
-      symbolColor: "#A8B2FF",
+      symbolColor: "#A8B2FF"
     },
-    icon: path.join(__dirname, "public/favicon.ico"),
+    icon: path.join(__dirname, "public/favicon.ico")
   });
 
   win.maximize();
+  if (process.env["NODE_ENV"] === "development") {
+    win.loadURL("http://localhost:3000");
+  } else {
+    win.loadFile("dist/index.html");
+  }
 
-  win.loadFile("dist/index.html");
-
-  win.webContents.on("new-window", function (e: Event, url: string) {
+  win.webContents.on("new-window", function(e: Event, url: string) {
     e.preventDefault();
     require("electron").shell.openExternal(url);
   });
@@ -47,5 +53,6 @@ app.on("window-all-closed", () => {
   }
   try {
     expressServer.close();
-  } catch (e) {}
+  } catch (e) {
+  }
 });

@@ -1,10 +1,8 @@
-import Index from "./router/Index";
 
 const {
   createProxyMiddleware,
   fixRequestBody
 } = require("http-proxy-middleware");
-const ProjectScraper = require("./controller/ProjectScraper");
 const SocketIO = require("./service/SocketIO");
 const http = require("http");
 
@@ -15,8 +13,6 @@ const cors = require("cors");
 app.use(cors());
 
 app.use(express.json());
-
-app.use("/api", Index);
 
 let targetInstance: string;
 

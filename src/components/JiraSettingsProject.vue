@@ -7,20 +7,19 @@
         color="primary"
         filled
         label="Project Name"
+        placeholder="Repository name"
         type="name"
       />
-      <d-card-subtitle class="py-0"> Use repository name </d-card-subtitle>
       <d-textfield
         full-width
         v-model="modelValue.path"
         color="primary"
         filled
         label="Path"
+        placeholder="Valid Path to Project Folder"
         type="path"
       />
-      <d-card-subtitle class="py-0">
-        Valid Path to Project Folder
-      </d-card-subtitle>
+      {{modelValue.branch}}
     </d-column>
     <d-icon-button height="initial" type="button" color="error" @click="remove">
       <d-icon name="times" />

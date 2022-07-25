@@ -28,7 +28,7 @@
           </span>
           <d-divider color="primary" :tint="-40" />
           <d-card-subtitle color="inherit" class="pa-0 font-weight-bold">
-            <d-icon name="file-edit-alt" :size="18"/>
+            <d-icon name="file-edit-alt" :size="18" />
             Changes
           </d-card-subtitle>
         </d-column>
@@ -46,16 +46,20 @@ import Project from "../model/Project";
 
 const props = defineProps({
   repository: { type: String, required: true },
-  tooltipPosition: { type: String as PropType<Position>, default: "left" },
+  tooltipPosition: { type: String as PropType<Position>, default: "left" }
 });
 
 const project = computed<Project>(
   () =>
     projects.value.find(
-      (project) =>
-        project.project.toLowerCase() === props.repository.toLowerCase()
-    ) as Project
-);
+      (project) => {
+        try {
+          return project.project.toLowerCase() === props.repository.toLowerCase();
+        } catch (e) {
+          return "error";
+        }
+      }
+) as Project);
 
 const hasChanges = computed<boolean>(() => project.value && project.value?.changes?.length > 0);
 
