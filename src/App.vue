@@ -5,6 +5,7 @@ import JiraSettings from "./components/JiraSettings.vue";
 import JiraBaseSelector from "./components/JiraBaseSelector.vue";
 import JiraSearchDialog from "./components/JiraSearchDialog.vue";
 import { searchOpen } from "./store/jira.store";
+import AppToolbarControls from "./components/AppToolbarControls.vue";
 
 const settingsOpen = ref(false);
 
@@ -14,10 +15,6 @@ function toggleSettings() {
 
 function onSettingsSubmit() {
   toggleSettings();
-}
-
-function closeWindow() {
-  window.close();
 }
 
 const baseurl = import.meta.env.BASE_URL;
@@ -53,14 +50,7 @@ const baseurl = import.meta.env.BASE_URL;
         </d-card-title>
         <JiraBaseSelector />
         <d-spacer />
-        <d-row class="action" gap width="auto">
-          <d-icon-button
-            :size="25"
-            name="times"
-            color="primary"
-            @click="closeWindow"
-          />
-        </d-row>
+        <AppToolbarControls />
       </DToolbar>
     </template>
     <template v-slot:default>
@@ -89,6 +79,13 @@ header,
 .d-toolbar {
   -webkit-app-region: drag;
 
+  .d-card {
+    padding: 0 !important;
+    .d-row {
+      padding-right: 0 !important;
+    }
+  }
+
   .d-title {
     -webkit-user-select: none !important;
   }
@@ -112,7 +109,6 @@ header,
     border-radius: 5px;
     overflow: hidden;
     transition: all 0.2s;
-
 
     &:hover {
       $hover-border-color: rgba(lighten($border-color, 40), 0.3);

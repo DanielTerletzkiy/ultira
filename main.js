@@ -10,7 +10,8 @@ function createWindow() {
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            enableRemoteModule: true,
         },
         frame: false,
         titleBarStyle: "customButtonsOnHover",
@@ -20,6 +21,8 @@ function createWindow() {
         },
         icon: path.join(__dirname, "public/favicon.ico")
     });
+    require('@electron/remote/main').initialize();
+    require('@electron/remote/main').enable(win.webContents);
     win.maximize();
     if (process.env["NODE_ENV"] === "development") {
         win.loadURL("http://localhost:3000");

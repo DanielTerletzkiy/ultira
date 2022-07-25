@@ -12,6 +12,7 @@
   },
   "main": "main.js",
   "dependencies": {
+    "@electron/remote": "^2.0.8",
     "@nanogiants/vue3-longpress": "^1.0.8",
     "@rushstack/eslint-patch": "^1.1.4",
     "@vue/cli-service": "^5.0.4",

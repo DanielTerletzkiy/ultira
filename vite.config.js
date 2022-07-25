@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 var path = require("path");
-var mode = process.env.NODE_ENV;
+var mode = undefined; //process.env.NODE_ENV; todo
 console.log("NODE_ENV:", mode);
 export default defineConfig({
     mode: mode,
