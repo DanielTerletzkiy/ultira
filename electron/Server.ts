@@ -21,7 +21,6 @@ app.post("/url", function(req: any, res: any) {
   console.log("targetInstance: ", targetInstance);
 
   app._router.stack.map((layer: any, i: number) => layer.regexp.fast_slash && layer.name === "<anonymous>" ? i : "").filter(String).forEach((i: number) => {
-    console.log(i);
     app._router.stack.splice(i, 1);
   });
 
