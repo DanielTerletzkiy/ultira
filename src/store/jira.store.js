@@ -28,7 +28,14 @@ const store = createStore({
         searchDialogOpen: false,
         credentialsDialogOpen: false,
         refreshTime: 60,
-        zoomFactor: 1
+        zoomFactor: 1,
+        theme: {
+            isDark: true,
+            primary: {
+                light: "#A8B2FF",
+                dark: "#A8B2FF"
+            }
+        }
     },
     getters: {
         currentIssueKey(state) {
@@ -58,6 +65,9 @@ const store = createStore({
         },
         zoomFactor(state) {
             return state.zoomFactor;
+        },
+        theme(state) {
+            return state.theme;
         }
     },
     mutations: {
@@ -88,6 +98,9 @@ const store = createStore({
         },
         setZoomFactor(state, payload) {
             state.zoomFactor = payload;
+        },
+        setTheme(state, payload) {
+            Object.assign(state.theme, payload);
         }
     },
     actions: {
@@ -108,7 +121,6 @@ const store = createStore({
             for (const project of payload) {
                 const index = context.state.projects.findIndex((x) => x.path === project.path);
                 if (index === -1) {
-                    console.log(project);
                     projects.push(project);
                 }
                 if (index > -1) {
@@ -130,6 +142,9 @@ const store = createStore({
         },
         setZoomFactor(context, payload) {
             context.commit("setZoomFactor", payload);
+        },
+        setTheme(context, payload) {
+            context.commit("setTheme", payload);
         }
     }
 });
@@ -206,6 +221,14 @@ export const zoomFactor = computed({
     },
     set(value) {
         store.dispatch("setZoomFactor", value);
+    }
+});
+export const theme = computed({
+    get() {
+        return store.getters.theme;
+    },
+    set(value) {
+        store.dispatch("setTheme", value);
     }
 });
 //# sourceMappingURL=jira.store.js.map

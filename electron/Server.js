@@ -13,7 +13,6 @@ app.post("/url", function (req, res) {
     targetInstance = req.headers["jira-host"];
     console.log("targetInstance: ", targetInstance);
     app._router.stack.map((layer, i) => layer.regexp.fast_slash && layer.name === "<anonymous>" ? i : "").filter(String).forEach((i) => {
-        console.log(i);
         app._router.stack.splice(i, 1);
     });
     try {

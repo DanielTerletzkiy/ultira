@@ -148,7 +148,7 @@ import { FadeTransition } from "v3-transitions";
 import {
   jiraConfigs,
   projects,
-  refreshTime,
+  refreshTime, theme,
   zoomFactor
 } from "../store/jira.store";
 import { JiraConfiguration } from "../../types/Jira";
@@ -199,7 +199,7 @@ function addProject() {
   projects.value.push({
     project: "",
     path: "",
-    branch: "master",
+    branch: "none",
     changes: []
   });
 }
@@ -218,14 +218,15 @@ const currentTheme = computed(() => (vuelize.theme.dark ? "dark" : "light"));
 watch(
   () => vuelize.theme.themes[currentTheme.value].primary,
   (color) => {
-    localStorage.setItem(`${currentTheme.value}:primary`, color);
+    //@ts-ignore
+    theme.value = { primary: {[currentTheme.value]: color }};
   }
 );
 
 watch(
   () => vuelize.theme.dark,
   (dark) => {
-    localStorage.setItem("theme:dark", JSON.stringify(dark));
+    theme.value = { isDark: dark };
   }
 );
 
@@ -246,13 +247,10 @@ function setElectronZoom(value: string | number) {
 
 onBeforeMount(() => {
   setElectronZoom(zoomFactor.value);
-  vuelize.theme.dark = JSON.parse(localStorage.getItem("theme:dark") || "{}");
-  ["dark", "light"].forEach((theme) => {
-    const primary = localStorage.getItem(`${theme}:primary`) || "#A8B2FF";
-    if (primary) {
-      //@ts-ignore
-      vuelize.theme.themes[theme].primary = primary;
-    }
+  vuelize.theme.dark = theme.value.isDark as boolean;
+  ["dark", "light"].forEach((mode) => {
+    //@ts-ignore
+    vuelize.theme.themes[mode].primary = theme.value.primary[mode];
   });
 });
 </script>

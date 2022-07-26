@@ -37,7 +37,14 @@ const store = createStore({
     searchDialogOpen: false,
     credentialsDialogOpen: false,
     refreshTime: 60,
-    zoomFactor: 1
+    zoomFactor: 1,
+    theme: {
+      isDark: true,
+      primary: {
+        light: "#A8B2FF",
+        dark: "#A8B2FF"
+      }
+    }
   },
   getters: {
     currentIssueKey(state): Task["key"] | undefined {
@@ -67,6 +74,9 @@ const store = createStore({
     },
     zoomFactor(state): number {
       return state.zoomFactor;
+    },
+    theme(state): object {
+      return state.theme;
     }
   },
   mutations: {
@@ -97,6 +107,9 @@ const store = createStore({
     },
     setZoomFactor(state, payload: number) {
       state.zoomFactor = payload;
+    },
+    setTheme(state, payload) {
+      Object.assign(state.theme,payload);
     }
   },
   actions: {
@@ -119,7 +132,6 @@ const store = createStore({
           (x) => x.path === project.path
         );
         if (index === -1) {
-          console.log(project);
           projects.push(project);
         }
         if (index > -1) {
@@ -141,6 +153,9 @@ const store = createStore({
     },
     setZoomFactor(context, payload: number) {
       context.commit("setZoomFactor", payload);
+    },
+    setTheme(context, payload: object) {
+      context.commit("setTheme", payload);
     }
   }
 });
@@ -233,5 +248,14 @@ export const zoomFactor = computed<number>({
   },
   set(value: number) {
     store.dispatch("setZoomFactor", value);
+  }
+});
+
+export const theme = computed<Partial<{ isDark: boolean, primary: { dark: string, light: string } }>>({
+  get() {
+    return store.getters.theme;
+  },
+  set(value: Partial<{ isDark: boolean, primary: { dark: string, light: string } }>) {
+    store.dispatch("setTheme", value);
   }
 });
