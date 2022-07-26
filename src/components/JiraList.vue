@@ -194,7 +194,7 @@ const sortOptions = [
   {
     name: SortNames.Priority,
     icon: "exclamation-triangle",
-    color: "changes",
+    color: "warning",
   },
   {
     name: SortNames.Type,
