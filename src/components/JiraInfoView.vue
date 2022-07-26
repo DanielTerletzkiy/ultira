@@ -51,7 +51,7 @@
           <d-card-title class="pt-0 font-size-medium">
             {{ currentIssue.task.fields.summary }}
           </d-card-title>
-          <d-card-subtitle>
+          <d-card-subtitle class="pt-3 pb-0">
             <d-tooltip position="bottom">
               <d-icon-button
                 rounded="md"
