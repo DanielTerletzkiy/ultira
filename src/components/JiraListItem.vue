@@ -70,6 +70,41 @@
               Type: <strong>{{ item.task.fields.issuetype.name }}</strong>
             </template>
           </d-tooltip>
+          <d-tooltip position="left">
+            <JiraImage
+              :url="item.task.fields.project.avatarUrls['16x16']"
+              :key="item.task.fields.project.key"
+            >
+              <template v-slot:default="{ base64 }">
+                  <FadeTransition group>
+                    <d-avatar
+                      v-if="base64"
+                      key="image"
+                      color="transparent"
+                      size="16"
+                      rounded="md"
+                      :style="{
+                      backgroundImage: `url(${base64})`,
+                      backgroundPosition: 'center',
+                      backgroundSize: 'cover',
+                    }"
+                    >
+                      <div />
+                    </d-avatar>
+                    <d-elevation-loader
+                      v-else
+                      key="loader"
+                      :default-size="8"
+                      :amount="4"
+                      :columns="2"
+                    />
+                  </FadeTransition>
+              </template>
+            </JiraImage>
+            <template v-slot:tooltip>
+              Project: <strong>{{ item.task.fields.project.name }}</strong>
+            </template>
+          </d-tooltip>
         </d-card-subtitle>
         <d-card-subtitle class="sub">
           <span class="key">{{ item.task.key }}</span>
@@ -88,18 +123,19 @@ import { VeProgress } from "vue-ellipse-progress";
 import { FadeTransition } from "v3-transitions";
 import { computed, inject, PropType } from "vue";
 import JiraTask from "../model/JiraTask";
+import JiraImage from "./JiraImage.vue";
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 const props = defineProps({
-  item: { type: Object as PropType<JiraTask>, required: true },
+  item: { type: Object as PropType<JiraTask>, required: true }
 });
 
 const status = computed(() => {
   const payload = {
     color: "success",
-    icon: "check",
+    icon: "check"
   };
   switch (props.item.task.fields.status.name) {
     case "Open":
@@ -138,9 +174,9 @@ const status = computed(() => {
 
     &::before {
       background: linear-gradient(
-        90deg,
-        currentColor 0%,
-        rgba(0, 212, 255, 0) 100%
+          90deg,
+          currentColor 0%,
+          rgba(0, 212, 255, 0) 100%
       );
     }
   }
