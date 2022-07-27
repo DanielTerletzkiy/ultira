@@ -7,7 +7,7 @@
     style="min-width: 200px"
   >
     <d-row>
-      <d-card-subtitle class="pa-0 font-weight-bold"> Sidebar </d-card-subtitle>
+      <d-card-subtitle class="pa-0 font-weight-bold"> Sidebar</d-card-subtitle>
       <d-divider class="mx-3" block elevation="8" />
     </d-row>
     <d-column gap class="px-2">
@@ -48,12 +48,13 @@
         v-model="currentIssue.task.fields.timespent"
         :max="currentIssue.task.fields.timeoriginalestimate"
         color="primary"
-        :show-label="false"
+        show-label
       >
         <template v-slot:progress>
-          <!--TODO fix progressbar in vuelize-->
-          {{ currentIssue.task.fields.timespent / 3600 }}h /
-          {{ currentIssue.task.fields.timeoriginalestimate / 3600 }}h
+          <strong>
+            {{ Math.round((currentIssue.task.fields.timespent / 3600) * 100) / 100 }}h /
+            {{ Math.round((currentIssue.task.fields.timeoriginalestimate / 3600) * 100) / 100 }}h
+          </strong>
         </template>
       </DProgressbar>
       <template v-slot:tooltip>
