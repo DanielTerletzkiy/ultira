@@ -24,7 +24,7 @@
         </d-column>
         <d-column v-if="hasChanges">
           <span>
-            <strong>{{ project.changes.length }}</strong>
+            <strong>{{ project.changes.length }}</strong> Files
           </span>
           <d-divider color="primary" :tint="-40" />
           <d-card-subtitle color="inherit" class="pa-0 font-weight-bold">
