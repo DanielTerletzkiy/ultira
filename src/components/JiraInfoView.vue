@@ -9,7 +9,6 @@
           >
             <template v-slot:default="{ base64 }">
               <d-card width="64px" height="64px" elevation-light>
-                <FadeTransition group>
                   <d-avatar
                     v-if="base64"
                     key="image"
@@ -30,7 +29,6 @@
                     :amount="16"
                     :columns="4"
                   />
-                </FadeTransition>
               </d-card>
             </template>
           </JiraImage>
@@ -116,7 +114,6 @@ import JiraController from "../controller/JiraController";
 import JiraInfoViewSidebar from "./JiraInfoViewSidebar.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraImage from "./JiraImage.vue";
-import { FadeTransition } from "v3-transitions";
 import JiraTransitionButtons from "./JiraTransitionButtons.vue";
 import { currentIssue } from "../store/jira.store";
 

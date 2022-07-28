@@ -82,7 +82,6 @@
           <d-card-subtitle class="pl-0 font-weight-bold">
             Jira Configurations
           </d-card-subtitle>
-          <FadeTransition group>
             <d-column v-for="(config, i) in jiraConfigs" :key="i" gap>
               <JiraSettingsConfig
                 v-model="jiraConfigs[i]"
@@ -90,7 +89,6 @@
               />
               <d-divider />
             </d-column>
-          </FadeTransition>
           <d-button color="primary" glow type="button" @click="addConfig">
             Add Config
           </d-button>
@@ -121,7 +119,6 @@
             </d-textfield>
             <JiraProjectBranchRefreshButton />
           </d-column>
-          <FadeTransition group>
             <d-column v-for="(project, i) in projects" :key="i" gap>
               <JiraSettingsProject
                 v-model="projects[i]"
@@ -129,7 +126,6 @@
               />
               <d-divider />
             </d-column>
-          </FadeTransition>
           <d-button color="primary" glow type="button" @click="addProject">
             Add Project
           </d-button>
@@ -144,7 +140,6 @@ import { computed, inject, onBeforeMount, ref, watch } from "vue";
 import { useStore } from "vuex";
 import JiraSettingsConfig from "./JiraSettingsConfig.vue";
 import JiraSettingsProject from "./JiraSettingsProject.vue";
-import { FadeTransition } from "v3-transitions";
 import {
   jiraConfigs,
   projects,

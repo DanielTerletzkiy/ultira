@@ -17,7 +17,7 @@ export default class JiraTask extends ApiController {
         let task = {};
         [task] = await Promise.all([
             ApiController.fetchJira(this._controller.url, `${url.pathname.replace(/\//, "")}`, "GET", this._controller.credentials),
-            updateConnected ? this.getConnectedData() : null,
+            updateConnected ? this.getConnectedData() : null
         ]);
         this.task = Object.assign({}, task);
         return this;
@@ -32,7 +32,7 @@ export default class JiraTask extends ApiController {
                 ApiController.fetchJira(this._controller.url, `${applicationUrl}=repository`, "GET", this._controller.credentials),
                 ApiController.fetchJira(this._controller.url, `${applicationUrl}=pullrequest`, "GET", this._controller.credentials),
                 ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/comment`, "GET", this._controller.credentials),
-                ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/transitions`, "GET", this._controller.credentials),
+                ApiController.fetchJira(this._controller.url, `${issueBaseUrl}/transitions`, "GET", this._controller.credentials)
             ]);
         if ((commitData &&
             commitData?.detail.length > 0 &&
@@ -60,14 +60,14 @@ export default class JiraTask extends ApiController {
     }
     async addWorkLog(seconds) {
         const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/worklog`, "POST", this._controller.credentials, 0 /* JSON */, {
-            timeSpentSeconds: seconds,
+            timeSpentSeconds: seconds
         });
         await this.updateSelf(true);
         return result;
     }
     async addComment(body) {
         const result = await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/comment`, "POST", this._controller.credentials, 0 /* JSON */, {
-            body,
+            body
         });
         await this.updateSelf(true);
         return result;
@@ -75,7 +75,7 @@ export default class JiraTask extends ApiController {
     async updateTransition(id) {
         try {
             await ApiController.fetchJira(this._controller.url, `rest/api/latest/issue/${this.task.key}/transitions`, "POST", this._controller.credentials, 0 /* JSON */, {
-                transition: { id },
+                transition: { id }
             });
         }
         catch (e) {
@@ -91,8 +91,10 @@ export default class JiraTask extends ApiController {
     }
     get commitsEmpty() {
         return (this.commitData &&
-            this.commitData?.detail.length > 0 &&
-            this.commitData?.detail[0].repositories.length === 0);
+            (this.commitData?.detail.length > 0 &&
+                this.commitData?.detail[0].repositories.length === 0) ||
+            (this.commitData?.errors &&
+                this.commitData?.errors.length > 0));
     }
     get hasPullRequests() {
         return (this.pullRequestData &&
@@ -101,8 +103,10 @@ export default class JiraTask extends ApiController {
     }
     get pullRequestsEmpty() {
         return (this.pullRequestData &&
-            this.pullRequestData?.detail.length > 0 &&
-            this.pullRequestData?.detail[0].pullRequests.length === 0);
+            (this.pullRequestData?.detail.length > 0 &&
+                this.pullRequestData?.detail[0].pullRequests.length === 0) ||
+            (this.pullRequestData?.errors &&
+                this.pullRequestData?.errors.length > 0));
     }
 }
 //# sourceMappingURL=JiraTask.js.map

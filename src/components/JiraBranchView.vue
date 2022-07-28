@@ -22,21 +22,16 @@
           :key="option"
           height="40px"
           style="font-size: 1.2rem"
-          >{{ option }}
+        >{{ option }}
         </d-list-item>
       </d-tab-list>
       <JiraProjectBranchRefreshButton />
     </template>
-    <SlideXLeftTransition
-      group
-      style="
-        width: 100%;
+    <d-card block background-color="transparent" style="
         max-height: calc(500px - 50px - 8px);
         overflow: overlay;
         overflow-x: hidden;
-      "
-      :class="$vuelize.theme.dark ? 'dark' : 'light'"
-    >
+      ">
       <d-column
         key="content"
         v-if="
@@ -60,7 +55,7 @@
                   {{ repository.name }}
                 </d-card-title>
                 <d-card-subtitle
-                  >Repository
+                >Repository
                   <JiraLinkIconButton
                     v-if="repository.url"
                     :url="repository.url"
@@ -194,6 +189,7 @@
               root-tag="pre"
               elevation="3"
               style="user-select: text"
+              class="font-weight-bold"
             >
               <d-icon name="brackets-curly" :size="18" />
               git stash && git checkout -b {{ currentIssueKey }}
@@ -203,12 +199,11 @@
         <JiraProjectList />
       </d-column>
       <JiraLoader key="loader" v-else />
-    </SlideXLeftTransition>
+    </d-card>
   </JiraViewWrapper>
 </template>
 
 <script setup lang="ts">
-import { SlideXLeftTransition } from "v3-transitions";
 import { JiraCommits, ViewSwitch } from "../../types/Jira";
 import JiraUserItem from "./JiraUserItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";

@@ -97,7 +97,6 @@
               filled
               :color="approved ? 'success' : 'error'"
             >
-              <SlideYUpTransition>
                 <d-avatar
                   rounded="circle"
                   :size="40"
@@ -113,7 +112,6 @@
                 >
                   <div />
                 </d-avatar>
-              </SlideYUpTransition>
               <template v-slot:tooltip>
                 {{ user.name }}
               </template>
@@ -139,7 +137,6 @@
 
 <script setup lang="ts">
 import JiraViewWrapper from "./JiraViewWrapper.vue";
-import { SlideYUpTransition } from "v3-transitions";
 import JiraLoader from "./JiraLoader.vue";
 import { currentIssue } from "../store/jira.store";
 

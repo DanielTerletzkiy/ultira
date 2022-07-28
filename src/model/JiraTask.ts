@@ -5,7 +5,7 @@ import {
   JiraCommits,
   JiraIssue,
   JiraPullRequests,
-  JiraTransitions,
+  JiraTransitions
 } from "../../types/Jira";
 import Commits = JiraCommits.Commits;
 import Task = JiraIssue.Task;
@@ -40,7 +40,7 @@ export default class JiraTask extends ApiController {
         "GET",
         this._controller.credentials
       ),
-      updateConnected ? this.getConnectedData() : null,
+      updateConnected ? this.getConnectedData() : null
     ]);
     this.task = Object.assign({}, task) as Task;
     return this;
@@ -79,7 +79,7 @@ export default class JiraTask extends ApiController {
           `${issueBaseUrl}/transitions`,
           "GET",
           this._controller.credentials
-        ),
+        )
       ]);
 
     if (
@@ -121,7 +121,7 @@ export default class JiraTask extends ApiController {
       this._controller.credentials,
       FetchContentType.JSON,
       {
-        timeSpentSeconds: seconds,
+        timeSpentSeconds: seconds
       }
     );
     await this.updateSelf(true);
@@ -136,7 +136,7 @@ export default class JiraTask extends ApiController {
       this._controller.credentials,
       FetchContentType.JSON,
       {
-        body,
+        body
       }
     );
     await this.updateSelf(true);
@@ -152,7 +152,7 @@ export default class JiraTask extends ApiController {
         this._controller.credentials,
         FetchContentType.JSON,
         {
-          transition: { id },
+          transition: { id }
         }
       );
     } catch (e) {
@@ -173,8 +173,14 @@ export default class JiraTask extends ApiController {
   get commitsEmpty() {
     return (
       this.commitData &&
-      this.commitData?.detail.length > 0 &&
-      this.commitData?.detail[0].repositories.length === 0
+      (
+        this.commitData?.detail.length > 0 &&
+        this.commitData?.detail[0].repositories.length === 0
+      ) ||
+      (
+        this.commitData?.errors &&
+        this.commitData?.errors.length > 0
+      )
     );
   }
 
@@ -189,8 +195,14 @@ export default class JiraTask extends ApiController {
   get pullRequestsEmpty() {
     return (
       this.pullRequestData &&
-      this.pullRequestData?.detail.length > 0 &&
-      this.pullRequestData?.detail[0].pullRequests.length === 0
+      (
+        this.pullRequestData?.detail.length > 0 &&
+        this.pullRequestData?.detail[0].pullRequests.length === 0
+      ) ||
+      (
+        this.pullRequestData?.errors &&
+        this.pullRequestData?.errors.length > 0
+      )
     );
   }
 }

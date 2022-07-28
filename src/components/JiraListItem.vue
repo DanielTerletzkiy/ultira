@@ -37,7 +37,6 @@
         <d-card-subtitle class="summary">
           {{ item.task.fields.summary }}
           <d-spacer />
-          <FadeTransition>
             <ve-progress
               v-if="item.loading"
               :color="$vuelize.getColor(status.color, 0)"
@@ -47,7 +46,6 @@
               :size="16"
               loading
             />
-          </FadeTransition>
           <d-tooltip position="left">
             <d-image
               width="16px"
@@ -76,7 +74,6 @@
               :key="item.task.fields.project.key"
             >
               <template v-slot:default="{ base64 }">
-                  <FadeTransition group>
                     <d-avatar
                       v-if="base64"
                       key="image"
@@ -98,7 +95,6 @@
                       :amount="4"
                       :columns="2"
                     />
-                  </FadeTransition>
               </template>
             </JiraImage>
             <template v-slot:tooltip>
@@ -120,7 +116,6 @@
 <script setup lang="ts">
 //@ts-ignore
 import { VeProgress } from "vue-ellipse-progress";
-import { FadeTransition } from "v3-transitions";
 import { computed, inject, PropType } from "vue";
 import JiraTask from "../model/JiraTask";
 import JiraImage from "./JiraImage.vue";

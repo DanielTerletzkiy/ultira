@@ -225,7 +225,7 @@ export namespace JiraIssue {
 
 export namespace JiraCommits {
   export interface Commits {
-    errors: any[];
+    errors: Object[];
     detail: Detail[];
   }
 

@@ -24,7 +24,6 @@
             :key="group.icon.url"
           >
             <template v-slot:default="{ base64 }">
-              <FadeTransition group>
                 <d-avatar
                   v-if="base64"
                   key="image"
@@ -45,7 +44,6 @@
                   :amount="4"
                   :columns="2"
                 />
-              </FadeTransition>
             </template>
           </JiraImage>
           <d-icon v-else :name="group.icon.url" :size="30" />
@@ -53,15 +51,6 @@
           <d-divider class="group-header__divider" block />
         </d-card-title>
         <d-column gap block class="pa-0 pt-1">
-          <FadeTransition
-            group
-            style="
-              display: flex;
-              flex-direction: column;
-              gap: 6px;
-              flex-wrap: nowrap;
-            "
-          >
             <JiraListItem
               v-for="issue in group.items"
               :item="issue"
@@ -74,7 +63,6 @@
                 v-intersection-observer="intersectObserver"
               ></span>
             </JiraListItem>
-          </FadeTransition>
         </d-column>
       </d-card>
     </d-list>
@@ -128,7 +116,6 @@ import {
   refreshTime,
 } from "../store/jira.store";
 import { vIntersectionObserver } from "@vueuse/components";
-import { FadeTransition } from "v3-transitions";
 import JiraImage from "./JiraImage.vue";
 import { SortNames } from "../../types/Jira";
 
