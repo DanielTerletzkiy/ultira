@@ -43,6 +43,7 @@ export namespace JiraIssue {
   interface Fields {
     issuetype: Issuetype;
     parent: Parent;
+    attachment: Attachment[]
     timespent: number;
     project: Project;
     fixVersions: any[];
@@ -91,6 +92,18 @@ export namespace JiraIssue {
     name: string;
     subtask: boolean;
     avatarId: number;
+  }
+
+  interface Attachment {
+    self: string;
+    id: string;
+    filename: string;
+    author: User;
+    created: string;
+    size: number;
+    mimeType: string;
+    content: string;
+    thumbnail: string;
   }
 
   interface Parent {

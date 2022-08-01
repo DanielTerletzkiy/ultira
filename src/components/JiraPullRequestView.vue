@@ -59,12 +59,11 @@
           <d-column style="overflow: hidden" class="pa-0">
             <d-label rounded="none" width="100%">{{ pullRequest.id }}</d-label>
             <d-label rounded="none" width="100%"
-              >{{ pullRequest.status }}
+            >{{ pullRequest.status }}
             </d-label>
           </d-column>
         </d-row>
-        <d-divider elevation="8" />
-        <d-card-subtitle class="pa-0">
+        <d-card-subtitle v-if="pullRequest.reviewers.length>0" class="pa-0">
           <d-card-subtitle class="font-weight-bold">
             Reviewers
           </d-card-subtitle>
@@ -97,10 +96,10 @@
               filled
               :color="approved ? 'success' : 'error'"
             >
-                <d-avatar
-                  rounded="circle"
-                  :size="40"
-                  :style="{
+              <d-avatar
+                rounded="circle"
+                :size="40"
+                :style="{
                     backgroundImage: `url(${user.avatar})`,
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
@@ -109,9 +108,9 @@
                     )}`,
                     outlineOffset: '4px',
                   }"
-                >
-                  <div />
-                </d-avatar>
+              >
+                <div />
+              </d-avatar>
               <template v-slot:tooltip>
                 {{ user.name }}
               </template>

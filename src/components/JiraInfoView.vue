@@ -9,26 +9,26 @@
           >
             <template v-slot:default="{ base64 }">
               <d-card width="64px" height="64px" elevation-light>
-                  <d-avatar
-                    v-if="base64"
-                    key="image"
-                    color="transparent"
-                    size="64"
-                    :style="{
+                <d-avatar
+                  v-if="base64"
+                  key="image"
+                  color="transparent"
+                  size="64"
+                  :style="{
                       backgroundImage: `url(${base64})`,
                       backgroundPosition: 'center',
                       backgroundSize: 'cover',
                     }"
-                  >
-                    <div />
-                  </d-avatar>
-                  <d-elevation-loader
-                    v-else
-                    key="loader"
-                    :default-size="16"
-                    :amount="16"
-                    :columns="4"
-                  />
+                >
+                  <div />
+                </d-avatar>
+                <d-elevation-loader
+                  v-else
+                  key="loader"
+                  :default-size="16"
+                  :amount="16"
+                  :columns="4"
+                />
               </d-card>
             </template>
           </JiraImage>
@@ -59,7 +59,7 @@
               >
                 <d-icon name="key-skeleton" :size="20" />
               </d-icon-button>
-              <template v-slot:tooltip> Copy Key </template>
+              <template v-slot:tooltip> Copy Key</template>
             </d-tooltip>
             <d-tooltip position="bottom">
               <d-icon-button
@@ -70,7 +70,7 @@
               >
                 <d-icon name="link-alt" :size="20" />
               </d-icon-button>
-              <template v-slot:tooltip> Copy Issue Link </template>
+              <template v-slot:tooltip> Copy Issue Link</template>
             </d-tooltip>
             <d-button
               width="max-content"
@@ -86,21 +86,68 @@
         </d-column>
       </d-row>
       <d-row class="info-row" gap block :wrap="false" align="start">
-        <d-column
-          v-if="currentIssue.task.fields.description"
-          class="description-column"
-          :wrap="false"
-          block
-        >
-          <d-row>
-            <d-card-subtitle class="pa-0 font-weight-bold">
-              Description
+        <d-column class="description-column" :wrap="false" block>
+          <d-column
+            v-if="currentIssue.task.fields.description"
+            :wrap="false"
+            block
+          >
+            <d-row>
+              <d-card-subtitle class="pa-0 font-weight-bold">
+                Description
+              </d-card-subtitle>
+              <d-divider class="mx-3" block elevation="6" />
+            </d-row>
+            <JiraMarkup :body="currentIssue.task.fields.description" />
+          </d-column>
+          <d-column v-if="currentIssue.task.fields.attachment.length>0" gap outlined>
+            <d-card-subtitle class="font-weight-bold">
+              <d-icon name="file" :size="20" />
+              Attachments
             </d-card-subtitle>
-            <d-divider class="mx-3" block elevation="6" />
-          </d-row>
-          <JiraMarkup :body="currentIssue.task.fields.description" />
+            <d-row gap>
+              <d-tooltip v-for="attachment in currentIssue.task.fields.attachment" :key="attachment.id" filled
+                         color="secondary">
+                <JiraImage
+                  :url="attachment.content"
+                  :key="attachment.id"
+                >
+                  <template v-slot:default="{ base64, height, width }">
+                    <d-avatar
+                      v-if="base64"
+                      key="image"
+                      color="transparent"
+                      rounded="md"
+                      root-tag="a"
+                      target="_blank"
+                      :href="attachment.content"
+                      :style="{
+                      width: width + 'px',
+                      height: height + 'px',
+                      backgroundImage: `url(${base64})`,
+                      backgroundPosition: 'center',
+                      backgroundSize: 'cover',
+                    }"
+                    >
+                      <div />
+                    </d-avatar>
+                    <d-elevation-loader
+                      v-else
+                      key="loader"
+                      :default-size="16"
+                      :amount="16"
+                      :columns="4"
+                    />
+                  </template>
+                </JiraImage>
+                <template v-slot:tooltip>
+                  {{ attachment.filename }}
+                </template>
+              </d-tooltip>
+            </d-row>
+          </d-column>
+          <d-spacer v-else />
         </d-column>
-        <d-spacer v-else />
         <JiraInfoViewSidebar />
       </d-row>
     </d-column>
@@ -108,7 +155,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject} from "vue";
+import { computed, inject } from "vue";
 import { State } from "vuelize/src/types/Vuelize";
 import JiraController from "../controller/JiraController";
 import JiraInfoViewSidebar from "./JiraInfoViewSidebar.vue";
@@ -127,10 +174,10 @@ const issueLink = computed(
 
 function copy(text: string) {
   navigator.clipboard.writeText(text).then(
-    function () {
+    function() {
       vuelize.notify("Copy", `Copied "${text}"`, State.Success);
     },
-    function (err) {
+    function(err) {
       vuelize.notify(
         "Copy",
         `Failed to copy "${text}", ERR: ${err}`,
