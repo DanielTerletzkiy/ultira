@@ -100,7 +100,7 @@
             </d-row>
             <JiraMarkup :body="currentIssue.task.fields.description" />
           </d-column>
-          <d-column v-if="currentIssue.task.fields.attachment.length>0" gap outlined>
+          <d-column v-if="currentIssue.task.fields.attachment?.length>0" gap outlined>
             <d-card-subtitle class="font-weight-bold">
               <d-icon name="file" :size="20" />
               Attachments
