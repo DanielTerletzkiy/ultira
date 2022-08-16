@@ -21,9 +21,8 @@ onMounted(async () => {
       let image = new Image();
 
       image.onload = function(){
-        width.value = image.width;
-        height.value = image.height;
-        //alert( image.width+", "+image.height );
+        width.value = image.width / 4;
+        height.value = image.height / 4;
       };
 
       image.src = result;

@@ -100,11 +100,15 @@
             </d-row>
             <JiraMarkup :body="currentIssue.task.fields.description" />
           </d-column>
-          <d-column v-if="currentIssue.task.fields.attachment?.length>0" gap outlined>
-            <d-card-subtitle class="font-weight-bold">
+          <d-button :disabled="currentIssue.task.fields.attachment?.length === 0"
+                    color="primary" block
+                    @click="toggleAttachmentDialog">
+            <template v-slot:prefix>
               <d-icon name="file" :size="20" />
-              Attachments
-            </d-card-subtitle>
+            </template>
+            Open Attachments
+          </d-button>
+          <d-dialog v-model="attachmentDialog">
             <d-row gap>
               <d-tooltip v-for="attachment in currentIssue.task.fields.attachment" :key="attachment.id" filled
                          color="secondary">
@@ -145,8 +149,7 @@
                 </template>
               </d-tooltip>
             </d-row>
-          </d-column>
-          <d-spacer v-else />
+          </d-dialog>
         </d-column>
         <JiraInfoViewSidebar />
       </d-row>
@@ -155,7 +158,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from "vue";
+import { computed, inject, ref } from "vue";
 import { State } from "vuelize/src/types/Vuelize";
 import JiraController from "../controller/JiraController";
 import JiraInfoViewSidebar from "./JiraInfoViewSidebar.vue";
@@ -166,6 +169,8 @@ import { currentIssue } from "../store/jira.store";
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
+
+const attachmentDialog = ref(false);
 
 const issueLink = computed(
   () =>
@@ -185,6 +190,10 @@ function copy(text: string) {
       );
     }
   );
+}
+
+function toggleAttachmentDialog() {
+  attachmentDialog.value = !attachmentDialog.value;
 }
 </script>
 
