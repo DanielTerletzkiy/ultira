@@ -3,6 +3,7 @@
     <d-list
       v-model="modelValue"
       @update:modelValue="onChange"
+      mandatory
       width="100%"
       class="font-weight-bold"
       style="max-height: calc(100% - 48px); overflow: hidden auto"

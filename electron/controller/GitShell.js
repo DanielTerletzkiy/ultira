@@ -26,6 +26,14 @@ module.exports = class GitShell {
         }
         return output;
     }
+    static async getMasterBranch(path) {
+        try {
+            return (await GitShell.exec(path, "git symbolic-ref refs/remotes/origin/HEAD --short")).replace(/(\r\n|\n|\r)/gm, "");
+        }
+        catch (e) {
+            return "none";
+        }
+    }
     static async getCurrentBranch(path) {
         try {
             return (await GitShell.exec(path, "git branch --show-current")).replace(/(\r\n|\n|\r)/gm, "");

@@ -29,6 +29,19 @@ module.exports = class GitShell {
     return output;
   }
 
+  public static async getMasterBranch(
+    path: Project["path"]
+  ): Promise<Project["branch"]> {
+    try {
+      return (await GitShell.exec(path, "git symbolic-ref refs/remotes/origin/HEAD --short")).replace(
+        /(\r\n|\n|\r)/gm,
+        ""
+      );
+    } catch (e) {
+      return "none";
+    }
+  }
+
   public static async getCurrentBranch(
     path: Project["path"]
   ): Promise<Project["branch"]> {
