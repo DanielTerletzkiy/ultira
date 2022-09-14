@@ -25,26 +25,26 @@
             :key="group.icon.url"
           >
             <template v-slot:default="{ base64 }">
-                <d-avatar
-                  v-if="base64"
-                  key="image"
-                  color="transparent"
-                  :size="30"
-                  :style="{
+              <d-avatar
+                v-if="base64"
+                key="image"
+                color="transparent"
+                :size="30"
+                :style="{
                     backgroundImage: `url(${base64})`,
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
                   }"
-                >
-                  <div />
-                </d-avatar>
-                <d-elevation-loader
-                  v-else
-                  key="loader"
-                  :default-size="15"
-                  :amount="4"
-                  :columns="2"
-                />
+              >
+                <div />
+              </d-avatar>
+              <d-elevation-loader
+                v-else
+                key="loader"
+                :default-size="15"
+                :amount="4"
+                :columns="2"
+              />
             </template>
           </JiraImage>
           <d-icon v-else :name="group.icon.url" :size="30" />
@@ -52,18 +52,18 @@
           <d-divider class="group-header__divider" block />
         </d-card-title>
         <d-column gap block class="pa-0 pt-1">
-            <JiraListItem
-              v-for="issue in group.items"
-              :item="issue"
-              class="item"
-              :key="issue.task.key"
-            >
+          <JiraListItem
+            v-for="issue in group.items"
+            :item="issue"
+            class="item"
+            :key="issue.task.key"
+            :hide="hidden.has(issue.task.key)"
+          >
               <span
-                v-if="issue.task.key === modelValue"
                 class="observer"
-                v-intersection-observer="intersectObserver"
+                v-intersection-observer="(e)=>intersectObserver(e, issue.task.key === modelValue, issue.task.key)"
               ></span>
-            </JiraListItem>
+          </JiraListItem>
         </d-column>
       </d-card>
     </d-list>
@@ -114,7 +114,7 @@ import {
   currentIssue,
   currentIssueKey,
   currentSort,
-  refreshTime,
+  refreshTime
 } from "../store/jira.store";
 import { vIntersectionObserver } from "@vueuse/components";
 import JiraImage from "./JiraImage.vue";
@@ -127,8 +127,8 @@ const props = defineProps({
   issueList: {
     type: Object as PropType<Array<JiraTask>>,
     // eslint-disable-next-line vue/require-valid-default-prop
-    default: [],
-  },
+    default: []
+  }
 });
 
 onMounted(() => {
@@ -143,19 +143,30 @@ function scrollIntoView(id: string) {
   document?.getElementById(id)?.scrollIntoView({
     behavior: "smooth",
     block: "center",
-    inline: "center",
+    inline: "center"
   });
 }
+
+const hidden = ref<Set<string>>(new Set<string>());
 
 // eslint-disable-next-line no-undef
 let timeout: NodeJS.Timeout | null | undefined = null;
 
-async function intersectObserver([{ isIntersecting }]: any) {
-  if (timeout && isIntersecting) {
-    clearTimeout(timeout);
-  }
-  if (!isIntersecting && props.modelValue) {
-    scrollTimeout(60000);
+async function intersectObserver(e: any, selected: boolean, key: string) {
+  const isIntersecting = e[0].isIntersecting;
+  if (selected) {
+    if (timeout && isIntersecting) {
+      clearTimeout(timeout);
+    }
+    if (!isIntersecting && props.modelValue) {
+      scrollTimeout(60000);
+    }
+  } else {
+    if (isIntersecting) {
+      hidden.value.delete(key);
+    } else {
+      hidden.value.add(key);
+    }
   }
 }
 
@@ -177,17 +188,17 @@ const sortOptions = [
   {
     name: SortNames.Latest,
     icon: "clock",
-    color: "primary",
+    color: "primary"
   },
   {
     name: SortNames.Priority,
     icon: "exclamation-triangle",
-    color: "warning",
+    color: "warning"
   },
   {
     name: SortNames.Type,
     icon: "list-ui-alt",
-    color: "primary",
+    color: "primary"
   },
   /*{ TODO
     name: SortNames.State,
@@ -197,8 +208,8 @@ const sortOptions = [
   {
     name: SortNames.Project,
     icon: "parcel",
-    color: "primary",
-  },
+    color: "primary"
+  }
 ];
 
 const sortGroups = () => {
@@ -222,32 +233,32 @@ const sortGroups = () => {
       const times = [
         {
           name: "Today",
-          hours: 24,
+          hours: 24
         },
         {
           name: "Week",
-          hours: 24 * 7,
+          hours: 24 * 7
         },
         {
           name: "Month",
-          hours: 24 * 7 * 4,
+          hours: 24 * 7 * 4
         },
         {
           name: "Year",
-          hours: 8766,
+          hours: 8766
         },
         {
           name: "2 Years",
-          hours: 8766 * 2,
+          hours: 8766 * 2
         },
         {
           name: "5 Years",
-          hours: 8766 * 5,
+          hours: 8766 * 5
         },
         {
           name: "20 Years",
-          hours: 8766 * 20,
-        },
+          hours: 8766 * 20
+        }
       ];
 
       for (const time of times) {
@@ -275,9 +286,9 @@ const sortGroups = () => {
             name: time.name,
             icon: {
               type: "icon",
-              url: "calendar-alt",
+              url: "calendar-alt"
             },
-            items,
+            items
           });
         }
       }
@@ -302,9 +313,9 @@ const sortGroups = () => {
           name: priority.name,
           icon: {
             type: "image",
-            url: priority.iconUrl,
+            url: priority.iconUrl
           },
-          items,
+          items
         });
       }
       break;
@@ -329,9 +340,9 @@ const sortGroups = () => {
           name: type.name,
           icon: {
             type: "image",
-            url: type.iconUrl,
+            url: type.iconUrl
           },
-          items,
+          items
         });
       }
       break;
@@ -355,9 +366,9 @@ const sortGroups = () => {
           name: project.name,
           icon: {
             type: "image",
-            url: project.avatarUrls["32x32"],
+            url: project.avatarUrls["32x32"]
           },
-          items,
+          items
         });
       }
       break;
@@ -366,13 +377,11 @@ const sortGroups = () => {
   return groups;
 };
 
-const debouncedSortedGroups = ref<
-  Array<{
-    name: string;
-    icon: { type: string; url: string };
-    items: Array<JiraTask>;
-  }>
->([]);
+const debouncedSortedGroups = ref<Array<{
+  name: string;
+  icon: { type: string; url: string };
+  items: Array<JiraTask>;
+}>>([]);
 watch(
   () => props.issueList,
   debounce(
@@ -407,9 +416,9 @@ watch(
 
   &__divider {
     background: linear-gradient(
-      90deg,
-      rgba(0, 212, 255, 0) 0%,
-      currentColor 100%
+        90deg,
+        rgba(0, 212, 255, 0) 0%,
+        currentColor 100%
     );
   }
 }

@@ -8,6 +8,9 @@ console.log("NODE_ENV:", mode);
 
 export default defineConfig({
   mode: mode,
+  server: {
+    port: 3000,
+  },
   plugins: [vue()],
   resolve: { dedupe: ["vue"] },
   base: mode === "production" ? `/${path.resolve(__dirname, "./dist/")}/` : "",

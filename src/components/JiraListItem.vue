@@ -1,42 +1,44 @@
 <template>
-  <d-list-item
-    :key="item.task.key"
-    :id="item.task.key"
-    class="list-item"
-    :color="status.color"
-  >
-    <d-row gap :wrap="false">
-      <d-tooltip
-        class="status-tooltip"
-        position="right"
-        :color="status.color"
-        filled
-        :tint="80"
-      >
-        <d-avatar
-          class="status"
+  <div class="list-item--wrapper">
+    <d-list-item
+      v-if="!hide"
+      :key="item.task.key"
+      :id="item.task.key"
+      class="list-item"
+      :color="status.color"
+    >
+      <d-row gap :wrap="false">
+        <d-tooltip
+          class="status-tooltip"
+          position="right"
           :color="status.color"
-          glowing
+          filled
           :tint="80"
-          :size="56"
         >
-          <d-icon
-            :name="status.icon"
+          <d-avatar
+            class="status"
             :color="status.color"
-            :tint="0"
-            :size="30"
-          />
-        </d-avatar>
-        <template v-slot:tooltip>
-          <d-card-subtitle class="pa-0" :color="status.color" :tint="-50">
-            {{ item.task.fields.status.name }}
-          </d-card-subtitle>
-        </template>
-      </d-tooltip>
-      <d-column class="header" width="100%">
-        <d-card-subtitle class="summary">
-          {{ item.task.fields.summary }}
-          <d-spacer />
+            glowing
+            :tint="80"
+            :size="56"
+          >
+            <d-icon
+              :name="status.icon"
+              :color="status.color"
+              :tint="0"
+              :size="30"
+            />
+          </d-avatar>
+          <template v-slot:tooltip>
+            <d-card-subtitle class="pa-0" :color="status.color" :tint="-50">
+              {{ item.task.fields.status.name }}
+            </d-card-subtitle>
+          </template>
+        </d-tooltip>
+        <d-column class="header" width="100%">
+          <d-card-subtitle class="summary">
+            {{ item.task.fields.summary }}
+            <d-spacer />
             <ve-progress
               v-if="item.loading"
               :color="$vuelize.getColor(status.color, 0)"
@@ -46,71 +48,72 @@
               :size="16"
               loading
             />
-          <d-tooltip position="left">
-            <d-image
-              width="16px"
-              height="16px"
-              :src="item.task.fields.priority.iconUrl"
-              rounded="md"
-            />
-            <template v-slot:tooltip>
-              Priority: <strong>{{ item.task.fields.priority.name }}</strong>
-            </template>
-          </d-tooltip>
-          <d-tooltip position="left">
-            <d-image
-              width="16px"
-              height="16px"
-              :src="item.task.fields.issuetype.iconUrl"
-              rounded="md"
-            />
-            <template v-slot:tooltip>
-              Type: <strong>{{ item.task.fields.issuetype.name }}</strong>
-            </template>
-          </d-tooltip>
-          <d-tooltip position="left">
-            <JiraImage
-              :url="item.task.fields.project.avatarUrls['16x16']"
-              :key="item.task.fields.project.key"
-            >
-              <template v-slot:default="{ base64 }">
-                    <d-avatar
-                      v-if="base64"
-                      key="image"
-                      color="transparent"
-                      size="16"
-                      rounded="md"
-                      :style="{
+            <d-tooltip position="left">
+              <d-image
+                width="16px"
+                height="16px"
+                :src="item.task.fields.priority.iconUrl"
+                rounded="md"
+              />
+              <template v-slot:tooltip>
+                Priority: <strong>{{ item.task.fields.priority.name }}</strong>
+              </template>
+            </d-tooltip>
+            <d-tooltip position="left">
+              <d-image
+                width="16px"
+                height="16px"
+                :src="item.task.fields.issuetype.iconUrl"
+                rounded="md"
+              />
+              <template v-slot:tooltip>
+                Type: <strong>{{ item.task.fields.issuetype.name }}</strong>
+              </template>
+            </d-tooltip>
+            <d-tooltip position="left">
+              <JiraImage
+                :url="item.task.fields.project.avatarUrls['16x16']"
+                :key="item.task.fields.project.key"
+              >
+                <template v-slot:default="{ base64 }">
+                  <d-avatar
+                    v-if="base64"
+                    key="image"
+                    color="transparent"
+                    size="16"
+                    rounded="md"
+                    :style="{
                       backgroundImage: `url(${base64})`,
                       backgroundPosition: 'center',
                       backgroundSize: 'cover',
                     }"
-                    >
-                      <div />
-                    </d-avatar>
-                    <d-elevation-loader
-                      v-else
-                      key="loader"
-                      :default-size="8"
-                      :amount="4"
-                      :columns="2"
-                    />
+                  >
+                    <div />
+                  </d-avatar>
+                  <d-elevation-loader
+                    v-else
+                    key="loader"
+                    :default-size="8"
+                    :amount="4"
+                    :columns="2"
+                  />
+                </template>
+              </JiraImage>
+              <template v-slot:tooltip>
+                Project: <strong>{{ item.task.fields.project.name }}</strong>
               </template>
-            </JiraImage>
-            <template v-slot:tooltip>
-              Project: <strong>{{ item.task.fields.project.name }}</strong>
-            </template>
-          </d-tooltip>
-        </d-card-subtitle>
-        <d-card-subtitle class="sub">
-          <span class="key">{{ item.task.key }}</span>
-          <d-spacer />
-          {{ new Date(item.task.fields.updated).toLocaleString(undefined) }}
-        </d-card-subtitle>
-      </d-column>
-    </d-row>
+            </d-tooltip>
+          </d-card-subtitle>
+          <d-card-subtitle class="sub">
+            <span class="key">{{ item.task.key }}</span>
+            <d-spacer />
+            {{ new Date(item.task.fields.updated).toLocaleString(undefined) }}
+          </d-card-subtitle>
+        </d-column>
+      </d-row>
+    </d-list-item>
     <slot />
-  </d-list-item>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -124,7 +127,8 @@ import JiraImage from "./JiraImage.vue";
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 const props = defineProps({
-  item: { type: Object as PropType<JiraTask>, required: true }
+  item: { type: Object as PropType<JiraTask>, required: true },
+  hide: {type: Boolean}
 });
 
 const status = computed(() => {
@@ -148,7 +152,7 @@ const status = computed(() => {
     }
     case "In Code Review": {
       payload.color = "info";
-      payload.icon = "search-alt";
+      payload.icon = "bug";
       break;
     }
   }
@@ -158,6 +162,12 @@ const status = computed(() => {
 
 <style scoped lang="scss">
 .list-item {
+  padding: 0;
+
+  &--wrapper{
+    min-height: 56px;
+  }
+
   ::v-deep(.d-list__item__content) {
     padding-top: 0;
     padding-bottom: 0;
