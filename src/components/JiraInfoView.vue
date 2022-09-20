@@ -81,7 +81,7 @@
               {{ currentIssue.task.key }}
             </d-button>
             <d-spacer />
-            <JiraTransitionButtons />
+            <JiraTransitionButtons :issue="currentIssue"/>
           </d-card-subtitle>
         </d-column>
       </d-row>

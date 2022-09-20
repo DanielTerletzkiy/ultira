@@ -2,7 +2,7 @@ import ApiController, { FetchContentType } from "./ApiController";
 import JiraBaseController from "./JiraBaseController";
 import JiraTask from "../model/JiraTask";
 import { JiraIssue } from "../../types/Jira";
-import { currentIssueKey } from "../store/jira.store";
+import { currentIssueKey, maxResults } from "../store/jira.store";
 import { ref, Ref } from "vue";
 import Task = JiraIssue.Task;
 
@@ -18,7 +18,7 @@ export default class JiraController extends ApiController {
   static async getAllIssues(): Promise<any> {
     const searchResult = await ApiController.fetchJira(
       JiraController.controller.url,
-      `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`,
+      `rest/api/latest/search?maxResults=${maxResults.value}&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`,
       "GET",
       JiraController.controller.credentials
     );

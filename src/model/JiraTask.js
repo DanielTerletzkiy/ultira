@@ -11,18 +11,23 @@ export default class JiraTask extends ApiController {
         super();
         this.task = task;
         this._controller = controller;
+        this.getConnectedData();
     }
     async updateSelf(updateConnected) {
         const url = new URL(this.task.self);
-        let task = {};
+        let task;
         [task] = await Promise.all([
             ApiController.fetchJira(this._controller.url, `${url.pathname.replace(/\//, "")}`, "GET", this._controller.credentials),
             updateConnected ? this.getConnectedData() : null
         ]);
         this.task = Object.assign({}, task);
+        if (this.task.fields.status.name !== task.fields.status.name) {
+            this.getConnectedData();
+        }
         return this;
     }
     async getConnectedData() {
+        console.log("get connected data", this.task.key);
         this.loading = true;
         const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
         const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;

@@ -1,37 +1,43 @@
 <template>
-  <d-row
-    v-if="currentIssue.transitionData"
-    width="max-content"
-    :key="currentIssue.task.key"
+  <d-tab-list
+    v-if="issue.transitionData"
+    :key="issue.task.key"
     :wrap="false"
     gap
-    elevation="2"
   >
-    <d-tooltip
-      v-for="transition in currentIssue.transitionData.transitions"
-      :key="transition.id" position="bottom"
+    <component :is="disableTooltip?'span':DTooltip"
+               v-for="transition in issue.transitionData.transitions"
+               :key="transition.id" position="bottom" filled
     >
-      <d-button color="secondary" @click="onClick(transition.id)">
+      <d-list-item color="secondary" @click="onClick(transition.id)">
         {{ transition.name }}
-      </d-button>
+      </d-list-item>
       <template v-slot:tooltip>
         Status
         <d-icon name="arrow-right" :size="20" />
         <strong>{{ transition.to.name }}</strong>
       </template>
-    </d-tooltip>
-  </d-row>
+    </component>
+  </d-tab-list>
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
+import { computed, inject, PropType, ref } from "vue";
 import { currentIssue } from "../store/jira.store";
+import JiraTask from "../model/JiraTask";
+import DTooltip from "vuelize/src/components/tooltip/DTooltip.vue";
 
 // eslint-disable-next-line no-undef,no-unused-vars
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
+const props = defineProps({
+  issue: Object as PropType<JiraTask>,
+  disableTooltip: Boolean
+});
+
+
 function onClick(id: string) {
-  currentIssue.value?.updateTransition(id);
+  props.issue?.updateTransition(id);
 }
 </script>
 

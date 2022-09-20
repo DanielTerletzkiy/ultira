@@ -38,6 +38,7 @@ const store = createStore({
     credentialsDialogOpen: false,
     refreshTime: 60,
     zoomFactor: 1,
+    maxResults: 50,
     theme: {
       isDark: true,
       primary: {
@@ -75,6 +76,9 @@ const store = createStore({
     zoomFactor(state): number {
       return state.zoomFactor;
     },
+    maxResults(state): number {
+      return state.maxResults;
+    },
     theme(state): object {
       return state.theme;
     }
@@ -107,6 +111,9 @@ const store = createStore({
     },
     setZoomFactor(state, payload: number) {
       state.zoomFactor = payload;
+    },
+    setMaxResults(state, payload: number) {
+      state.maxResults = payload;
     },
     setTheme(state, payload) {
       Object.assign(state.theme,payload);
@@ -153,6 +160,9 @@ const store = createStore({
     },
     setZoomFactor(context, payload: number) {
       context.commit("setZoomFactor", payload);
+    },
+    setMaxResults(context, payload: number) {
+      context.commit("setMaxResults", payload);
     },
     setTheme(context, payload: object) {
       context.commit("setTheme", payload);
@@ -248,6 +258,15 @@ export const zoomFactor = computed<number>({
   },
   set(value: number) {
     store.dispatch("setZoomFactor", value);
+  }
+});
+
+export const maxResults = computed<number>({
+  get() {
+    return store.getters.maxResults;
+  },
+  set(value: number) {
+    store.dispatch("setMaxResults", value);
   }
 });
 

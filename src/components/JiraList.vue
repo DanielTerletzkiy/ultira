@@ -82,6 +82,7 @@
           :key="option.name"
           :color="option.color"
           height="48px"
+          center
         >
           <d-icon :name="option.icon" :size="20" />
           {{ option.name }}
@@ -158,13 +159,13 @@ async function intersectObserver(e: any, selected: boolean, key: string) {
     if (timeout && isIntersecting) {
       clearTimeout(timeout);
     }
-    if (!isIntersecting && props.modelValue) {
+    if (!isIntersecting && (props.modelValue !== key)) {
       scrollTimeout(60000);
     }
   } else {
     if (isIntersecting) {
       hidden.value.delete(key);
-    } else {
+    } else if (props.modelValue !== key) {
       hidden.value.add(key);
     }
   }

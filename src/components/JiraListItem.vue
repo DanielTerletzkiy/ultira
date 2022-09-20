@@ -12,7 +12,7 @@
           class="status-tooltip"
           position="right"
           :color="status.color"
-          filled
+          filled popover simple-fade
           :tint="80"
         >
           <d-avatar
@@ -29,10 +29,15 @@
               :size="30"
             />
           </d-avatar>
-          <template v-slot:tooltip>
-            <d-card-subtitle class="pa-0" :color="status.color" :tint="-50">
-              {{ item.task.fields.status.name }}
-            </d-card-subtitle>
+          <template v-slot:tooltip-wrapper>
+            <d-card elevation="n4" class="pa-2">
+              <d-card-title :color="status.color">
+                {{ item.task.fields.status.name }}
+              </d-card-title>
+              <d-divider />
+              <JiraTransitionButtons :issue="item" class="font-size-medium" disable-tooltip
+                                     style="flex-direction: column" />
+            </d-card>
           </template>
         </d-tooltip>
         <d-column class="header" width="100%">
@@ -122,13 +127,14 @@ import { VeProgress } from "vue-ellipse-progress";
 import { computed, inject, PropType } from "vue";
 import JiraTask from "../model/JiraTask";
 import JiraImage from "./JiraImage.vue";
+import JiraTransitionButtons from "./JiraTransitionButtons.vue";
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 const props = defineProps({
   item: { type: Object as PropType<JiraTask>, required: true },
-  hide: {type: Boolean}
+  hide: { type: Boolean }
 });
 
 const status = computed(() => {
@@ -162,16 +168,10 @@ const status = computed(() => {
 
 <style scoped lang="scss">
 .list-item {
-  padding: 0;
+  padding: 0 8px 0 0;
 
-  &--wrapper{
+  &--wrapper {
     min-height: 56px;
-  }
-
-  ::v-deep(.d-list__item__content) {
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 0;
   }
 
   .status {

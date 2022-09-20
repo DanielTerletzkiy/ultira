@@ -1,6 +1,6 @@
 import ApiController from "./ApiController";
 import JiraTask from "../model/JiraTask";
-import { currentIssueKey } from "../store/jira.store";
+import { currentIssueKey, maxResults } from "../store/jira.store";
 import { ref } from "vue";
 export default class JiraController extends ApiController {
     static controller;
@@ -10,7 +10,7 @@ export default class JiraController extends ApiController {
         JiraController.controller = baseController;
     }
     static async getAllIssues() {
-        const searchResult = await ApiController.fetchJira(JiraController.controller.url, `rest/api/latest/search?maxResults=1000&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`, "GET", JiraController.controller.credentials);
+        const searchResult = await ApiController.fetchJira(JiraController.controller.url, `rest/api/latest/search?maxResults=${maxResults.value}&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`, "GET", JiraController.controller.credentials);
         if (JiraController.issues.value.length > 0) {
             JiraController.issues.value.forEach((issue) => {
                 issue.updateSelf(issue.task.key === currentIssueKey.value);

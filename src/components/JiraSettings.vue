@@ -48,6 +48,15 @@
           >
             <template v-slot:suffix> seconds</template>
           </d-textfield>
+          <d-textfield
+            v-model="maxResults"
+            full-width
+            color="primary"
+            filled
+            label="Max Results"
+            type="number"
+            min="5"
+          />
           <d-card-subtitle class="pl-0 pb-0 font-weight-bold">
             Zoom
           </d-card-subtitle>
@@ -141,7 +150,7 @@ import { useStore } from "vuex";
 import JiraSettingsConfig from "./JiraSettingsConfig.vue";
 import JiraSettingsProject from "./JiraSettingsProject.vue";
 import {
-  jiraConfigs,
+  jiraConfigs, maxResults,
   projects,
   refreshTime, theme,
   zoomFactor
