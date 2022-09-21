@@ -86,7 +86,7 @@
         </d-column>
       </d-row>
       <d-row class="info-row" gap block :wrap="false" align="start">
-        <d-column class="description-column" :wrap="false" block>
+        <d-column class="description-column" :wrap="false" block height="100%">
           <d-column
             v-if="currentIssue.task.fields.description"
             :wrap="false"
@@ -100,7 +100,8 @@
             </d-row>
             <JiraMarkup :body="currentIssue.task.fields.description" />
           </d-column>
-          <d-button :disabled="currentIssue.task.fields.attachment?.length === 0"
+          <d-spacer/>
+          <d-button :disabled="!currentIssue.task.fields.attachment || currentIssue.task.fields.attachment?.length === 0"
                     color="primary" block
                     @click="toggleAttachmentDialog">
             <template v-slot:prefix>
@@ -108,48 +109,7 @@
             </template>
             Open Attachments
           </d-button>
-          <d-dialog v-model="attachmentDialog">
-            <d-row gap>
-              <d-tooltip v-for="attachment in currentIssue.task.fields.attachment" :key="attachment.id" filled
-                         color="secondary">
-                <JiraImage
-                  :url="attachment.content"
-                  :key="attachment.id"
-                >
-                  <template v-slot:default="{ base64, height, width }">
-                    <d-avatar
-                      v-if="base64"
-                      key="image"
-                      color="transparent"
-                      rounded="md"
-                      root-tag="a"
-                      target="_blank"
-                      :href="attachment.content"
-                      :style="{
-                      width: width + 'px',
-                      height: height + 'px',
-                      backgroundImage: `url(${base64})`,
-                      backgroundPosition: 'center',
-                      backgroundSize: 'cover',
-                    }"
-                    >
-                      <div />
-                    </d-avatar>
-                    <d-elevation-loader
-                      v-else
-                      key="loader"
-                      :default-size="16"
-                      :amount="16"
-                      :columns="4"
-                    />
-                  </template>
-                </JiraImage>
-                <template v-slot:tooltip>
-                  {{ attachment.filename }}
-                </template>
-              </d-tooltip>
-            </d-row>
-          </d-dialog>
+          <JiraAttachmentDialog v-model="attachmentDialog"/>
         </d-column>
         <JiraInfoViewSidebar />
       </d-row>
@@ -166,6 +126,7 @@ import JiraMarkup from "./JiraMarkup.vue";
 import JiraImage from "./JiraImage.vue";
 import JiraTransitionButtons from "./JiraTransitionButtons.vue";
 import { currentIssue } from "../store/jira.store";
+import JiraAttachmentDialog from "./JiraAttachmentDialog.vue";
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;

@@ -3,17 +3,26 @@
     class="content"
     color="secondary"
     :tint="10"
-    v-html="jira2md.jira_to_html(body)"
+    v-html="html"
   />
 </template>
 
 <script setup lang="ts">
 //@ts-ignore
 import jira2md from "jira2md";
+import { computed } from "vue";
 
 const props = defineProps({
   body: String,
 });
+
+const html = computed(()=>{
+  try {
+    return jira2md.jira_to_html(props.body);
+  }catch (e) {
+    return props.body
+  }
+})
 </script>
 
 <style scoped lang="scss">
