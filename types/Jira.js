@@ -11,11 +11,6 @@ export var ViewSwitch;
     ViewSwitch["Server"] = "Server";
     ViewSwitch["Local"] = "Local";
 })(ViewSwitch || (ViewSwitch = {}));
-/*export interface Project {
-  path: string;
-  project: string;
-  branch: string;
-}*/
 export var JiraConfiguration;
 (function (JiraConfiguration) {
     let ApplicationType;

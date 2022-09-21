@@ -11,11 +11,12 @@ export enum ViewSwitch {
   Local = 'Local',
 }
 
-/*export interface Project {
-  path: string;
-  project: string;
-  branch: string;
-}*/
+export interface Project {
+  path: string,
+  project: string,
+  branch: string,
+  changes: Array<Array<string>>,
+}
 
 export namespace JiraConfiguration {
   export interface JiraConfig {

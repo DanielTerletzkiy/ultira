@@ -1,9 +1,5 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Project_1 = __importDefault(require("../../src/model/Project"));
 const Worker = require("worker_threads").Worker;
 const path = require("path");
 const SocketIO = require("../service/SocketIO");
@@ -16,7 +12,7 @@ module.exports = class ProjectScraper {
         });
         let projects = (await new Promise((resolve, reject) => {
             worker.once("message", (message) => {
-                const projects = message.map((object) => new Project_1.default(object));
+                const projects = message.map((object) => object);
                 resolve(projects);
             });
         }));

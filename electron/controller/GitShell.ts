@@ -1,4 +1,4 @@
-import Project from "../../src/model/Project";
+import { Project } from "../../types/Jira";
 
 module.exports = class GitShell {
   private static async exec(

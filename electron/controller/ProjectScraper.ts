@@ -1,6 +1,5 @@
-import { JiraIssue } from "../../types/Jira";
+import { JiraIssue, Project } from "../../types/Jira";
 import Task = JiraIssue.Task;
-import Project from "../../src/model/Project";
 import shell from "shelljs";
 
 const Worker = require("worker_threads").Worker;
@@ -20,7 +19,7 @@ module.exports = class ProjectScraper {
     );
     let projects = (await new Promise((resolve, reject) => {
       worker.once("message", (message: Array<Project>) => {
-        const projects = message.map((object) => new Project(object));
+        const projects = message.map((object) => object);
         resolve(projects);
       });
     })) as Array<Project>;
