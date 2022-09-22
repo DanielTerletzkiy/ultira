@@ -25,7 +25,7 @@
     "concurrently": "^7.2.1",
     "cors": "^2.8.5",
     "http-proxy-middleware": "^2.0.6",
-    "jira2md": "^2.1.0",
+    "jira2md": "2.1.0",
     "lodash": "^4.17.21",
     "shelljs": "^0.8.5",
     "socket.io": "^4.5.1",
@@ -33,7 +33,7 @@
     "vue": "^3.2.37",
     "vue-ellipse-progress": "^2.1.1",
     "vue3-carousel": "^0.1.46",
-    "vuelize": "^0.1.21",
+    "vuelize": "^0.1.24",
     "vuex": "^4.0.2",
     "vuex-persist": "^3.1.3"
   },

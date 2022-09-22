@@ -1,6 +1,6 @@
 <template>
   <d-dialog :model-value="modelValue" @update:modelValue="close">
-    <d-card min-width="700px">
+    <d-card min-width="700px" max-width="60vw">
       <d-column class="pa-2 pt-1" block>
         <d-card-title>Attachments</d-card-title>
         <d-divider />
@@ -9,16 +9,22 @@
         <Slide
           v-for="attachment in currentIssue.task.fields.attachment"
           :key="attachment.id"
-          class="pa-6"
-        >
+          class="pa-6">
           <JiraImage :url="attachment.content" :key="attachment.id">
-            <template v-slot:default="{ base64 }">
-              <d-column block gap>
-                <d-image
+            <template v-slot:default="{ base64, width, height }">
+              <d-column gap style="align-items: center">
+                <d-avatar
                   v-if="base64"
-                  :src="`${base64}`"
-                  :style="{ height: '50vh', width: '100%' }"
-                />
+                  rounded="xl"
+                  :style="{
+                    maxHeight: '60vh', maxWidth: '40vw', width: width + 'px', height: height + 'px',
+                    backgroundImage: `url(${base64})`,
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
+                  }"
+                >
+                  <div />
+                </d-avatar>
                 <d-elevation-loader
                   v-else
                   key="loader"
@@ -26,7 +32,7 @@
                   :amount="16"
                   :columns="4"
                 />
-                <d-divider/>
+                <d-divider />
                 <d-card-subtitle class="font-weight-bold font-size-medium py-0">
                   {{ attachment.filename }}
                 </d-card-subtitle>
@@ -56,7 +62,7 @@ const vuelize: Vuelize = inject("vuelize") as Vuelize;
 const emit = defineEmits(["update:modelValue"]);
 
 defineProps({
-  modelValue: Boolean,
+  modelValue: Boolean
 });
 
 function close() {

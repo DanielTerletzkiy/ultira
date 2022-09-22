@@ -7,7 +7,7 @@
   >
     <component :is="disableTooltip?'span':DTooltip"
                v-for="transition in issue.transitionData.transitions"
-               :key="transition.id" position="bottom" filled
+               :key="transition.id" position="bottom"
     >
       <d-list-item color="secondary" @click="onClick(transition.id)">
         {{ transition.name }}

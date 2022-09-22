@@ -3,7 +3,7 @@
     class="content"
     color="secondary"
     :tint="10"
-    v-html="html"
+    v-html="jira2md.jira_to_html(props.body)"
   />
 </template>
 
@@ -16,13 +16,14 @@ const props = defineProps({
   body: String,
 });
 
-const html = computed(()=>{
+/*const html = computed(()=>{
   try {
     return jira2md.jira_to_html(props.body);
   }catch (e) {
-    return props.body
+    console.error(e);
+    return props.body;
   }
-})
+})*/
 </script>
 
 <style scoped lang="scss">
