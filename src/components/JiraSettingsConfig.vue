@@ -23,7 +23,12 @@
         elevation="1"
         class="ma-1"
       >
-        <d-list-item v-for="app in AppTypes" :key="app" class="center-item">
+        <d-list-item
+          v-for="app in AppTypes"
+          :key="app"
+          class="center-item"
+          center
+        >
           {{ app }}
         </d-list-item>
       </d-tab-list>
@@ -41,7 +46,9 @@ import JiraConfig = JiraConfiguration.JiraConfig;
 import ApplicationType = JiraConfiguration.ApplicationType;
 
 //@ts-ignore
-const AppTypes = Object.keys(ApplicationType).map((type) => ApplicationType[type]);
+const AppTypes = Object.keys(ApplicationType).map(
+  (type) => ApplicationType[type]
+);
 
 const emit = defineEmits(["remove", "update:modelValue"]);
 const props = defineProps({
@@ -60,11 +67,6 @@ watch(
 
 <style scoped lang="scss">
 .center-item {
-  flex: 1;
-  text-align: center;
-
-  :deep(.d-list__item__content) {
-    justify-content: center;
-  }
+  text-transform: capitalize;
 }
 </style>

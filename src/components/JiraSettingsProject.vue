@@ -19,7 +19,9 @@
         placeholder="Valid Path to Project Folder"
         type="path"
       />
-      {{modelValue.branch}}
+      <d-card-subtitle>
+        Current Branch: <strong>{{ modelValue.branch }}</strong>
+      </d-card-subtitle>
     </d-column>
     <d-icon-button height="initial" type="button" color="error" @click="remove">
       <d-icon name="times" />
@@ -29,7 +31,7 @@
 
 <script setup lang="ts">
 import { PropType, watch } from "vue";
-import Project from "../model/Project";
+import { Project } from "../../types/Jira";
 
 const emit = defineEmits(["remove", "update:modelValue"]);
 const props = defineProps({

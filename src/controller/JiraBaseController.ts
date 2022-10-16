@@ -14,6 +14,8 @@ export default class JiraBaseController extends ApiController {
     this.name = data.name;
     this.credentials = data.credentials;
     this.applicationType = data.applicationType;
+
+    //set proxy server address in express backend
     ApiController.fetchJira(data.url, "url", "POST", data.credentials);
   }
 }
