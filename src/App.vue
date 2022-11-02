@@ -4,8 +4,9 @@ import JiraDashboard from "./views/JiraDashboard.vue";
 import JiraSettings from "./components/JiraSettings.vue";
 import JiraBaseSelector from "./components/JiraBaseSelector.vue";
 import JiraSearchDialog from "./components/JiraSearchDialog.vue";
-import { searchOpen } from "./store/jira.store";
+import { searchOpen, historyOpen } from "./store/jira.store";
 import AppToolbarControls from "./components/AppToolbarControls.vue";
+import JiraHistoryDialog from "./components/JiraHistoryDialog.vue";
 
 const settingsOpen = ref(false);
 
@@ -58,6 +59,7 @@ const baseurl = import.meta.env.BASE_URL;
       <JiraDashboard />
       <JiraSettings v-model:open="settingsOpen" @submit="onSettingsSubmit" />
       <JiraSearchDialog v-model:open="searchOpen" />
+      <JiraHistoryDialog v-model:open="historyOpen" />
     </template>
   </d-root>
 </template>
@@ -81,6 +83,7 @@ header,
 
   .d-card {
     padding: 0 !important;
+
     .d-row {
       padding-right: 0 !important;
     }

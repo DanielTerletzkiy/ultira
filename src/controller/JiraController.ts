@@ -5,11 +5,13 @@ import { JiraIssue } from "../../types/Jira";
 import { currentIssueKey, maxResults } from "../store/jira.store";
 import { ref, Ref } from "vue";
 import Task = JiraIssue.Task;
+import User = JiraIssue.User;
 
 export default class JiraController extends ApiController {
   static controller: JiraBaseController;
   static issues: Ref<Array<JiraTask>> = ref([]);
   static totalIssues: Ref<number> = ref(0);
+  static myself: Ref<User | undefined> = ref();
 
   static setBase(baseController: JiraBaseController) {
     JiraController.controller = baseController;
@@ -33,7 +35,7 @@ export default class JiraController extends ApiController {
       if (
         JiraController.issues.value.length > 0 &&
         JiraController.issues.value.findIndex((x) => x.task.key === issue.key) >
-          -1
+        -1
       ) {
         //return this.issues.find((x) => x.task.key === issue.key);
       } else {
@@ -46,12 +48,12 @@ export default class JiraController extends ApiController {
     JiraController.totalIssues = searchResult.total;
     return {
       issues: JiraController.issues.value,
-      total: JiraController.totalIssues,
+      total: JiraController.totalIssues
     };
   }
 
-  static clearIssues(){
-    JiraController.issues.value = []
+  static clearIssues() {
+    JiraController.issues.value = [];
   }
 
   static async getImageBase64(url: string): Promise<string> {
@@ -84,6 +86,16 @@ export default class JiraController extends ApiController {
         return `data:image/jpeg;base64,${btoa(binary)}`;
       }
     }
+  }
+
+  static async getMyself() {
+    this.myself.value = await ApiController.fetchJira(
+      JiraController.controller.url,
+      `rest/api/latest/myself`,
+      "GET",
+      JiraController.controller.credentials
+    );
+    return this.myself;
   }
 
   static get issueKeys(): Array<Task["key"]> {

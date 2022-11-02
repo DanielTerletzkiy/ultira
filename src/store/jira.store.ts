@@ -34,6 +34,7 @@ const store = createStore({
       }
     ],
     searchDialogOpen: false,
+    historyDialogOpen: false,
     credentialsDialogOpen: false,
     refreshTime: 60,
     zoomFactor: 1,
@@ -65,6 +66,9 @@ const store = createStore({
     },
     searchDialogOpen(state): boolean {
       return state.searchDialogOpen;
+    },
+    historyDialogOpen(state): boolean {
+      return state.historyDialogOpen;
     },
     credentialsDialogOpen(state): boolean {
       return state.credentialsDialogOpen;
@@ -101,6 +105,9 @@ const store = createStore({
     },
     setSearchDialogOpen(state, payload: boolean) {
       state.searchDialogOpen = payload;
+    },
+    setHistoryDialogOpen(state, payload: boolean) {
+      state.historyDialogOpen = payload;
     },
     setCredentialsDialogOpen(state, payload: boolean) {
       state.credentialsDialogOpen = payload;
@@ -150,6 +157,9 @@ const store = createStore({
     },
     setSearchDialogOpen(context, payload: boolean) {
       context.commit("setSearchDialogOpen", payload);
+    },
+    setHistoryDialogOpen(context, payload: boolean) {
+      context.commit("setHistoryDialogOpen", payload);
     },
     setCredentialsDialogOpen(context, payload: boolean) {
       context.commit("setCredentialsDialogOpen", payload);
@@ -230,6 +240,15 @@ export const searchOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setSearchDialogOpen", value);
+  }
+});
+
+export const historyOpen = computed<boolean>({
+  get() {
+    return store.getters.historyDialogOpen;
+  },
+  set(value: boolean) {
+    store.dispatch("setHistoryDialogOpen", value);
   }
 });
 

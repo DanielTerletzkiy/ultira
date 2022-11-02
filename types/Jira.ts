@@ -522,3 +522,271 @@ export namespace JiraTransitions {
     name: string;
   }
 }
+
+export namespace JiraChangelog {
+  export interface JiraChangelogRoot {
+    expand: string;
+    id: string;
+    self: string;
+    key: string;
+    fields: Fields;
+    changelog: Changelog;
+  }
+
+  export interface Issuetype {
+    self: string;
+    id: string;
+    description: string;
+    iconUrl: string;
+    name: string;
+    subtask: boolean;
+    avatarId: number;
+  }
+
+  export interface AvatarUrls {
+    '48x48': string;
+    '24x24': string;
+    '16x16': string;
+    '32x32': string;
+  }
+
+  export interface ProjectCategory {
+    self: string;
+    id: string;
+    description: string;
+    name: string;
+  }
+
+  export interface Project {
+    self: string;
+    id: string;
+    key: string;
+    name: string;
+    projectTypeKey: string;
+    avatarUrls: AvatarUrls;
+    projectCategory: ProjectCategory;
+  }
+
+  export interface Resolution {
+    self: string;
+    id: string;
+    description: string;
+    name: string;
+  }
+
+  export interface Watches {
+    self: string;
+    watchCount: number;
+    isWatching: boolean;
+  }
+
+  export interface Priority {
+    self: string;
+    iconUrl: string;
+    name: string;
+    id: string;
+  }
+
+  export interface Assignee {
+    self: string;
+    name: string;
+    key: string;
+    emailAddress: string;
+    avatarUrls: AvatarUrls;
+    displayName: string;
+    active: boolean;
+    timeZone: string;
+  }
+
+  export interface StatusCategory {
+    self: string;
+    id: number;
+    key: string;
+    colorName: string;
+    name: string;
+  }
+
+  export interface Status {
+    self: string;
+    description: string;
+    iconUrl: string;
+    name: string;
+    id: string;
+    statusCategory: StatusCategory;
+  }
+
+  export interface Component {
+    self: string;
+    id: string;
+    name: string;
+  }
+
+  export interface Timetracking {
+  }
+
+  export interface Creator {
+    self: string;
+    name: string;
+    key: string;
+    emailAddress: string;
+    avatarUrls: AvatarUrls;
+    displayName: string;
+    active: boolean;
+    timeZone: string;
+  }
+
+  export interface Reporter {
+    self: string;
+    name: string;
+    key: string;
+    emailAddress: string;
+    avatarUrls: AvatarUrls;
+    displayName: string;
+    active: boolean;
+    timeZone: string;
+  }
+
+  export interface Aggregateprogress {
+    progress: number;
+    total: number;
+  }
+
+  export interface Progress {
+    progress: number;
+    total: number;
+  }
+
+  export interface Comment {
+    comments: any[];
+    maxResults: number;
+    total: number;
+    startAt: number;
+  }
+
+  export interface Votes {
+    self: string;
+    votes: number;
+    hasVoted: boolean;
+  }
+
+  export interface Worklog {
+    startAt: number;
+    maxResults: number;
+    total: number;
+    worklogs: any[];
+  }
+
+  export interface Fields {
+    issuetype: Issuetype;
+    timespent?: any;
+    project: Project;
+    fixVersions: any[];
+    aggregatetimespent?: any;
+    resolution: Resolution;
+    resolutiondate: Date;
+    workratio: number;
+    lastViewed: Date;
+    watches: Watches;
+    created: Date;
+    priority: Priority;
+    labels: any[];
+    timeestimate?: any;
+    aggregatetimeoriginalestimate?: any;
+    versions: any[];
+    issuelinks: any[];
+    assignee: Assignee;
+    updated: Date;
+    status: Status;
+    components: Component[];
+    timeoriginalestimate?: any;
+    description: string;
+    timetracking: Timetracking;
+    attachment: any[];
+    aggregatetimeestimate?: any;
+    summary: string;
+    creator: Creator;
+    subtasks: any[];
+    reporter: Reporter;
+    aggregateprogress: Aggregateprogress;
+    environment?: any;
+    duedate?: any;
+    progress: Progress;
+    comment: Comment;
+    votes: Votes;
+    worklog: Worklog;
+  }
+
+  export interface Author {
+    self: string;
+    name: string;
+    key: string;
+    emailAddress: string;
+    avatarUrls: AvatarUrls;
+    displayName: string;
+    active: boolean;
+    timeZone: string;
+  }
+
+  export interface Item {
+    field: string;
+    fieldtype: string;
+    from: string;
+    fromString: string;
+    to: string;
+    toString: string;
+  }
+
+  export interface Actor {
+    id: string;
+    displayName: string;
+    type: string;
+    avatarUrl: string;
+    url: string;
+  }
+
+  export interface Generator {
+    id: string;
+    type: string;
+    avatarUrl: string;
+  }
+
+  export interface Cause {
+    id: string;
+    displayName: string;
+    displayNameKey: string;
+    type: string;
+  }
+
+  export interface ExtraData {
+  }
+
+  export interface HistoryMetadata {
+    type: string;
+    description: string;
+    descriptionKey: string;
+    activityDescription: string;
+    activityDescriptionKey: string;
+    emailDescription: string;
+    emailDescriptionKey: string;
+    actor: Actor;
+    generator: Generator;
+    cause: Cause;
+    extraData: ExtraData;
+  }
+
+  export interface History {
+    id: string;
+    author: Author;
+    created: Date;
+    items: Item[];
+    historyMetadata: HistoryMetadata;
+  }
+
+  export interface Changelog {
+    startAt: number;
+    maxResults: number;
+    total: number;
+    histories: History[];
+  }
+
+}

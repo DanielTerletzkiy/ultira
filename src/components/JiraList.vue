@@ -120,6 +120,7 @@ import {
 import { vIntersectionObserver } from "@vueuse/components";
 import JiraImage from "./JiraImage.vue";
 import { SortNames } from "../../types/Jira";
+import { times } from "../constants/Times";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
@@ -231,36 +232,6 @@ const sortGroups = () => {
 
   switch (currentSort.value) {
     case SortNames.Latest: {
-      const times = [
-        {
-          name: "Today",
-          hours: 24
-        },
-        {
-          name: "Week",
-          hours: 24 * 7
-        },
-        {
-          name: "Month",
-          hours: 24 * 7 * 4
-        },
-        {
-          name: "Year",
-          hours: 8766
-        },
-        {
-          name: "2 Years",
-          hours: 8766 * 2
-        },
-        {
-          name: "5 Years",
-          hours: 8766 * 5
-        },
-        {
-          name: "20 Years",
-          hours: 8766 * 20
-        }
-      ];
 
       for (const time of times) {
         const dateStart = new Date();

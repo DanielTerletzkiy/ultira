@@ -1,6 +1,7 @@
 import ApiController, { FetchContentType } from "../controller/ApiController";
 import JiraBaseController from "../controller/JiraBaseController";
 import {
+  JiraChangelog,
   JiraComments,
   JiraCommits,
   JiraIssue,
@@ -12,6 +13,7 @@ import Task = JiraIssue.Task;
 import PullRequests = JiraPullRequests.PullRequests;
 import CommentsRoot = JiraComments.CommentsRoot;
 import TransitionsRoot = JiraTransitions.TransitionsRoot;
+import JiraChangelogRoot = JiraChangelog.JiraChangelogRoot;
 
 export default class JiraTask extends ApiController {
   private readonly _controller: JiraBaseController;
@@ -21,6 +23,7 @@ export default class JiraTask extends ApiController {
   pullRequestData: PullRequests | undefined;
   commentsData: CommentsRoot | undefined;
   transitionData: TransitionsRoot | undefined;
+  changelogData: JiraChangelogRoot | undefined;
 
   loading: boolean = false;
 
@@ -58,8 +61,9 @@ export default class JiraTask extends ApiController {
     let commitData: Commits | undefined = undefined,
       pullRequestData: PullRequests | undefined = undefined,
       commentsData: CommentsRoot | undefined = undefined,
-      transitionData: TransitionsRoot | undefined = undefined;
-    [commitData, pullRequestData, commentsData, transitionData] =
+      transitionData: TransitionsRoot | undefined = undefined,
+      changelogData: JiraChangelogRoot | undefined = undefined;
+    [commitData, pullRequestData, commentsData, transitionData, changelogData] =
       await Promise.all([
         ApiController.fetchJira(
           this._controller.url,
@@ -82,6 +86,12 @@ export default class JiraTask extends ApiController {
         ApiController.fetchJira(
           this._controller.url,
           `${issueBaseUrl}/transitions`,
+          "GET",
+          this._controller.credentials
+        ),
+        ApiController.fetchJira(
+          this._controller.url,
+          `${issueBaseUrl}?expand=changelog`,
           "GET",
           this._controller.credentials
         )
@@ -114,6 +124,9 @@ export default class JiraTask extends ApiController {
     }
     if (transitionData) {
       this.transitionData = Object.assign(transitionData);
+    }
+    if (changelogData) {
+      this.changelogData = Object.assign(changelogData);
     }
     this.loading = false;
   }

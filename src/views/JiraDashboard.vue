@@ -109,7 +109,7 @@ async function setJiraBase(name: any) {
       })
     );
     await JiraController.getAllIssues();
-    console.log(JiraController.issues.value);
+    await JiraController.getMyself();
     connectCurrentData();
   } else {
     credentialsOpen.value = true;
