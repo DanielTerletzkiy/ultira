@@ -30,12 +30,12 @@
             />
           </d-avatar>
           <template v-slot:tooltip-wrapper>
-            <d-card elevation="n4" class="pa-2">
-              <d-card-title :color="status.color">
+            <d-card elevation="n4">
+              <d-card-title :color="status.color" class="font-size-medium font-weight-bold" glowing>
                 {{ item.task.fields.status.name }}
               </d-card-title>
               <d-divider />
-              <JiraTransitionButtons :issue="item" class="font-size-medium" disable-tooltip
+              <JiraTransitionButtons :issue="item" class="font-size-medium pa-2" disable-tooltip
                                      style="flex-direction: column" />
             </d-card>
           </template>
