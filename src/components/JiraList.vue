@@ -1,5 +1,5 @@
 <template>
-  <d-column block elevation="n1" height="100%" class="pa-0" :wrap="false">
+  <d-column no-padding block elevation="n1" height="100%" class="pa-0" :wrap="false">
     <d-list
       v-model="modelValue"
       @update:modelValue="onChange"
@@ -51,7 +51,7 @@
           {{ group.name }}
           <d-divider class="group-header__divider" block />
         </d-card-title>
-        <d-column gap block class="pa-0 pt-1">
+        <d-column no-padding gap block class="pa-0 pt-1">
           <JiraListItem
             v-for="issue in group.items"
             :item="issue"

@@ -34,8 +34,7 @@
               <d-card-title :color="status.color" class="font-size-medium font-weight-bold" glowing>
                 {{ item.task.fields.status.name }}
               </d-card-title>
-              <d-divider />
-              <JiraTransitionButtons :issue="item" class="font-size-medium pa-2" disable-tooltip
+              <JiraTransitionButtons :issue="item" class="font-size-small pa-2" disable-tooltip
                                      style="flex-direction: column" />
             </d-card>
           </template>

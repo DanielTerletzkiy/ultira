@@ -44,7 +44,7 @@
           >
             <div />
           </d-avatar>
-          <d-column class="pa-0">
+          <d-column no-padding class="pa-0">
             <d-card-title class="font-size-medium">
               {{ pullRequest.name }}
             </d-card-title>
@@ -56,7 +56,7 @@
             </d-card-subtitle>
           </d-column>
           <d-spacer />
-          <d-column style="overflow: hidden" class="pa-0">
+          <d-column no-padding style="overflow: hidden" class="pa-0">
             <d-label rounded="none" width="100%">{{ pullRequest.id }}</d-label>
             <d-label rounded="none" width="100%"
             >{{ pullRequest.status }}

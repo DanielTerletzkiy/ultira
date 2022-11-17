@@ -5,7 +5,7 @@
     block
     :max-width="hidden ? '50px' : ''"
   >
-    <d-column class="header pa-0" :height="hidden ? '100%' : ''">
+    <d-column no-padding class="header pa-0" :height="hidden ? '100%' : ''">
       <d-row color="primary" :height="hidden ? '100%' : ''">
         <d-icon-button
           v-if="!!$slots.icon"
@@ -16,7 +16,7 @@
         >
           <slot name="icon" :hidden="hidden"/>
         </d-icon-button>
-        <d-column v-if="!hidden" class="pa-0" block>
+        <d-column v-if="!hidden" no-padding class="pa-0" block>
           <d-card-title class="title font-size-medium" height="50px">
             <slot name="title" />
           </d-card-title>

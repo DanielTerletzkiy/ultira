@@ -13,7 +13,7 @@
       <d-accordion
         v-for="(project, p) in list.projects"
         :key="p"
-        :model-value="project.changes?.length > 0 ? false : -1"
+        :disabled="!project.changes?.length"
         header-color="primary"
       >
         <template v-slot:header>
