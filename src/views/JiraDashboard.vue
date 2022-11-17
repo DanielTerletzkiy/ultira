@@ -53,7 +53,7 @@ import {
   projects,
   currentIssueKey,
   selectedJiraConfig,
-  currentIssue,
+  currentIssue
 } from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -105,7 +105,7 @@ async function setJiraBase(name: any) {
     JiraController.setBase(
       new JiraBaseController({
         ...currentJiraConfig.value,
-        credentials: cookieCredentials,
+        credentials: cookieCredentials
       })
     );
     await JiraController.getAllIssues();
@@ -143,12 +143,19 @@ onMounted(() => {
       State.Success
     );
   });
+
+  setInterval(() => {
+    ProjectController.scrapeBranches(
+      projects.value.map((project) => project.path)
+    );
+  }, 300000);
 });
 </script>
 
 <style scoped lang="scss">
 .card {
   margin: 6px 3px;
+
   &--bottom {
     max-height: calc(100vh - 84px - 500px);
     overflow: auto;
