@@ -12,7 +12,7 @@
       Branches & Commits
       <d-spacer />
       <d-tab-list
-        v-if="currentIssue.hasCommits"
+        v-if="currentIssue?.hasCommits"
         v-model="currentViewSwitch"
         color="primary"
         show-indicator
@@ -73,6 +73,9 @@
                 <d-card-subtitle> Commits</d-card-subtitle>
               </d-column>
               <d-spacer />
+              <JiraPRButton
+                :repository="repository"
+              />
               <JiraProjectButton
                 :repository="
                   repository.name.match(new RegExp('.*(/|^)(.*)')).pop()
@@ -216,6 +219,7 @@ import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue
 import { ref } from "vue";
 import JiraLinkIconButton from "./JiraLinkIconButton.vue";
 import ChangeType = JiraCommits.ChangeType;
+import JiraPRButton from "./JiraPRButton.vue";
 
 function changeTypeColor(type: ChangeType) {
   switch (type) {

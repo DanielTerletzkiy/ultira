@@ -55,11 +55,13 @@ const baseurl = import.meta.env.BASE_URL;
       </DToolbar>
     </template>
     <template v-slot:default>
-      <d-notification-wrapper />
       <JiraDashboard />
       <JiraSettings v-model:open="settingsOpen" @submit="onSettingsSubmit" />
       <JiraSearchDialog v-model:open="searchOpen" />
       <JiraHistoryDialog v-model:open="historyOpen" />
+    </template>
+    <template v-slot:notifications>
+      <d-notification-wrapper />
     </template>
   </d-root>
 </template>

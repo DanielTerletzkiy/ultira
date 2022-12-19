@@ -330,7 +330,7 @@ export namespace JiraPullRequests {
     repository: Repository;
   }
 
-  interface Repository {
+  export interface Repository {
     name: string;
     avatar: string;
     avatarDescription: string;

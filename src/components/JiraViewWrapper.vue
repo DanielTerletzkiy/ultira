@@ -18,7 +18,7 @@
         </d-icon-button>
         <d-column v-if="!hidden" no-padding class="pa-0" block>
           <d-card-title class="title font-size-medium" height="50px">
-            <slot name="title" />
+            <slot name="title" :hidden="hidden"/>
           </d-card-title>
         </d-column>
       </d-row>
@@ -29,7 +29,7 @@
       />
     </d-column>
     <d-card v-if="!hidden" class="content" background-color="transparent" block>
-      <slot name="default" />
+      <slot name="default" :hidden="hidden"/>
     </d-card>
   </d-card>
 </template>

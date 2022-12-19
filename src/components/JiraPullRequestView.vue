@@ -8,9 +8,28 @@
         color="primary"
       />
     </template>
-    <template v-slot:title> Pull Requests</template>
+    <template v-slot:title="{hidden}">
+      Pull Requests
+      <d-spacer />
+      <d-row width="max-content" v-if="currentIssue?.hasPullRequests && !hidden" gap>
+        <d-card-title v-for="pullRequest in currentIssue?.pullRequestData.detail[0]
+          ?.pullRequests.sort((a,b)=>new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime())"
+                      :color="pullRequest.reviewers.some((reviewer => reviewer.approved))?'success':'error'"
+                      glowing
+                      width="30px"
+                      height="30px"
+                      class="font-size-medium font-weight-bold"
+                      style="justify-content: center; "
+                      v-ripple
+                      root-tag="a"
+                      target="_blank"
+                      :href="pullRequest.url">
+          {{ pullRequest.reviewers.filter((reviewer => reviewer.approved)).length }}
+        </d-card-title>
+      </d-row>
+    </template>
     <d-column
-      v-if="currentIssue.hasPullRequests"
+      v-if="currentIssue?.hasPullRequests"
       gap
       style="max-height: 100%; overflow: overlay"
       height="100%"
@@ -18,7 +37,7 @@
     >
       <d-card
         v-for="pullRequest in currentIssue.pullRequestData.detail[0]
-          ?.pullRequests"
+          ?.pullRequests.sort((a,b)=>new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime())"
         width="100%"
         elevation="4"
       >
