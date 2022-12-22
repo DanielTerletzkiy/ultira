@@ -46,7 +46,7 @@
           </template>
         </d-tooltip>
         <d-column block>
-          <d-card-title class="pt-0 font-size-medium">
+          <d-card-title class="pt-0 font-size-medium" style="text-align: start">
             {{ currentIssue.task.fields.summary }}
           </d-card-title>
           <d-card-subtitle class="pt-3 pb-0">

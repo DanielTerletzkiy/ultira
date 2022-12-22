@@ -67,14 +67,6 @@ const baseurl = import.meta.env.BASE_URL;
 </template>
 
 <style lang="scss">
-#root main {
-  overflow: hidden;
-}
-
-.d-root > div {
-  height: calc(100% - 30px) !important;
-}
-
 .d-root > header {
   max-height: 30px !important;
 }
@@ -114,6 +106,7 @@ header,
     border-radius: 5px;
     overflow: hidden;
     transition: all 0.2s;
+    font-family: monospace;
 
     &:hover {
       $hover-border-color: rgba(lighten($border-color, 40), 0.3);

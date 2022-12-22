@@ -157,7 +157,7 @@ onMounted(() => {
   margin: 6px 3px;
 
   &--bottom {
-    max-height: calc(100vh - 84px - 500px);
+    max-height: calc(100vh - 60px - 500px);
     overflow: auto;
     overflow-x: hidden;
     min-width: 0;

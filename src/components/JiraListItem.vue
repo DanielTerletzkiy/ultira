@@ -34,80 +34,84 @@
               <d-card-title :color="status.color" class="font-size-medium font-weight-bold" glowing>
                 {{ item.task.fields.status.name }}
               </d-card-title>
-              <JiraTransitionButtons :issue="item" class="font-size-small pa-2" disable-tooltip
+              <JiraTransitionButtons :issue="item" class="font-size-small" disable-tooltip
                                      style="flex-direction: column" />
             </d-card>
           </template>
         </d-tooltip>
         <d-column class="header" width="100%">
-          <d-card-subtitle class="summary">
-            {{ item.task.fields.summary }}
+          <d-row color="inherit">
+            <d-card-subtitle class="summary" color="inherit">
+              {{ item.task.fields.summary }}
+            </d-card-subtitle>
             <d-spacer />
-            <ve-progress
-              v-if="item.loading"
-              :color="$vuelize.getColor(status.color, 0)"
-              :empty-color="$vuelize.getColor(status.color, 20) + '10'"
-              thickness="2"
-              empty-thickness="2px"
-              :size="16"
-              loading
-            />
-            <d-tooltip position="left">
-              <d-image
-                width="16px"
-                height="16px"
-                :src="item.task.fields.priority.iconUrl"
-                rounded="md"
+            <d-row width="max-content" gap>
+              <ve-progress
+                v-if="item.loading"
+                :color="$vuelize.getColor(status.color, 0)"
+                :empty-color="$vuelize.getColor(status.color, 20) + '10'"
+                thickness="2"
+                empty-thickness="2px"
+                :size="16"
+                loading
               />
-              <template v-slot:tooltip>
-                Priority: <strong>{{ item.task.fields.priority.name }}</strong>
-              </template>
-            </d-tooltip>
-            <d-tooltip position="left">
-              <d-image
-                width="16px"
-                height="16px"
-                :src="item.task.fields.issuetype.iconUrl"
-                rounded="md"
-              />
-              <template v-slot:tooltip>
-                Type: <strong>{{ item.task.fields.issuetype.name }}</strong>
-              </template>
-            </d-tooltip>
-            <d-tooltip position="left">
-              <JiraImage
-                :url="item.task.fields.project.avatarUrls['16x16']"
-                :key="item.task.fields.project.key"
-              >
-                <template v-slot:default="{ base64 }">
-                  <d-avatar
-                    v-if="base64"
-                    key="image"
-                    color="transparent"
-                    size="16"
-                    rounded="md"
-                    :style="{
+              <d-tooltip position="left">
+                <d-image
+                  width="16px"
+                  height="16px"
+                  :src="item.task.fields.priority.iconUrl"
+                  rounded="md"
+                />
+                <template v-slot:tooltip>
+                  Priority: <strong>{{ item.task.fields.priority.name }}</strong>
+                </template>
+              </d-tooltip>
+              <d-tooltip position="left">
+                <d-image
+                  width="16px"
+                  height="16px"
+                  :src="item.task.fields.issuetype.iconUrl"
+                  rounded="md"
+                />
+                <template v-slot:tooltip>
+                  Type: <strong>{{ item.task.fields.issuetype.name }}</strong>
+                </template>
+              </d-tooltip>
+              <d-tooltip position="left">
+                <JiraImage
+                  :url="item.task.fields.project.avatarUrls['16x16']"
+                  :key="item.task.fields.project.key"
+                >
+                  <template v-slot:default="{ base64 }">
+                    <d-avatar
+                      v-if="base64"
+                      key="image"
+                      color="transparent"
+                      size="16"
+                      rounded="md"
+                      :style="{
                       backgroundImage: `url(${base64})`,
                       backgroundPosition: 'center',
                       backgroundSize: 'cover',
                     }"
-                  >
-                    <div />
-                  </d-avatar>
-                  <d-elevation-loader
-                    v-else
-                    key="loader"
-                    :default-size="8"
-                    :amount="4"
-                    :columns="2"
-                  />
+                    >
+                      <div />
+                    </d-avatar>
+                    <d-elevation-loader
+                      v-else
+                      key="loader"
+                      :default-size="8"
+                      :amount="4"
+                      :columns="2"
+                    />
+                  </template>
+                </JiraImage>
+                <template v-slot:tooltip>
+                  Project: <strong>{{ item.task.fields.project.name }}</strong>
                 </template>
-              </JiraImage>
-              <template v-slot:tooltip>
-                Project: <strong>{{ item.task.fields.project.name }}</strong>
-              </template>
-            </d-tooltip>
-          </d-card-subtitle>
+              </d-tooltip>
+            </d-row>
+          </d-row>
           <d-card-subtitle class="sub">
             <span class="key">{{ item.task.key }}</span>
             <d-spacer />
@@ -170,6 +174,8 @@ const status = computed(() => {
   padding: 0 8px 0 0;
 
   &--wrapper {
+    width: 100%;
+    max-width: 100%;
     min-height: 56px;
   }
 
@@ -191,7 +197,13 @@ const status = computed(() => {
     }
 
     .summary {
+      width: calc(100% - 100px);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       padding: 0;
+      display: inline;
+      text-align: start;
     }
 
     .sub {
