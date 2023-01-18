@@ -21,7 +21,7 @@
             style="flex: 1; max-height: 500px; min-height: 500px"
           />
         </d-row>
-        <d-row :wrap="false" style="flex: 1" align="stretch">
+        <d-row :wrap="false" style="flex: 1; max-width: calc(100vw - 16px)" align="stretch">
           <JiraList
             class="card card--bottom"
             style="flex: 3"

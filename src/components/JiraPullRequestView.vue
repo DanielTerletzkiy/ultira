@@ -38,20 +38,24 @@
       <d-card
         v-for="pullRequest in currentIssue.pullRequestData.detail[0]
           ?.pullRequests.sort((a,b)=>new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime())"
+        :key="pullRequest.id"
         width="100%"
         elevation="4"
+        class="request"
       >
         <d-row
           gap
-          class="pl-3"
+          class="header"
           glow
           v-ripple
+          :wrap="false"
           root-tag="a"
           target="_blank"
           :href="pullRequest.url"
         >
           <d-avatar
             v-if="pullRequest.source?.repository"
+            class="avatar"
             color="transparent"
             size="40"
             elevation-light
@@ -63,8 +67,8 @@
           >
             <div />
           </d-avatar>
-          <d-column no-padding class="pa-0">
-            <d-card-title class="font-size-medium">
+          <d-column class="pa-0 text" no-padding>
+            <d-card-title class="font-size-medium name">
               {{ pullRequest.name }}
             </d-card-title>
             <d-card-subtitle
@@ -74,10 +78,10 @@
               {{ pullRequest.source.repository.name }}
             </d-card-subtitle>
           </d-column>
-          <d-spacer />
-          <d-column no-padding style="overflow: hidden" class="pa-0">
+          <d-column class="status" no-padding style="overflow: hidden">
             <d-label rounded="none" width="100%">{{ pullRequest.id }}</d-label>
             <d-label rounded="none" width="100%"
+                     :color="pullRequest.status === 'MERGED' ? 'success':pullRequest.status === 'OPEN' ? 'warning':''"
             >{{ pullRequest.status }}
             </d-label>
           </d-column>
@@ -173,8 +177,35 @@ function getReviewersForType(reviewers: any, approved: boolean) {
 
 <style scoped lang="scss">
 .jira-pull-request-view {
-  .reviewer-row {
-    display: flex;
+  .request {
+
+    .header {
+      overflow: hidden;
+      display: flex;
+      padding: 0 0 0 12px;
+
+      .avatar {
+        width: 40px;
+      }
+
+      .text {
+        flex: 6;
+        overflow: hidden;
+        width: 100%;
+
+        .name {
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          display: inline;
+          text-align: start;
+        }
+      }
+
+      .status {
+      }
+    }
   }
 }
 </style>

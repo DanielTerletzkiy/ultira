@@ -163,6 +163,7 @@ async function intersectObserver(e: any, selected: boolean, key: string) {
     if (!isIntersecting && (props.modelValue !== key)) {
       scrollTimeout(60000);
     }
+    hidden.value.delete(key);
   } else {
     if (isIntersecting) {
       hidden.value.delete(key);
