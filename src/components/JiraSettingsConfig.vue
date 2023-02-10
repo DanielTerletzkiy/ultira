@@ -1,5 +1,5 @@
 <template>
-  <d-row gap block align="stretch" elevation="2">
+  <d-row block align="stretch" elevation="2" outlined>
     <d-column gap block>
       <d-textfield
         full-width
@@ -33,15 +33,21 @@
         </d-list-item>
       </d-tab-list>
     </d-column>
-    <d-icon-button height="initial" type="button" color="error" @click="remove">
-      <d-icon name="times" />
-    </d-icon-button>
+    <d-column elevation="n1">
+      <d-icon-button type="button" color="error" @click="remove">
+        <d-icon name="times" />
+      </d-icon-button>
+      <d-icon-button type="button" color="primary" @click="edit">
+        <d-icon name="edit" />
+      </d-icon-button>
+    </d-column>
   </d-row>
 </template>
 
 <script setup lang="ts">
 import { PropType, watch } from "vue";
 import { JiraConfig, ApplicationType } from "../../types/Jira";
+import { credentialsOpen, selectedJiraConfig } from "../store/jira.store";
 
 //@ts-ignore
 const AppTypes = Object.keys(ApplicationType).map(
@@ -51,11 +57,16 @@ const AppTypes = Object.keys(ApplicationType).map(
 
 const emit = defineEmits(["remove", "update:modelValue"]);
 const props = defineProps({
-  modelValue: Object as PropType<JiraConfig>,
+  modelValue: Object as PropType<JiraConfig>
 });
 
 function remove() {
   emit("remove");
+}
+
+function edit(){
+  selectedJiraConfig.value = props.modelValue?.name;
+  credentialsOpen.value = true;
 }
 
 watch(

@@ -10,7 +10,9 @@
     "isolatedModules": true,
     "esModuleInterop": false,
     "lib": ["esnext", "dom"],
-    "noEmit": true
+    "noEmit": true,
+    "noEmitOnError": true,
+    "noEmitHelpers": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["electron"],

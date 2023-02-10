@@ -1,6 +1,6 @@
 {
   "name": "ultira",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "ultimate jira tool",
   "author": {
@@ -11,6 +11,7 @@
     "build": "vite build",
     "dev": "concurrently \"cross-env NODE_ENV=development&& vite\" \"npm run node\" ",
     "node": "nodemon electron/Server.js",
+    "electron:start": "cross-env NODE_ENV=development concurrently \"vite\" \"electron electron/main\" ",
     "electron:dist": "npm run build && electron-builder build",
     "electron:release": "npm run build && electron-builder build --publish always",
     "preview": "vite preview"

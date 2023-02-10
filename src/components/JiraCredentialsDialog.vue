@@ -4,7 +4,7 @@
     style="position:fixed;"
     @update:modelValue="(e) => $emit('update:open', e)"
   >
-    <d-card class="pa-2 pt-1">
+    <d-card class="pa-2 pt-1" min-width="400px">
       <d-card-title>
         {{ name }}
       </d-card-title>
@@ -15,14 +15,14 @@
           <d-textfield
             v-model="username"
             color="primary"
-            filled
+            filled full-width
             label="Username"
             type="name"
           />
           <d-textfield
             v-model="password"
             color="primary"
-            filled
+            filled full-width
             label="Password"
             type="password"
           />

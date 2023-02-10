@@ -22,6 +22,7 @@ process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
 let win;
 const preload = join(__dirname, "../preload/index.js");
 const url = process.env.VITE_DEV_SERVER_URL as string;
+console.log("url", url)
 const indexHtml = join(process.env.DIST, "index.html");
 
 function createWindow() {
@@ -48,9 +49,8 @@ function createWindow() {
 
 
   win.maximize();
-  if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
+  if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(url);
-    // Open devTool if the app is not packaged
     win.webContents.openDevTools();
   } else {
     win.loadFile(indexHtml);
