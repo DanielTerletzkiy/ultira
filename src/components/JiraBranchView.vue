@@ -207,7 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import { JiraCommits, ViewSwitch } from "../../types/Jira";
+import { ViewSwitch } from "../../types/Jira";
 import JiraUserItem from "./JiraUserItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
@@ -218,8 +218,8 @@ import JiraLoader from "./JiraLoader.vue";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 import { ref } from "vue";
 import JiraLinkIconButton from "./JiraLinkIconButton.vue";
-import ChangeType = JiraCommits.ChangeType;
 import JiraPRButton from "./JiraPRButton.vue";
+import { ChangeType } from "../../types/JiraCommits";
 
 function changeTypeColor(type: ChangeType) {
   switch (type) {

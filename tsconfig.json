@@ -7,10 +7,10 @@
     "strict": true,
     "jsx": "preserve",
     "resolveJsonModule": true,
-    "isolatedModules": false,
-    "esModuleInterop": true,
+    "isolatedModules": true,
+    "esModuleInterop": false,
     "lib": ["esnext", "dom"],
-    "skipLibCheck": true
+    "noEmit": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["electron"],

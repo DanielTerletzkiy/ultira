@@ -34,10 +34,10 @@
 
 <script setup lang="ts">
 import { computed, PropType } from "vue";
-import { JiraIssue } from "../../types/Jira";
+import { User } from "../../types/JiraIssue";
 
 const props = defineProps({
-  user: Object as PropType<JiraIssue.User>,
+  user: Object as PropType<User>,
   avatar: String,
   name: String,
 });

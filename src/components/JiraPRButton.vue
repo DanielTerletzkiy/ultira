@@ -11,10 +11,10 @@
 
 <script setup lang="ts">
 import { computed, PropType } from "vue";
-import { ApplicationType, JiraCommits } from "../../types/Jira";
-import Repository = JiraCommits.Repository;
+import { ApplicationType } from "../../types/Jira";
 import JiraController from "../controller/JiraController";
 import { currentIssue } from "../store/jira.store";
+import { Repository } from "../../types/JiraCommits";
 
 const props = defineProps({
   repository: { type: Object as PropType<Repository>, required: true }

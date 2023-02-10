@@ -1,6 +1,6 @@
-import { JiraIssue, Project } from "../../types/Jira";
-import Task = JiraIssue.Task;
+import { Project } from "../../types/Jira";
 import shell from "shelljs";
+import { JiraIssue as Task } from "../../types/JiraIssue";
 
 const Worker = require("worker_threads").Worker;
 const path = require("path");

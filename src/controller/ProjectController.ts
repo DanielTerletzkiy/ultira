@@ -1,7 +1,7 @@
 import SocketClient from "../service/SocketIOClient";
-import { JiraIssue, Project } from "../../types/Jira";
+import { Project } from "../../types/Jira";
 import ApiController from "./ApiController";
-import Task = JiraIssue.Task;
+import { JiraIssue as Task } from "../../types/JiraIssue";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;

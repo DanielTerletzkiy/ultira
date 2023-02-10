@@ -1,29 +1,21 @@
 import ApiController, { FetchContentType } from "../controller/ApiController";
 import JiraBaseController from "../controller/JiraBaseController";
-import {
-  JiraChangelog,
-  JiraComments,
-  JiraCommits,
-  JiraIssue,
-  JiraPullRequests,
-  JiraTransitions
-} from "../../types/Jira";
-import Commits = JiraCommits.Commits;
-import Task = JiraIssue.Task;
-import PullRequests = JiraPullRequests.PullRequests;
-import CommentsRoot = JiraComments.CommentsRoot;
-import TransitionsRoot = JiraTransitions.TransitionsRoot;
-import JiraChangelogRoot = JiraChangelog.JiraChangelogRoot;
+import { JiraChangelog } from "../../types/JiraChangelog";
+import { JiraTransitions } from "../../types/JiraTransitions";
+import { JiraComments } from "../../types/JiraComments";
+import { JiraPullRequests } from "../../types/JiraPullRequests";
+import { JiraCommits } from "../../types/JiraCommits";
+import { JiraIssue as Task } from "../../types/JiraIssue";
 
 export default class JiraTask extends ApiController {
   private readonly _controller: JiraBaseController;
   task: Task;
 
-  commitData: Commits | undefined;
-  pullRequestData: PullRequests | undefined;
-  commentsData: CommentsRoot | undefined;
-  transitionData: TransitionsRoot | undefined;
-  changelogData: JiraChangelogRoot | undefined;
+  commitData: JiraCommits | undefined;
+  pullRequestData: JiraPullRequests | undefined;
+  commentsData: JiraComments | undefined;
+  transitionData: JiraTransitions | undefined;
+  changelogData: JiraChangelog | undefined;
 
   loading: boolean = false;
 
@@ -58,11 +50,11 @@ export default class JiraTask extends ApiController {
     this.loading = true;
     const applicationUrl = `rest/dev-status/latest/issue/detail?issueId=${this.task.id}&applicationType=${this._controller.applicationType}&dataType`;
     const issueBaseUrl = `rest/api/latest/issue/${this.task.key}`;
-    let commitData: Commits | undefined = undefined,
-      pullRequestData: PullRequests | undefined = undefined,
-      commentsData: CommentsRoot | undefined = undefined,
-      transitionData: TransitionsRoot | undefined = undefined,
-      changelogData: JiraChangelogRoot | undefined = undefined;
+    let commitData: JiraCommits | undefined = undefined,
+      pullRequestData: JiraPullRequests | undefined = undefined,
+      commentsData: JiraComments | undefined = undefined,
+      transitionData: JiraTransitions | undefined = undefined,
+      changelogData: JiraChangelog | undefined = undefined;
     [commitData, pullRequestData, commentsData, transitionData, changelogData] =
       await Promise.all([
         ApiController.fetchJira(

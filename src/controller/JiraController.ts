@@ -1,11 +1,9 @@
 import ApiController, { FetchContentType } from "./ApiController";
 import JiraBaseController from "./JiraBaseController";
 import JiraTask from "../model/JiraTask";
-import { JiraIssue } from "../../types/Jira";
 import { currentIssueKey, maxResults } from "../store/jira.store";
 import { ref, Ref } from "vue";
-import Task = JiraIssue.Task;
-import User = JiraIssue.User;
+import { JiraIssue as Task, User } from "../../types/JiraIssue";
 
 export default class JiraController extends ApiController {
   static controller: JiraBaseController;

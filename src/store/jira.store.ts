@@ -3,12 +3,12 @@ import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
 import {
   ApplicationType, JiraConfig,
-  JiraIssue, Project,
+  Project,
   SortNames
 } from "../../types/Jira";
-import Task = JiraIssue.Task;
 import JiraTask from "../model/JiraTask";
 import JiraController from "../controller/JiraController";
+import { JiraIssue as Task} from "../../types/JiraIssue";
 
 const store = createStore({
   plugins: [new VuexPersistence().plugin],
