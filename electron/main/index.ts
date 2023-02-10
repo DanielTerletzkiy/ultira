@@ -1,7 +1,12 @@
 // @ts-ignore
+import { UpdateDownloadedEvent, UpdateInfo } from "electron-updater";
+
 const { app, BrowserWindow } = require("electron");
-const path = require("path");
 import { join } from "node:path";
+import { ProgressInfo } from "electron-builder";
+
+const log = require("electron-log");
+const { autoUpdater } = require("electron-updater");
 
 const expressServer = require("../../electron/Server");
 require("../../electron/router/ProjectRouter");
@@ -13,9 +18,10 @@ process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? join(process.env.DIST_ELECTRON, "../public")
   : process.env.DIST;
 
+// @ts-ignore
 let win;
 const preload = join(__dirname, "../preload/index.js");
-const url = process.env.VITE_DEV_SERVER_URL;
+const url = process.env.VITE_DEV_SERVER_URL as string;
 const indexHtml = join(process.env.DIST, "index.html");
 
 function createWindow() {
@@ -32,6 +38,7 @@ function createWindow() {
       preload,
       nodeIntegration: true,
       contextIsolation: false,
+      // @ts-ignore
       enableRemoteModule: true
     }
   });
@@ -42,11 +49,11 @@ function createWindow() {
 
   win.maximize();
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
-    win.loadURL(url)
+    win.loadURL(url);
     // Open devTool if the app is not packaged
-    win.webContents.openDevTools()
+    win.webContents.openDevTools();
   } else {
-    win.loadFile(indexHtml)
+    win.loadFile(indexHtml);
   }
 
   win.webContents.on("new-window", function(e: any, url: string) {
@@ -55,9 +62,18 @@ function createWindow() {
   });
 }
 
+function sendStatusToWindow(text: string) {
+  log.info(text);
+  // @ts-ignore
+  if (win) {
+    win.webContents.send("message", text);
+  }
+}
+
 app.setUserTasks([]);
 
 app.whenReady().then(() => {
+  autoUpdater.checkForUpdatesAndNotify();
   createWindow();
 
   app.on("activate", () => {
@@ -75,4 +91,26 @@ app.on("window-all-closed", () => {
     expressServer.close();
   } catch (e) {
   }
+});
+
+autoUpdater.on("checking-for-update", () => {
+  sendStatusToWindow("Checking for update...");
+});
+autoUpdater.on("update-available", (info: UpdateInfo) => {
+  sendStatusToWindow("Update available.");
+});
+autoUpdater.on("update-not-available", (info: UpdateInfo) => {
+  sendStatusToWindow("Update not available.");
+});
+autoUpdater.on("error", (err: Error) => {
+  sendStatusToWindow("Error in auto-updater. " + err);
+});
+autoUpdater.on("download-progress", (progressObj: ProgressInfo) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + " - Downloaded " + progressObj.percent + "%";
+  log_message = log_message + " (" + progressObj.transferred + "/" + progressObj.total + ")";
+  sendStatusToWindow(log_message);
+});
+autoUpdater.on("update-downloaded", (info: UpdateDownloadedEvent) => {
+  sendStatusToWindow("Update downloaded");
 });

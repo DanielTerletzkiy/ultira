@@ -12,7 +12,7 @@
     "dev": "concurrently \"cross-env NODE_ENV=development&& vite\" \"npm run node\" ",
     "node": "nodemon electron/Server.js",
     "electron:dist": "npm run build && electron-builder build",
-    "electron:release": "npm run build && electron-builder build --publish onTag",
+    "electron:release": "npm run build && electron-builder build --publish always",
     "preview": "vite preview"
   },
   "debug": {
@@ -21,8 +21,15 @@
     }
   },
   "build": {
-    "appId": "ultira",
+    "appId": "com.github.DanielTerletzkiy.ultira",
     "icon": "public/favicon.ico",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "DanielTerletzkiy",
+        "repo": "ultira"
+      }
+    ],
     "directories": {
       "output": "release/${version}"
     },
@@ -77,6 +84,8 @@
     "chalk": "^4.1.2",
     "concurrently": "^7.2.1",
     "cors": "^2.8.5",
+    "electron-log": "^5.0.0-beta.16",
+    "electron-updater": "^5.3.0",
     "http-proxy-middleware": "^2.0.6",
     "jira2md": "2.1.0",
     "lodash": "^4.17.21",

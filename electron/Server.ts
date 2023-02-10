@@ -47,10 +47,15 @@ app.post("/url", function(req: any, res: any) {
   res.status(200).send({ url: targetInstance });
 });
 
-const httpServer = http.createServer(app);
-httpServer.listen(2343);
 
-SocketIO.createInstance(httpServer);
+let httpServer;
+try {
+  httpServer = http.createServer(app);
+  httpServer.listen(2343);
 
+  SocketIO.createInstance(httpServer);
+
+  console.log("app ready");
+} catch (e) {
+}
 export default httpServer;
-console.log("app ready");
