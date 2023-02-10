@@ -9,8 +9,8 @@ When there is a Jira issue open, then you can switch a project to it with on pre
 
 ## How to start?
 
-Development:
-```npm run electron:start```
+~~Development:
+```npm run electron:start```~~ TODO
 
 Package it up:
-```npm run electron:package```
+```npm run electron:dist```
