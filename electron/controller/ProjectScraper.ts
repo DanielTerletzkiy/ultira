@@ -60,14 +60,14 @@ module.exports = class ProjectScraper {
       shell.cd(path);
 
       const masterBranch = GitShell.getMasterBranch(path);
-      shell.exec(`git pull origin ${masterBranch}`, { windowsHide: true }); //update master
+      shell.exec(`git fetch && git pull origin ${masterBranch}`, { windowsHide: true }); //update master
       shell.exec(`git stash`, { windowsHide: true }); //sash current uncommitted files
       if (
         shell.exec(`git checkout ${issue}`, { windowsHide: true }).code !== 0
       ) {
         shell.exec(`git checkout -b ${issue}`, { windowsHide: true });
-        shell.exec(`git merge ${masterBranch}`, { windowsHide: true }); //merge master
       } //try to check out branch, create if necessary
+      shell.exec(`git merge ${masterBranch}`, { windowsHide: true }); //merge master
       if (event) {
         Promise.all([
           new Promise(resolve => GitShell.getCurrentBranch(path).then(resolve)),
@@ -81,7 +81,7 @@ module.exports = class ProjectScraper {
             }]);
           });
       }
-      shell.exec("phpstorm64 .", { windowsHide: true }); //open as project in current directory
+      // shell.exec("phpstorm64 .", { windowsHide: true }); //open as project in current directory
       return true;
     } catch (e) {
       console.error("error: ", e);

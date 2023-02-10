@@ -62,10 +62,9 @@ import JiraInfoView from "../components/JiraInfoView.vue";
 import JiraBranchView from "../components/JiraBranchView.vue";
 import JiraPullRequestView from "../components/JiraPullRequestView.vue";
 import JiraCommentsView from "../components/JiraCommentsView.vue";
-import { JiraConfiguration } from "../../types/Jira";
 import ProjectController from "../controller/ProjectController";
 import { State } from "vuelize/src/types/Vuelize";
-import JiraConfig = JiraConfiguration.JiraConfig;
+import { JiraConfig } from "../../types/Jira";
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;

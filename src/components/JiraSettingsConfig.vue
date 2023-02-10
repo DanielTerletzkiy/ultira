@@ -41,12 +41,11 @@
 
 <script setup lang="ts">
 import { PropType, watch } from "vue";
-import { JiraConfiguration } from "../../types/Jira";
-import JiraConfig = JiraConfiguration.JiraConfig;
-import ApplicationType = JiraConfiguration.ApplicationType;
+import { JiraConfig, ApplicationType } from "../../types/Jira";
 
 //@ts-ignore
 const AppTypes = Object.keys(ApplicationType).map(
+  //@ts-ignore
   (type) => ApplicationType[type]
 );
 

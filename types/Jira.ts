@@ -7,8 +7,8 @@ export enum SortNames {
 }
 
 export enum ViewSwitch {
-  Server = 'Server',
-  Local = 'Local',
+  Server = "Server",
+  Local = "Local",
 }
 
 export interface Project {
@@ -18,18 +18,16 @@ export interface Project {
   changes: Array<Array<string>>,
 }
 
-export namespace JiraConfiguration {
-  export interface JiraConfig {
-    url: string;
-    name: string;
-    applicationType: ApplicationType;
-  }
+export interface JiraConfig {
+  url: string;
+  name: string;
+  applicationType: ApplicationType;
+}
 
-  export enum ApplicationType {
-    Bitbucket = "bitbucket",
-    Stash = "stash",
-    GitHub = "GitHub", //hmm ¯\_(ツ)_/¯
-  }
+export enum ApplicationType {
+  Bitbucket = "bitbucket",
+  Stash = "stash",
+  GitHub = "GitHub", //hmm ¯\_(ツ)_/¯
 }
 
 export namespace JiraIssue {
@@ -44,7 +42,7 @@ export namespace JiraIssue {
   interface Fields {
     issuetype: Issuetype;
     parent: Parent;
-    attachment: Attachment[]
+    attachment: Attachment[];
     timespent: number;
     project: Project;
     fixVersions: any[];
@@ -544,10 +542,10 @@ export namespace JiraChangelog {
   }
 
   export interface AvatarUrls {
-    '48x48': string;
-    '24x24': string;
-    '16x16': string;
-    '32x32': string;
+    "48x48": string;
+    "24x24": string;
+    "16x16": string;
+    "32x32": string;
   }
 
   export interface ProjectCategory {

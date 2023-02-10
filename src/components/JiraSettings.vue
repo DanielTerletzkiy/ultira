@@ -155,11 +155,10 @@ import {
   refreshTime, theme,
   zoomFactor
 } from "../store/jira.store";
-import { JiraConfiguration } from "../../types/Jira";
 import { useZoomFactor } from "@vueuse/electron";
 import ProjectController from "../controller/ProjectController";
-import ApplicationType = JiraConfiguration.ApplicationType;
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
+import { ApplicationType } from "../../types/Jira";
 
 const factor = useZoomFactor();
 

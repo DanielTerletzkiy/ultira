@@ -1,6 +1,5 @@
 import ApiController from "./ApiController";
-import { JiraConfiguration } from "../../types/Jira";
-import ApplicationType = JiraConfiguration.ApplicationType;
+import { ApplicationType } from "../../types/Jira";
 
 export default class JiraBaseController extends ApiController {
   url: string = "";

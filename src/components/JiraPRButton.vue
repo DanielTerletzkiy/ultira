@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { computed, PropType } from "vue";
-import { JiraCommits, JiraConfiguration } from "../../types/Jira";
+import { ApplicationType, JiraCommits } from "../../types/Jira";
 import Repository = JiraCommits.Repository;
 import JiraController from "../controller/JiraController";
 import { currentIssue } from "../store/jira.store";
@@ -23,10 +23,10 @@ const props = defineProps({
 const pullRequestUrl = computed(() => {
   console.log(props.repository);
   switch (JiraController.controller.applicationType) {
-    case JiraConfiguration.ApplicationType.Bitbucket:
-    case JiraConfiguration.ApplicationType.Stash:
+    case ApplicationType.Bitbucket:
+    case ApplicationType.Stash:
       return `${props.repository?.url.replace("browse", "pull-requests?create")}&sourceBranch=${currentIssue.value?.task.key}`;
-    case JiraConfiguration.ApplicationType.GitHub:
+    case ApplicationType.GitHub:
       return `${props.repository?.url}/compare/...${currentIssue.value?.task.key}`;
   }
 });

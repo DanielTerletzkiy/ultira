@@ -2,12 +2,10 @@ import { createStore } from "vuex";
 import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
 import {
-  JiraConfiguration,
+  ApplicationType, JiraConfig,
   JiraIssue, Project,
   SortNames
 } from "../../types/Jira";
-import ApplicationType = JiraConfiguration.ApplicationType;
-import JiraConfig = JiraConfiguration.JiraConfig;
 import Task = JiraIssue.Task;
 import JiraTask from "../model/JiraTask";
 import JiraController from "../controller/JiraController";
