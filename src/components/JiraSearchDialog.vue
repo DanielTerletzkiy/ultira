@@ -57,9 +57,10 @@ import JiraController from "../controller/JiraController";
 import JiraList from "./JiraList.vue";
 import { currentIssueKey } from "../store/jira.store";
 import JiraTask from "../model/JiraTask";
+import { watchDebounced } from "@vueuse/core";
 
 const props = defineProps({
-  open: Boolean,
+  open: Boolean
 });
 const searchKey = ref<string>();
 
@@ -110,7 +111,10 @@ function clearSearchKey() {
   searchKey.value = "";
 }
 
-watch([searchKey, () => props.open], search);
+watchDebounced(
+  [searchKey, () => props.open],
+  search,
+  { debounce: 200, maxWait: 1000 });
 
 onMounted(search);
 </script>

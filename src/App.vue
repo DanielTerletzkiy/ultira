@@ -7,6 +7,7 @@ import JiraSearchDialog from "./components/JiraSearchDialog.vue";
 import { searchOpen, historyOpen } from "./store/jira.store";
 import AppToolbarControls from "./components/AppToolbarControls.vue";
 import JiraHistoryDialog from "./components/JiraHistoryDialog.vue";
+import { version } from "../package.json";
 
 const settingsOpen = ref(false);
 
@@ -16,6 +17,10 @@ function toggleSettings() {
 
 function onSettingsSubmit() {
   toggleSettings();
+}
+
+function onToggleSearch() {
+  searchOpen.value = !searchOpen.value;
 }
 
 const baseurl = import.meta.env.BASE_URL;
@@ -46,11 +51,15 @@ const baseurl = import.meta.env.BASE_URL;
         <DCardTitle color="primary" class="title font-size-small">
           ULTIRA
         </DCardTitle>
-        <d-card-title class="title font-size-small">
-          <kbd>CTR</kbd> + <kbd>SHIFT</kbd> + <kbd>S</kbd> = search
-        </d-card-title>
+        <d-tooltip filled color="secondary">
+          <d-icon-button class="title action" name="search" @click="onToggleSearch" size="30"/>
+          <template v-slot:tooltip>
+            <kbd>CTR</kbd> + <kbd>SHIFT</kbd> + <kbd>S</kbd>
+          </template>
+        </d-tooltip>
         <JiraBaseSelector />
         <d-spacer />
+        <pre>v{{ version }}</pre>
         <AppToolbarControls />
       </DToolbar>
     </template>
@@ -92,13 +101,12 @@ header,
   }
 
   kbd {
-    $border-color: #727272;
-    $font-color: #949494;
+    $border-color: #282a2b;
+    color: inherit;
     position: relative;
     user-select: none;
     font-weight: bold;
     font-size: 0.8rem;
-    color: $font-color;
     border: rgba(lighten($border-color, 20), 0.3) 1px solid;
     box-shadow: 2px 3px 0 rgba(lighten($border-color, 20), 0.3);
     min-width: 18px;

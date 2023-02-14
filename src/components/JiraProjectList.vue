@@ -83,8 +83,8 @@ import { projects, currentIssueKey } from "../store/jira.store";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraController from "../controller/JiraController";
 import { computed } from "vue";
-import Project from "../model/Project";
 import ProjectController from "../controller/ProjectController";
+import { Project } from "../../types/Jira";
 
 function setIssue(branch: string) {
   currentIssueKey.value = branch;
@@ -135,7 +135,7 @@ function onFileClick(project: Project, file: string) {
 
   .path {
     padding-left: 0;
-    margin-top: -14px;
+    margin-top: -10px;
   }
 }
 

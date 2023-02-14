@@ -10,7 +10,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "concurrently \"cross-env NODE_ENV=development&& vite\" \"npm run node\" ",
-    "node": "nodemon electron/Server.js",
+    "node": "npx nodemon electron/Server.ts",
     "electron:start": "cross-env NODE_ENV=development concurrently \"vite\" \"electron electron/main\" ",
     "electron:dist": "npm run build && electron-builder build",
     "electron:release": "npm run build && electron-builder build --publish always",
@@ -93,6 +93,7 @@
     "shelljs": "^0.8.5",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1",
+    "ts-node": "^10.9.1",
     "uuid": "^9.0.0",
     "vite-plugin-electron": "^0.11.1",
     "vite-plugin-electron-renderer": "^0.12.1",

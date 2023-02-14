@@ -9,8 +9,8 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "noEmit": true,
-    "noEmitOnError": true,
-    "noEmitHelpers": true
-  }
+    "noEmit": false,
+    "noEmitOnError": false,
+    "noEmitHelpers": false,
+    "exclude": ["../types/*"]}
 }

@@ -93,7 +93,8 @@
           </d-card-subtitle>
           <d-column v-for="(config, i) in jiraConfigs" :key="i" gap>
             <JiraSettingsConfig
-              v-model="jiraConfigs[i]"
+              :modelValue="config"
+              @update:modelValue="(e)=>jiraConfigs[i]=e"
               @remove="removeConfig(i)"
             />
             <d-divider />

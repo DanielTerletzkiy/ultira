@@ -1,9 +1,9 @@
 <template>
   <d-row block align="stretch" elevation="2" outlined>
-    <d-column gap block>
+    <d-column gap block v-if="config">
       <d-textfield
         full-width
-        v-model="modelValue.name"
+        v-model="config.name"
         color="primary"
         filled
         label="Name"
@@ -11,17 +11,17 @@
       />
       <d-textfield
         full-width
-        v-model="modelValue.url"
-        color="primary"
+        v-model="config.url"
+        :color="!validation.url?'error':'primary'"
         filled
         label="Url"
         type="url"
       />
       <d-card-subtitle>
-        ID: <strong>{{ modelValue.id }}</strong>
+        ID: <strong>{{ config.id }}</strong>
       </d-card-subtitle>
       <d-tab-list
-        v-model="modelValue.applicationType"
+        v-model="config.applicationType"
         color="primary"
         elevation="1"
         class="ma-1"
@@ -37,17 +37,20 @@
       </d-tab-list>
     </d-column>
     <d-column elevation="n1">
-      <JiraButtonConfirm color="error" icon="times" @confirm="remove"/>
-      <JiraButtonConfirm color="primary" icon="edit" @confirm="edit"/>
+      <JiraButtonConfirm color="error" icon="times" @confirm="remove" />
+      <JiraButtonConfirm color="primary" icon="key-skeleton" @confirm="edit" />
+      <d-spacer />
+      <JiraButtonConfirm color="success" icon="save" @confirm="save" />
     </d-column>
   </d-row>
 </template>
 
 <script setup lang="ts">
-import { PropType, watch } from "vue";
+import { computed, PropType, reactive, ref, toRefs, watch } from "vue";
 import { JiraConfig, ApplicationType } from "../../types/Jira";
 import { credentialsOpen, selectedJiraConfig } from "../store/jira.store";
 import JiraButtonConfirm from "./JiraButtonConfirm.vue";
+import { clone } from "lodash";
 
 //@ts-ignore
 const AppTypes = Object.keys(ApplicationType).map(
@@ -57,22 +60,32 @@ const AppTypes = Object.keys(ApplicationType).map(
 
 const emit = defineEmits(["remove", "update:modelValue"]);
 const props = defineProps({
-  modelValue: Object as PropType<JiraConfig>
+  modelValue: { type: Object as PropType<JiraConfig>, required: true }
 });
+
+const config = ref(clone(toRefs(props).modelValue?.value));
 
 function remove() {
   emit("remove");
 }
 
-function edit(){
+function edit() {
   selectedJiraConfig.value = props.modelValue?.id;
   credentialsOpen.value = true;
 }
 
-watch(
-  () => props.modelValue,
-  (data) => emit("update:modelValue", data)
-);
+function save() {
+  console.log(config);
+  emit("update:modelValue", config.value);
+  config.value = clone(config.value);
+}
+
+
+const validation = computed(() => {
+  return {
+    url: config.value.url && /^((?:https?:\/\/)?[^./]+(?:\.[^./]+)+?)$/.test(config.value.url)
+  };
+});
 </script>
 
 <style scoped lang="scss">
