@@ -8,8 +8,8 @@ import { ProgressInfo } from "electron-builder";
 const log = require("electron-log");
 const { autoUpdater } = require("electron-updater");
 
-const expressServer = require("../../electron/Server");
-require("../../electron/router/ProjectRouter");
+const expressServer = require("../../electron/Server.js");
+require("../../electron/router/ProjectRouter.js");
 
 process.env.DIST_ELECTRON = join(__dirname, "..");
 process.env.DIST = join(process.env.DIST_ELECTRON, "../dist");
