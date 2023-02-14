@@ -19,6 +19,7 @@ export type Project = {
 }
 
 export type JiraConfig = {
+  id: string;
   url: string;
   name: string;
   applicationType: ApplicationType;

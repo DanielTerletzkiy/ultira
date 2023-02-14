@@ -1,5 +1,5 @@
 <template>
-  <d-row gap block align="stretch" elevation="2">
+  <d-row block align="stretch" elevation="2">
     <d-column gap block>
       <d-textfield
         full-width
@@ -23,19 +23,20 @@
         Current Branch: <strong>{{ modelValue.branch }}</strong>
       </d-card-subtitle>
     </d-column>
-    <d-icon-button height="initial" type="button" color="error" @click="remove">
-      <d-icon name="times" />
-    </d-icon-button>
+    <d-column elevation="n1">
+      <JiraButtonConfirm color="error" icon="times" @confirm="remove"/>
+    </d-column>
   </d-row>
 </template>
 
 <script setup lang="ts">
 import { PropType, watch } from "vue";
 import { Project } from "../../types/Jira";
+import JiraButtonConfirm from "./JiraButtonConfirm.vue";
 
 const emit = defineEmits(["remove", "update:modelValue"]);
 const props = defineProps({
-  modelValue: Object as PropType<Project>,
+  modelValue: Object as PropType<Project>
 });
 
 function remove() {

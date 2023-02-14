@@ -50,6 +50,7 @@ const password = ref<string>();
 
 function onSubmit() {
   emit("submit", { username: username.value, password: password.value });
+  location.reload();
 }
 
 const isDisabled = computed(() => {

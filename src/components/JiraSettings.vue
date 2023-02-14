@@ -91,14 +91,17 @@
           <d-card-subtitle class="pl-0 font-weight-bold">
             Jira Configurations
           </d-card-subtitle>
-            <d-column v-for="(config, i) in jiraConfigs" :key="i" gap>
-              <JiraSettingsConfig
-                v-model="jiraConfigs[i]"
-                @remove="removeConfig(i)"
-              />
-              <d-divider />
-            </d-column>
+          <d-column v-for="(config, i) in jiraConfigs" :key="i" gap>
+            <JiraSettingsConfig
+              v-model="jiraConfigs[i]"
+              @remove="removeConfig(i)"
+            />
+            <d-divider />
+          </d-column>
           <d-button color="primary" glow type="button" @click="addConfig">
+            <template v-slot:prefix>
+              <d-icon name="plus" />
+            </template>
             Add Config
           </d-button>
         </d-column>
@@ -128,14 +131,17 @@
             </d-textfield>
             <JiraProjectBranchRefreshButton />
           </d-column>
-            <d-column v-for="(project, i) in projects" :key="i" gap>
-              <JiraSettingsProject
-                v-model="projects[i]"
-                @remove="removeProject(i)"
-              />
-              <d-divider />
-            </d-column>
+          <d-column v-for="(project, i) in projects" :key="i" gap>
+            <JiraSettingsProject
+              v-model="projects[i]"
+              @remove="removeProject(i)"
+            />
+            <d-divider />
+          </d-column>
           <d-button color="primary" glow type="button" @click="addProject">
+            <template v-slot:prefix>
+              <d-icon name="plus" />
+            </template>
             Add Project
           </d-button>
         </d-column>
@@ -159,6 +165,7 @@ import { useZoomFactor } from "@vueuse/electron";
 import ProjectController from "../controller/ProjectController";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 import { ApplicationType } from "../../types/Jira";
+import { v4 as uuidv4 } from "uuid";
 
 const factor = useZoomFactor();
 
@@ -180,6 +187,7 @@ watch(
 
 function addConfig() {
   jiraConfigs.value.push({
+    id: uuidv4(),
     name: "",
     url: "",
     applicationType: ApplicationType.Bitbucket
@@ -222,7 +230,7 @@ watch(
   () => vuelize.theme.themes[currentTheme.value].primary,
   (color) => {
     //@ts-ignore
-    theme.value = { primary: {[currentTheme.value]: color }};
+    theme.value = { primary: { [currentTheme.value]: color } };
   }
 );
 

@@ -18,8 +18,9 @@ const store = createStore({
     selectedJiraConfig: "",
     jiraConfigs: [
       {
-        name: "sample",
-        url: "https://",
+        id: "remove this",
+        name: "don't use this",
+        url: "https://only-a-sample.com",
         applicationType: ApplicationType.Bitbucket
       }
     ],

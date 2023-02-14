@@ -71,7 +71,7 @@ const vuelize: Vuelize = inject("vuelize") as Vuelize;
 const currentJiraConfig = computed<JiraConfig>(
   () =>
     jiraConfigs.value?.find(
-      (base: { name: string }) => base.name === selectedJiraConfig.value
+      (base: { id: string }) => base.id === selectedJiraConfig.value
     ) as JiraConfig
 );
 
@@ -83,13 +83,13 @@ watch(
   { deep: true }
 );
 
-async function setJiraBase(name: any) {
-  console.log("baseName", name);
-  if (localStorage.getItem(`${name}Cred`)) {
+async function setJiraBase(id: string) {
+  console.log("baseName", id);
+  if (localStorage.getItem(`${id}Cred`)) {
     let cookieCredentials;
     try {
       cookieCredentials = JSON.parse(
-        localStorage.getItem(`${name}Cred`) || "{}"
+        localStorage.getItem(`${id}Cred`) || "{}"
       );
     } catch (e) {
       credentialsOpen.value = true;
@@ -111,7 +111,11 @@ async function setJiraBase(name: any) {
     await JiraController.getMyself();
     connectCurrentData();
   } else {
-    credentialsOpen.value = true;
+    vuelize.notify(
+      "Credentials",
+      `Submit your config credentials in the settings`,
+      State.Info
+    );
   }
 }
 

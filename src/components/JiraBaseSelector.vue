@@ -7,7 +7,6 @@
       @submit="onCredentialsSubmit"
     />
     <d-tab-list
-      v-if="jiraConfigs.length > 1"
       class="action"
       color="primary"
       elevation="2"
@@ -15,11 +14,11 @@
     >
       <d-list-item
         v-for="jira in jiraConfigs"
-        :key="jira.name"
+        :key="jira.id"
         style="min-height: 0"
         v-use-longpress
         @longpress="
-          () => (jira.name === selectedJiraConfig ? openCredentials() : null)
+          () => (jira.id === selectedJiraConfig ? openCredentials() : null)
         "
       >
         {{ jira.name }}
@@ -55,10 +54,10 @@ function onCredentialsSubmit(credentials: {
 onMounted(() => {
   if (
     jiraConfigs.value.findIndex(
-      (config) => selectedJiraConfig.value === config.name
+      (config) => selectedJiraConfig.value === config.id
     ) < 0
   ) {
-    selectedJiraConfig.value = jiraConfigs.value[0].name;
+    selectedJiraConfig.value = jiraConfigs.value[0].id;
   }
 });
 </script>

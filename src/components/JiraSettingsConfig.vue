@@ -17,6 +17,9 @@
         label="Url"
         type="url"
       />
+      <d-card-subtitle>
+        ID: <strong>{{ modelValue.id }}</strong>
+      </d-card-subtitle>
       <d-tab-list
         v-model="modelValue.applicationType"
         color="primary"
@@ -34,12 +37,8 @@
       </d-tab-list>
     </d-column>
     <d-column elevation="n1">
-      <d-icon-button type="button" color="error" @click="remove">
-        <d-icon name="times" />
-      </d-icon-button>
-      <d-icon-button type="button" color="primary" @click="edit">
-        <d-icon name="edit" />
-      </d-icon-button>
+      <JiraButtonConfirm color="error" icon="times" @confirm="remove"/>
+      <JiraButtonConfirm color="primary" icon="edit" @confirm="edit"/>
     </d-column>
   </d-row>
 </template>
@@ -48,6 +47,7 @@
 import { PropType, watch } from "vue";
 import { JiraConfig, ApplicationType } from "../../types/Jira";
 import { credentialsOpen, selectedJiraConfig } from "../store/jira.store";
+import JiraButtonConfirm from "./JiraButtonConfirm.vue";
 
 //@ts-ignore
 const AppTypes = Object.keys(ApplicationType).map(
@@ -65,7 +65,7 @@ function remove() {
 }
 
 function edit(){
-  selectedJiraConfig.value = props.modelValue?.name;
+  selectedJiraConfig.value = props.modelValue?.id;
   credentialsOpen.value = true;
 }
 
