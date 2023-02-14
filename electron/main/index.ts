@@ -11,28 +11,29 @@ const { autoUpdater } = require("electron-updater");
 const expressServer = require("../../electron/Server");
 require("../../electron/router/ProjectRouter");
 
-
 process.env.DIST_ELECTRON = join(__dirname, "..");
 process.env.DIST = join(process.env.DIST_ELECTRON, "../dist");
+process.env.SPLASH = join(process.env.DIST_ELECTRON, "../splash");
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? join(process.env.DIST_ELECTRON, "../public")
   : process.env.DIST;
 
 // @ts-ignore
-let win;
+let win: BrowserWindow;
 const preload = join(__dirname, "../preload/index.js");
 const url = process.env.VITE_DEV_SERVER_URL as string;
-console.log("url", url)
+console.log("url", url);
 const indexHtml = join(process.env.DIST, "index.html");
 
 function createWindow() {
   win = new BrowserWindow({
+    show: false,
     frame: false,
     // @ts-ignore
     icon: join(process.env.PUBLIC, "favicon.ico"),
     titleBarOverlay: {
       color: "#242832",
-      symbolColor: "#A8B2FF"
+      symbolColor: "#A8B2FF",
     },
     titleBarStyle: "customButtonsOnHover",
     webPreferences: {
@@ -40,15 +41,22 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       // @ts-ignore
-      enableRemoteModule: true
-    }
+      enableRemoteModule: true,
+    },
   });
 
   require("@electron/remote/main").initialize();
   require("@electron/remote/main").enable(win.webContents);
 
+  const splash = new BrowserWindow({
+    width: 450,
+    height: 450,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+  });
+  splash.loadFile(`${process.env.SPLASH}/index.html`);
 
-  win.maximize();
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(url);
     win.webContents.openDevTools();
@@ -56,7 +64,13 @@ function createWindow() {
     win.loadFile(indexHtml);
   }
 
-  win.webContents.on("new-window", function(e: any, url: string) {
+  win.webContents.on("did-finish-load", () => {
+    splash.destroy();
+    win.show();
+    win.maximize();
+  });
+
+  win.webContents.on("new-window", function (e: any, url: string) {
     e.preventDefault();
     require("electron").shell.openExternal(url);
   });
@@ -90,6 +104,7 @@ app.on("window-all-closed", () => {
   try {
     expressServer.close();
   } catch (e) {
+    console.error(e);
   }
 });
 
@@ -108,7 +123,13 @@ autoUpdater.on("error", (err: Error) => {
 autoUpdater.on("download-progress", (progressObj: ProgressInfo) => {
   let log_message = "Download speed: " + progressObj.bytesPerSecond;
   log_message = log_message + " - Downloaded " + progressObj.percent + "%";
-  log_message = log_message + " (" + progressObj.transferred + "/" + progressObj.total + ")";
+  log_message =
+    log_message +
+    " (" +
+    progressObj.transferred +
+    "/" +
+    progressObj.total +
+    ")";
   sendStatusToWindow(log_message);
 });
 autoUpdater.on("update-downloaded", (info: UpdateDownloadedEvent) => {

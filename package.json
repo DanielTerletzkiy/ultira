@@ -1,6 +1,6 @@
 {
   "name": "ultira",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "description": "ultimate jira tool",
   "author": {
@@ -36,8 +36,9 @@
     },
     "files": [
       "dist-electron",
+      "dist",
       "electron",
-      "dist"
+      "splash"
     ],
     "dmg": {
       "contents": [

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>splash screen</title>
+</head>
+<body>
+<img class="icon" src="../dist/favicon.ico" alt="app icon">
+<h1>PLEASE WAIT</h1>
+</body>
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+
+    html {
+        user-select: none;
+        width: calc(100% - 2px);
+        height: calc(100% - 2px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1f2025;
+        border: solid 1px rgba(112, 128, 144, 0.32);
+        border-radius: 8px;
+        font-family: "Roboto Mono", sans-serif;
+        text-align: center;
+        color: #9fcdff;
+    }
+
+    .icon {
+        -webkit-user-drag: none;
+        animation: spin 3s infinite linear;
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+
+</style>
+</html>

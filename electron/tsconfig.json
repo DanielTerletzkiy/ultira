@@ -11,6 +11,6 @@
     "skipLibCheck": true,
     "noEmit": false,
     "noEmitOnError": false,
-    "noEmitHelpers": false,
-    "exclude": ["../types/*"]}
+    "noEmitHelpers": false
+    }
 }
