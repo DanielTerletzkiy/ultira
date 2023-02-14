@@ -53,14 +53,15 @@ module.exports = class ProjectScraper {
     return projectBranches;
   }
 
-  static open(path: Project["path"], issue: Task["key"], event?: any) {
+  static async open(path: Project["path"], issue: Task["key"], event?: any) {
     try {
       const shell = require("shelljs");
       shell.config.execPath = shell.which("node").stdout;
       shell.cd(path);
 
-      const masterBranch = GitShell.getMasterBranch(path);
-      shell.exec(`git fetch && git pull origin ${masterBranch}`, { windowsHide: true }); //update master
+      const masterBranch = (await GitShell.getMasterBranch(path)).replace('/',' ');
+      console.log("change project: ", masterBranch, issue, path, !!event);
+      shell.exec(`git fetch && git pull ${masterBranch}`, { windowsHide: true }); //update master
       shell.exec(`git stash`, { windowsHide: true }); //sash current uncommitted files
       if (
         shell.exec(`git checkout ${issue}`, { windowsHide: true }).code !== 0

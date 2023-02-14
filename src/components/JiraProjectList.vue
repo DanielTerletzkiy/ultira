@@ -1,5 +1,10 @@
 <template>
   <d-card v-if="projects.length > 0" block elevation="4" class="ma-3">
+    <d-textfield v-model="search" class="search sticky" filled solo placeholder="Search..." full-width>
+      <template v-slot:prefix>
+        <d-icon name="search" />
+      </template>
+    </d-textfield>
     <d-column
       v-for="list in lists"
       :key="list.title"
@@ -8,7 +13,7 @@
       v-show="list.projects.length > 0"
     >
       <d-card-subtitle color="primary" class="font-weight-bold px-4 sticky" glow
-        >{{ list.title }}
+      >{{ list.title }}
       </d-card-subtitle>
       <d-accordion
         v-for="(project, p) in list.projects"
@@ -82,7 +87,7 @@
 import { projects, currentIssueKey } from "../store/jira.store";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraController from "../controller/JiraController";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import ProjectController from "../controller/ProjectController";
 import { Project } from "../../types/Jira";
 
@@ -98,21 +103,29 @@ function issueExists(branch: string): boolean {
   );
 }
 
+const search = ref("");
+
 const lists = computed<Array<{ title: string; projects: Array<Project> }>>(
   () => {
-    console.log(recommendedProjects.value);
     return [
       {
         title: "Recommended",
-        projects: recommendedProjects.value,
+        projects: recommendedProjects.value
       },
       {
         title: "All",
-        projects: projects.value,
-      },
+        projects: !search ?
+          projects.value :
+          projects.value.filter((project) =>
+            project.project.toLowerCase().includes(search.value.toLowerCase()) ||
+            project.branch.toLowerCase().includes(search.value.toLowerCase()) ||
+            project.path.toLowerCase().includes(search.value.toLowerCase())
+          )
+      }
     ];
   }
 );
+
 
 const recommendedProjects = computed<Array<Project>>(() => {
   return projects.value.filter(
@@ -145,6 +158,12 @@ function onFileClick(project: Project, file: string) {
   z-index: 1;
   user-select: none;
   backdrop-filter: blur(10px);
+}
+
+.search {
+  top: 35px;
+  z-index: 2;
+
 }
 
 ::v-deep(.d-accordion .d-title) {

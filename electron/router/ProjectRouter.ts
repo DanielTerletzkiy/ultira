@@ -7,10 +7,10 @@ const ProjectScraper = require("../controller/ProjectScraper");
 
 ipcMain.on(
   "open/project",
-  (event: any, arg: { path: string; issue: Task["key"] }) => {
+  async (event: any, arg: { path: string; issue: Task["key"] }) => {
     event.sender.send(
       "result/open/project",
-      ProjectScraper.open(arg.path, arg.issue, event)
+      await ProjectScraper.open(arg.path, arg.issue, event)
     );
   }
 );
