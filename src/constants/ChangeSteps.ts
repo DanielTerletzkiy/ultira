@@ -19,9 +19,9 @@ export const changeStepsInfo = [
     icon: "code-branch",
     color: "inherit"
   },
-  {
+  /*{
     description: "Merge master into branch",
     icon: "arrows-merge",
     color: "inherit"
-  }
+  }*/
 ];

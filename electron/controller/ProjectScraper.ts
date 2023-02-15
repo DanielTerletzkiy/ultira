@@ -2,6 +2,7 @@ import { ChangeStep, Project } from "../types/Jira";
 import { JiraIssue as Task } from "../types/JiraIssue";
 import { ChangeState } from "../types/ChangeState";
 import shell from "shelljs";
+import SimpleGit from "../service/SimpleGit";
 
 const Worker = require("worker_threads").Worker;
 const path = require("path");
@@ -64,41 +65,29 @@ module.exports = class ProjectScraper {
     };
     try {
 
-      let shell;
       //start shell
-      try {
-        changeStep({ step: 0, state: ChangeState.Started });
-        shell = require("shelljs");
-        //shell.config.execPath = shell.which("node").stdout;
-        //console.log("node path", shell.which("node").stdout);
-      } catch (e) {
-        console.error("start shell:", e);
-        changeStep({ step: 0, state: ChangeState.Failed });
-        return false;
-      }
       changeStep({ step: 0, state: ChangeState.Finished });
       //shell finished
 
       //go to project
-      try {
-        changeStep({ step: 1, state: ChangeState.Started });
-        shell.cd(path);
-      } catch (e) {
-        console.error("goto project:", e);
-        changeStep({ step: 1, state: ChangeState.Failed });
-        return false;
-      }
+      changeStep({ step: 1, state: ChangeState.Started });
+
+      const git = SimpleGit(path);
+
       changeStep({ step: 1, state: ChangeState.Finished });
       //in project
 
-      const masterBranch = (await GitShell.getMasterBranch(path)).replace("/", " ");
-      console.log("change project: ", masterBranch, issue, path, !!event);
+      const masterBranch = await GitShell.getMasterBranch(path);
+      const [prefix, master] = masterBranch.split("/");
+      console.log("change project: ", master, issue, path, !!event);
 
       //update master and stash
       changeStep({ step: 2, state: ChangeState.Started });
       try {
-        shell.exec(`git fetch && git pull ${masterBranch}`, { windowsHide }); //update master
-        shell.exec(`git stash`, { windowsHide }); //sash current uncommitted files
+        await git.stash();
+        await git.checkout(master);
+        await git.fetch();
+        await git.pull();
       } catch (e) {
         console.error("fetch:", e);
         changeStep({ step: 2, state: ChangeState.Failed });
@@ -111,13 +100,9 @@ module.exports = class ProjectScraper {
       //goto branch
       changeStep({ step: 3, state: ChangeState.Started });
       try {
-        const status = shell.exec(`git checkout ${issue}`, { windowsHide });
-        console.log(`git checkout ${issue}`, "stdout:", status.stdout, "stderr:", status.stderr, "code:", status.code);
-        console.log(shell.exec(`echo "$PWD"`, { windowsHide }));
-        if (status.code !== 0) {
-          const status = shell.exec(`git checkout -b ${issue}`, { windowsHide });
-          console.log(`git checkout -b ${issue}`, "stdout:", status.stdout, "stderr:", status.stderr, "code:", status.code);
-        } //try to check out branch, create if necessary
+        await git.checkout(issue).catch(async () => {
+          await git.checkoutLocalBranch(issue);
+        });
       } catch (e) {
         console.error("checkout:", e);
         changeStep({ step: 3, state: ChangeState.Failed });
@@ -125,19 +110,6 @@ module.exports = class ProjectScraper {
       }
       changeStep({ step: 3, state: ChangeState.Finished });
       //went to branch
-
-
-      //merge master
-      changeStep({ step: 4, state: ChangeState.Started });
-      try {
-        shell.exec(`git merge ${masterBranch}`, { windowsHide }); //merge master
-      } catch (e) {
-        console.error("merge:", e);
-        changeStep({ step: 4, state: ChangeState.Failed });
-        return false;
-      }
-      changeStep({ step: 4, state: ChangeState.Finished });
-      //merged master
 
       Promise.all([
         new Promise(resolve => GitShell.getCurrentBranch(path).then(resolve)),
