@@ -47,10 +47,11 @@
 
 <script setup lang="ts">
 import { computed, PropType, reactive, ref, toRefs, watch } from "vue";
-import { JiraConfig, ApplicationType } from "../../types/Jira";
+import { JiraConfig } from "../../types/Jira";
 import { credentialsOpen, selectedJiraConfig } from "../store/jira.store";
 import JiraButtonConfirm from "./JiraButtonConfirm.vue";
 import { clone } from "lodash";
+import { ApplicationType } from "../../types/ApplicationType";
 
 //@ts-ignore
 const AppTypes = Object.keys(ApplicationType).map(

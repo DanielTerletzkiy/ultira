@@ -110,7 +110,6 @@ import JiraListItem from "./JiraListItem.vue";
 import JiraController from "../controller/JiraController";
 import JiraTask from "../model/JiraTask";
 import { onMounted, PropType, ref, watch } from "vue";
-import debounce from "lodash/debounce";
 import {
   currentIssue,
   currentIssueKey,
@@ -119,8 +118,9 @@ import {
 } from "../store/jira.store";
 import { vIntersectionObserver } from "@vueuse/components";
 import JiraImage from "./JiraImage.vue";
-import { SortNames } from "../../types/Jira";
 import { times } from "../constants/Times";
+import { SortNames } from "../../types/SortNames";
+import { debounce } from "lodash";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({

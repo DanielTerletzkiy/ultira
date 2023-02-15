@@ -2,13 +2,15 @@ import { createStore } from "vuex";
 import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
 import {
-  ApplicationType, JiraConfig,
-  Project,
-  SortNames
+  ChangeStep,
+  JiraConfig,
+  Project
 } from "../../types/Jira";
 import JiraTask from "../model/JiraTask";
 import JiraController from "../controller/JiraController";
 import { JiraIssue as Task} from "../../types/JiraIssue";
+import { SortNames } from "../../types/SortNames";
+import { ApplicationType } from "../../types/ApplicationType";
 
 const store = createStore({
   plugins: [new VuexPersistence().plugin],
@@ -30,6 +32,13 @@ const store = createStore({
         project: "",
         branch: "",
         changes: [""]
+      }
+    ],
+    changeSteps: [
+      {
+        step: -1,
+        success: false,
+        path: ""
       }
     ],
     searchDialogOpen: false,
@@ -62,6 +71,10 @@ const store = createStore({
     projects(state): Array<Project> {
       //@ts-ignore
       return state.projects;
+    },
+    changeSteps(state): Array<ChangeStep> {
+      //@ts-ignore
+      return state.changeSteps;
     },
     searchDialogOpen(state): boolean {
       return state.searchDialogOpen;
@@ -101,6 +114,10 @@ const store = createStore({
     setProjects(state, payload: Array<Project>) {
       // @ts-ignore
       state.projects.push(...payload);
+    },
+    setChangeSteps(state, payload: Array<ChangeStep>) {
+      // @ts-ignore
+      state.changeSteps.push(...payload);
     },
     setSearchDialogOpen(state, payload: boolean) {
       state.searchDialogOpen = payload;
@@ -153,6 +170,9 @@ const store = createStore({
         }
       }
       context.commit("setProjects", projects);
+    },
+    setChangeSteps(context, payload: Array<ChangeStep>){
+      context.commit('setChangeSteps', payload);
     },
     setSearchDialogOpen(context, payload: boolean) {
       context.commit("setSearchDialogOpen", payload);
@@ -230,6 +250,15 @@ export const projects = computed<Array<Project>>({
   },
   set(value) {
     store.dispatch("setProjects", value);
+  }
+});
+
+export const changeSteps = computed<Array<ChangeStep>>({
+  get() {
+    return store.getters.changeSteps;
+  },
+  set(value) {
+    store.dispatch("setChangeSteps", value);
   }
 });
 

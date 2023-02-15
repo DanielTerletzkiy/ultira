@@ -1,3 +1,5 @@
+import { ChangeType } from "./ChangeType";
+
 export type JiraCommits = {
   errors: Object[];
   detail: Detail[];
@@ -47,15 +49,6 @@ interface File {
   changeType: ChangeType;
   linesAdded: number;
   linesRemoved: number;
-}
-
-export enum ChangeType {
-  MODIFIED = "MODIFIED",
-  DELETED = "DELETED",
-  MOVED = "MOVED",
-  ADDED = "ADDED",
-  COPIED = "COPIED",
-  UNKNOWN = "UNKNOWN",
 }
 
 interface Instance {

@@ -165,8 +165,8 @@ import {
 import { useZoomFactor } from "@vueuse/electron";
 import ProjectController from "../controller/ProjectController";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
-import { ApplicationType } from "../../types/Jira";
 import { v4 as uuidv4 } from "uuid";
+import { ApplicationType } from "../../types/ApplicationType";
 
 const factor = useZoomFactor();
 

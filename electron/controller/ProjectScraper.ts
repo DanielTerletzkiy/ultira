@@ -1,6 +1,7 @@
-import { Project } from "../../types/Jira";
+import { ChangeStep, Project } from "../types/Jira";
+import { JiraIssue as Task } from "../types/JiraIssue";
+import { ChangeState } from "../types/ChangeState";
 import shell from "shelljs";
-import { JiraIssue as Task } from "../../types/JiraIssue";
 
 const Worker = require("worker_threads").Worker;
 const path = require("path");
@@ -53,36 +54,103 @@ module.exports = class ProjectScraper {
     return projectBranches;
   }
 
-  static async open(path: Project["path"], issue: Task["key"], event?: any) {
-    try {
-      const shell = require("shelljs");
-      shell.config.execPath = shell.which("node").stdout;
-      shell.cd(path);
+  static async open(path: Project["path"], issue: Task["key"], event: any) {
 
-      const masterBranch = (await GitShell.getMasterBranch(path)).replace('/',' ');
-      console.log("change project: ", masterBranch, issue, path, !!event);
-      shell.exec(`git fetch && git pull ${masterBranch}`, { windowsHide: true }); //update master
-      shell.exec(`git stash`, { windowsHide: true }); //sash current uncommitted files
-      if (
-        shell.exec(`git checkout ${issue}`, { windowsHide: true }).code !== 0
-      ) {
-        shell.exec(`git checkout -b ${issue}`, { windowsHide: true });
-      } //try to check out branch, create if necessary
-      shell.exec(`git merge ${masterBranch}`, { windowsHide: true }); //merge master
-      if (event) {
-        Promise.all([
-          new Promise(resolve => GitShell.getCurrentBranch(path).then(resolve)),
-          new Promise(resolve => GitShell.getCurrentChanges(path).then(resolve))
-        ])
-          .then(data => {
-            event.sender.send("result/scrape/branches", [{
-              path: path,
-              branch: data[0],
-              changes: data[1]
-            }]);
-          });
+    const windowsHide = true;
+    const changeStep = ({ step, state }: Partial<ChangeStep>) => {
+      event.sender.send("result/change/step", [{
+        step, path, state
+      } as ChangeStep]);
+    };
+    try {
+
+      let shell;
+      //start shell
+      try {
+        changeStep({ step: 0, state: ChangeState.Started });
+        shell = require("shelljs");
+        //shell.config.execPath = shell.which("node").stdout;
+        //console.log("node path", shell.which("node").stdout);
+      } catch (e) {
+        console.error("start shell:", e);
+        changeStep({ step: 0, state: ChangeState.Failed });
+        return false;
       }
-      // shell.exec("phpstorm64 .", { windowsHide: true }); //open as project in current directory
+      changeStep({ step: 0, state: ChangeState.Finished });
+      //shell finished
+
+      //go to project
+      try {
+        changeStep({ step: 1, state: ChangeState.Started });
+        shell.cd(path);
+      } catch (e) {
+        console.error("goto project:", e);
+        changeStep({ step: 1, state: ChangeState.Failed });
+        return false;
+      }
+      changeStep({ step: 1, state: ChangeState.Finished });
+      //in project
+
+      const masterBranch = (await GitShell.getMasterBranch(path)).replace("/", " ");
+      console.log("change project: ", masterBranch, issue, path, !!event);
+
+      //update master and stash
+      changeStep({ step: 2, state: ChangeState.Started });
+      try {
+        shell.exec(`git fetch && git pull ${masterBranch}`, { windowsHide }); //update master
+        shell.exec(`git stash`, { windowsHide }); //sash current uncommitted files
+      } catch (e) {
+        console.error("fetch:", e);
+        changeStep({ step: 2, state: ChangeState.Failed });
+        return false;
+      }
+      changeStep({ step: 2, state: ChangeState.Finished });
+      //finish update
+
+
+      //goto branch
+      changeStep({ step: 3, state: ChangeState.Started });
+      try {
+        const status = shell.exec(`git checkout ${issue}`, { windowsHide });
+        console.log(`git checkout ${issue}`, "stdout:", status.stdout, "stderr:", status.stderr, "code:", status.code);
+        console.log(shell.exec(`echo "$PWD"`, { windowsHide }));
+        if (status.code !== 0) {
+          const status = shell.exec(`git checkout -b ${issue}`, { windowsHide });
+          console.log(`git checkout -b ${issue}`, "stdout:", status.stdout, "stderr:", status.stderr, "code:", status.code);
+        } //try to check out branch, create if necessary
+      } catch (e) {
+        console.error("checkout:", e);
+        changeStep({ step: 3, state: ChangeState.Failed });
+        return false;
+      }
+      changeStep({ step: 3, state: ChangeState.Finished });
+      //went to branch
+
+
+      //merge master
+      changeStep({ step: 4, state: ChangeState.Started });
+      try {
+        shell.exec(`git merge ${masterBranch}`, { windowsHide }); //merge master
+      } catch (e) {
+        console.error("merge:", e);
+        changeStep({ step: 4, state: ChangeState.Failed });
+        return false;
+      }
+      changeStep({ step: 4, state: ChangeState.Finished });
+      //merged master
+
+      Promise.all([
+        new Promise(resolve => GitShell.getCurrentBranch(path).then(resolve)),
+        new Promise(resolve => GitShell.getCurrentChanges(path).then(resolve))
+      ])
+        .then(data => {
+          event.sender.send("result/scrape/branches", [{
+            path: path,
+            branch: data[0],
+            changes: data[1]
+          } as Project]);
+        });
+      // shell.exec("phpstorm64 .", { windowsHide }); //open as project in current directory
       return true;
     } catch (e) {
       console.error("error: ", e);

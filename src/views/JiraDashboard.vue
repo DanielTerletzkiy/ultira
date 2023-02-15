@@ -53,7 +53,7 @@ import {
   projects,
   currentIssueKey,
   selectedJiraConfig,
-  currentIssue
+  currentIssue, changeSteps
 } from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -145,6 +145,11 @@ onMounted(() => {
       `Updated ${resProjects.length} Branches`,
       State.Success
     );
+  });
+
+  ProjectController.subscribeChangeStep((resChangeSteps) => {
+    console.log("changeSteps: ", resChangeSteps);
+    changeSteps.value = resChangeSteps;
   });
 
   setInterval(() => {

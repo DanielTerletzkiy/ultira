@@ -1,6 +1,5 @@
 // @ts-ignore
 import { UpdateDownloadedEvent, UpdateInfo } from "electron-updater";
-
 const { app, BrowserWindow } = require("electron");
 import { join } from "node:path";
 import { ProgressInfo } from "electron-builder";
@@ -19,10 +18,14 @@ process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
   : process.env.DIST;
 
 // @ts-ignore
+//log.transports.file.resolvePathFn = () => join(process.env.DIST_ELECTRON, '../logs/main.log');
+log.errorHandler.startCatching();
+Object.assign(console, log.functions);
+// @ts-ignore
 let win: BrowserWindow;
 const preload = join(__dirname, "../preload/index.js");
 const url = process.env.VITE_DEV_SERVER_URL as string;
-console.log("url", url);
+log.info("url", url);
 const indexHtml = join(process.env.DIST, "index.html");
 
 function createWindow() {

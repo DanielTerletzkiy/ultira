@@ -1,5 +1,5 @@
-import { Project } from "../../types/Jira";
-import { JiraIssue as Task } from "../../types/JiraIssue";
+import { Project } from "../types/Jira";
+import { JiraIssue as Task } from "../types/JiraIssue";
 
 const { ipcMain } = require("electron");
 
