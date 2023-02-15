@@ -1,45 +1,47 @@
 <template>
   <d-tooltip :position="tooltipPosition" color="primary" filled :key="hasChangeSteps" :popover="hasChangeSteps">
-    <d-icon-button
-      name="folder-open"
-      color="primary"
-      :outlined="hasChanges"
-      :disabled="!project"
-      @click="onClick"
-    />
-    <template v-slot:tooltip>
-      <d-column gap>
-        <d-row gap>
-          <d-icon
-            name="corner-down-right"
-            :size="20"
-            style="transform: rotate(45deg)"
-          />
-          <d-row gap style="max-width: max-content">
-            <d-column>
-          <span>
-            <strong v-if="project">{{ project.branch.toUpperCase() }}</strong>
-            <span v-else>Project not installed</span>
-          </span>
-              <d-divider color="primary" :tint="-40" />
-              <strong>{{ currentIssueKey }}</strong>
-            </d-column>
-            <d-column v-if="hasChanges">
-          <span>
-            <strong>{{ project.changes.length }}</strong> Files
-          </span>
-              <d-divider color="primary" :tint="-40" />
-              <d-card-subtitle color="inherit" class="pa-0 font-weight-bold">
-                <d-icon name="file-edit-alt" :size="18" />
-                Changes
-              </d-card-subtitle>
-            </d-column>
+    <d-card :outlined="hasChanges" background-color="transparent" outline-width="2px">
+      <JiraButtonConfirm icon="folder-open" color="primary" askColor="primary" :disabled="!project"
+                         @confirm="onClick" />
+    </d-card>
+    <template v-slot:tooltip-wrapper>
+      <d-card>
+        <d-column gap>
+          <d-row gap>
+            <d-icon
+              name="corner-down-right"
+              :size="20"
+              style="transform: rotate(45deg)"
+            />
+            <d-row gap style="max-width: max-content">
+              <d-column>
+                <d-card-subtitle>
+                  <strong v-if="project">{{ project.branch.toUpperCase() }}</strong>
+                  <span v-else>Project not installed</span>
+                </d-card-subtitle>
+                <d-divider color="primary" :tint="-40" />
+                <d-card-subtitle>
+                  <strong>{{ currentIssueKey }}</strong>
+                </d-card-subtitle>
+              </d-column>
+              <d-divider color="primary" :tint="-40" vertical block class="my-3" v-if="hasChanges" />
+              <d-column v-if="hasChanges">
+                <d-card-subtitle>
+                  <strong>{{ project.changes.length }}</strong> Files
+                </d-card-subtitle>
+                <d-divider color="primary" :tint="-40" />
+                <d-card-subtitle color="inherit" class="font-weight-bold">
+                  <d-icon name="file-edit-alt" :size="18" />
+                  Changes
+                </d-card-subtitle>
+              </d-column>
+            </d-row>
           </d-row>
-        </d-row>
-        <d-card v-if="hasChangeSteps" class="pa-2">
-          <JiraChangeStep />
-        </d-card>
-      </d-column>
+          <d-card v-if="hasChangeSteps" class="ma-2 pa-2" outlined elevation="2">
+            <JiraChangeStep />
+          </d-card>
+        </d-column>
+      </d-card>
     </template>
   </d-tooltip>
 </template>
@@ -51,6 +53,7 @@ import ProjectController from "../controller/ProjectController";
 import { Position } from "vuelize/src/types/Vuelize";
 import { Project } from "../../types/Jira";
 import JiraChangeStep from "./JiraChangeStep.vue";
+import JiraButtonConfirm from "./JiraButtonConfirm.vue";
 
 const props = defineProps({
   repository: { type: String, required: true },
