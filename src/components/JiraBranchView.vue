@@ -22,16 +22,20 @@
           :key="option"
           height="40px"
           style="font-size: 1.2rem"
-        >{{ option }}
+          >{{ option }}
         </d-list-item>
       </d-tab-list>
       <JiraProjectBranchRefreshButton />
     </template>
-    <d-card block background-color="transparent" style="
+    <d-card
+      block
+      background-color="transparent"
+      style="
         max-height: calc(500px - 50px - 8px);
         overflow: overlay;
         overflow-x: hidden;
-      ">
+      "
+    >
       <d-column
         key="content"
         v-if="
@@ -55,7 +59,7 @@
                   {{ repository.name }}
                 </d-card-title>
                 <d-card-subtitle
-                >Repository
+                  >Repository
                   <JiraLinkIconButton
                     v-if="repository.url"
                     :url="repository.url"
@@ -73,9 +77,12 @@
                 <d-card-subtitle> Commits</d-card-subtitle>
               </d-column>
               <d-spacer />
-              <JiraPRButton
-                :repository="repository"
-              />
+              <d-tooltip>
+                <JiraPRButton :repository="repository" />
+                <template v-slot:tooltip>
+                  Create PR
+                </template>
+              </d-tooltip>
               <JiraProjectButton
                 :repository="
                   repository.name.match(new RegExp('.*(/|^)(.*)')).pop()

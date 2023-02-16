@@ -4,8 +4,8 @@
       <d-row class="px-1" gap :wrap="false">
         <d-tooltip position="right" filled color="primary">
           <JiraImage
-            :url="currentIssue.task.fields.project.avatarUrls['48x48']"
-            :key="currentIssue.task.fields.project.key"
+            :url="currentIssue?.task.fields.project.avatarUrls['48x48']"
+            :key="currentIssue?.task.fields.project.key"
           >
             <template v-slot:default="{ base64 }">
               <d-card width="64px" height="64px" elevation-light>

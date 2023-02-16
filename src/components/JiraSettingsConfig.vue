@@ -12,7 +12,7 @@
       <d-textfield
         full-width
         v-model="config.url"
-        :color="!validation.url?'error':'primary'"
+        :color="!validation.url ? 'error' : 'primary'"
         filled
         label="Url"
         type="url"
@@ -37,16 +37,29 @@
       </d-tab-list>
     </d-column>
     <d-column elevation="n1">
-      <JiraButtonConfirm color="error" icon="times" @confirm="remove" />
-      <JiraButtonConfirm color="primary" icon="key-skeleton" @confirm="edit" />
+      <d-tooltip position="left">
+        <JiraButtonConfirm color="error" icon="times" @confirm="remove" />
+        <template v-slot:tooltip>Delete</template>
+      </d-tooltip>
+      <d-tooltip position="left">
+        <JiraButtonConfirm
+          color="primary"
+          icon="key-skeleton"
+          @confirm="edit"
+        />
+        <template v-slot:tooltip>Change Credentials</template>
+      </d-tooltip>
       <d-spacer />
-      <JiraButtonConfirm color="success" icon="save" @confirm="save" />
+      <d-tooltip position="left">
+        <JiraButtonConfirm color="success" icon="save" @confirm="save" />
+        <template v-slot:tooltip>Save</template>
+      </d-tooltip>
     </d-column>
   </d-row>
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, reactive, ref, toRefs, watch } from "vue";
+import { computed, PropType, ref, toRefs } from "vue";
 import { JiraConfig } from "../../types/Jira";
 import { credentialsOpen, selectedJiraConfig } from "../store/jira.store";
 import JiraButtonConfirm from "./JiraButtonConfirm.vue";
@@ -61,7 +74,7 @@ const AppTypes = Object.keys(ApplicationType).map(
 
 const emit = defineEmits(["remove", "update:modelValue"]);
 const props = defineProps({
-  modelValue: { type: Object as PropType<JiraConfig>, required: true }
+  modelValue: { type: Object as PropType<JiraConfig>, required: true },
 });
 
 const config = ref(clone(toRefs(props).modelValue?.value));
@@ -81,10 +94,11 @@ function save() {
   config.value = clone(config.value);
 }
 
-
 const validation = computed(() => {
   return {
-    url: config.value.url && /^((?:https?:\/\/)?[^./]+(?:\.[^./]+)+?)$/.test(config.value.url)
+    url:
+      config.value.url &&
+      /^((?:https?:\/\/)?[^./]+(?:\.[^./]+)+?)$/.test(config.value.url),
   };
 });
 </script>

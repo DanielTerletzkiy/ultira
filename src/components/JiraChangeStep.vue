@@ -1,15 +1,16 @@
 <template>
-  <d-row gap>
-    <d-tooltip v-for="step in steps" :key="step.description">
-      <d-column glow :color="step.color">
-        <d-icon :name="step.icon" :size="40" />
-      </d-column>
-      <template v-slot:tooltip>
-        {{ step.description }}
-      </template>
-    </d-tooltip>
-    <d-icon-button name="times" @click="onClear" :size="30" color="inherit"/>
-  </d-row>
+  <d-column no-padding v-ripple @click="onClear">
+    <d-row gap>
+      <d-tooltip v-for="step in steps" :key="step.description">
+        <d-column glow :color="step.color">
+          <d-icon :name="step.icon" :size="40" />
+        </d-column>
+        <template v-slot:tooltip>
+          {{ step.description }}
+        </template>
+      </d-tooltip>
+    </d-row>
+  </d-column>
 </template>
 
 <script setup lang="ts">
@@ -21,13 +22,10 @@ import ProjectController from "../controller/ProjectController";
 import { ChangeState } from "../../types/ChangeState";
 
 const steps = computed(() => {
-
-  const stepGroup = groupBy(changeSteps.value, (n) => n.step);
-  console.log(stepGroup, typeof stepGroup);
+  const stepGroup = getGroup();
   if (!Object.keys(stepGroup)) {
     return changeStepsInfo;
   }
-
   const clone = cloneDeep(changeStepsInfo);
 
   for (const [i, stepInfo] of clone.entries()) {
@@ -38,24 +36,29 @@ const steps = computed(() => {
     if (!currentGroup) {
       continue;
     }
-    console.log("cr:", currentGroup);
     const currentStep = currentGroup.at(-1);
     if (!currentStep) {
       continue;
     }
     stepInfo.color =
-      currentStep.state === ChangeState.Started ? "warning" :
-        currentStep.state === ChangeState.Finished ? "success" :
-          currentStep.state === ChangeState.Failed ? "error" : "";
+      currentStep.state === ChangeState.Started
+        ? "warning"
+        : currentStep.state === ChangeState.Finished
+        ? "success"
+        : currentStep.state === ChangeState.Failed
+        ? "error"
+        : "inherit";
   }
   return clone;
 });
+
+function getGroup() {
+  return groupBy(changeSteps.value, (n) => n.step);
+}
 
 function onClear() {
   ProjectController.clearChangeSteps();
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

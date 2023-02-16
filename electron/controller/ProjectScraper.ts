@@ -78,8 +78,9 @@ module.exports = class ProjectScraper {
       //in project
 
       const masterBranch = await GitShell.getMasterBranch(path);
-      const [prefix, master] = masterBranch.split("/");
-      console.log("change project: ", master, issue, path, !!event);
+      console.log({ masterBranch })
+      const master = masterBranch === 'none' ? 'master' : masterBranch.split("/").pop();
+      console.log("change project: ", { master }, { issue }, { path });
 
       //update master and stash
       changeStep({ step: 2, state: ChangeState.Started });

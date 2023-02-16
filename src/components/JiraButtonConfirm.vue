@@ -1,8 +1,24 @@
 <template>
   <OnClickOutside @trigger="onReset">
-    <d-icon-button v-if="icon" :color="currentColor" :active="state" @click="onClick" :name="icon"
-                   :outlined="state" :outline-color="color" outline-offset="2px" outline-width="4px" />
-    <d-button v-else :color="currentColor" :filled="state" @click="onClick">
+    <d-icon-button
+      v-if="icon"
+      :color="currentColor"
+      :active="state"
+      @click="onClick"
+      :disabled="disabled"
+      :name="icon"
+      :outlined="state"
+      :outline-color="color"
+      outline-offset="2px"
+      outline-width="4px"
+    />
+    <d-button
+      v-else
+      :color="currentColor"
+      :filled="state"
+      @click="onClick"
+      :disabled="disabled"
+    >
       <template v-slot:prefix>
         <slot name="prefix" />
       </template>
@@ -21,8 +37,9 @@ import { OnClickOutside } from "@vueuse/components";
 const emit = defineEmits(["click", "confirm", "cancel"]);
 const props = defineProps({
   color: { type: String, default: "primary" },
-  askColor: { type: String, default: "info" },
-  icon: { type: String }
+  askColor: { type: String, default: "primary" },
+  icon: { type: String },
+  disabled: { type: Boolean },
 });
 
 const state = ref(false);
@@ -45,10 +62,6 @@ function onReset() {
   emit("cancel");
   state.value = false;
 }
-
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

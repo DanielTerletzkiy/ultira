@@ -1,10 +1,6 @@
 <template>
   <d-column gap block style="position: relative">
-    <d-card
-      v-if="selectedJiraConfig"
-      background-color="transparent"
-      block
-    >
+    <d-card v-if="selectedJiraConfig" background-color="transparent" block>
       <d-column :wrap="false">
         <d-row
           :wrap="false"
@@ -21,7 +17,11 @@
             style="flex: 1; max-height: 500px; min-height: 500px"
           />
         </d-row>
-        <d-row :wrap="false" style="flex: 1; max-width: calc(100vw - 16px)" align="stretch">
+        <d-row
+          :wrap="false"
+          style="flex: 1; max-width: calc(100vw - 16px)"
+          align="stretch"
+        >
           <JiraList
             class="card card--bottom"
             style="flex: 3"
@@ -53,7 +53,8 @@ import {
   projects,
   currentIssueKey,
   selectedJiraConfig,
-  currentIssue, changeSteps
+  currentIssue,
+  changeSteps,
 } from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -88,9 +89,7 @@ async function setJiraBase(id: string) {
   if (localStorage.getItem(`${id}Cred`)) {
     let cookieCredentials;
     try {
-      cookieCredentials = JSON.parse(
-        localStorage.getItem(`${id}Cred`) || "{}"
-      );
+      cookieCredentials = JSON.parse(localStorage.getItem(`${id}Cred`) || "{}");
     } catch (e) {
       credentialsOpen.value = true;
       return;
@@ -104,7 +103,7 @@ async function setJiraBase(id: string) {
     JiraController.setBase(
       new JiraBaseController({
         ...currentJiraConfig.value,
-        credentials: cookieCredentials
+        credentials: cookieCredentials,
       })
     );
     await JiraController.getAllIssues();
@@ -140,11 +139,6 @@ onMounted(() => {
   ProjectController.subscribeBranches((resProjects) => {
     console.log("projects branches: ", resProjects);
     projects.value = resProjects;
-    vuelize.notify(
-      "Scraper",
-      `Updated ${resProjects.length} Branches`,
-      State.Success
-    );
   });
 
   ProjectController.subscribeChangeStep((resChangeSteps) => {
