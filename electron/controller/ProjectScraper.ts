@@ -2,6 +2,7 @@ import { ChangeStep, Project } from "../types/Jira";
 import { JiraIssue as Task } from "../types/JiraIssue";
 import { ChangeState } from "../types/ChangeState";
 import SimpleGit from "../service/SimpleGit";
+import shell from "shelljs";
 
 const Worker = require("worker_threads").Worker;
 const path = require("path");
@@ -15,7 +16,7 @@ module.exports = class ProjectScraper {
     const worker = new Worker(
       path.join(__dirname, "..", "worker/ProjectScrapperWorker.js"),
       {
-        workerData: startDirectory
+        workerData: startDirectory,
       }
     );
     let projects = (await new Promise((resolve, reject) => {
@@ -35,7 +36,9 @@ module.exports = class ProjectScraper {
     return projects;
   }
 
-  static async scrapeBranches(paths: Array<Project["path"]>) {
+  static async scrapeBranches(
+    paths: Array<Project["path"]>
+  ): Promise<Array<Partial<Project>>> {
     const projectBranches: Array<{
       path: Project["path"];
       branch: Project["branch"];
@@ -43,11 +46,11 @@ module.exports = class ProjectScraper {
     }> = [];
     for (const path of paths) {
       const branch = await GitShell.getCurrentBranch(path);
-      const changes = await GitShell.getCurrentChanges(path);
+      const changes = await GitShell.getCurrentChanges(path).catch();
       projectBranches.push({
         path,
         branch,
-        changes
+        changes: changes || null,
       });
     }
     //SocketIO.instance.emit("branches/scan/complete", projectBranches);
@@ -55,14 +58,17 @@ module.exports = class ProjectScraper {
   }
 
   static async open(project: Project, issue: Task["key"], event: any) {
-    console.log({ project })
+    console.log({ project });
     const changeStep = ({ step, state }: Partial<ChangeStep>) => {
-      event.sender.send("result/change/step", [{
-        step, path: project.path, state
-      } as ChangeStep]);
+      event.sender.send("result/change/step", [
+        {
+          step,
+          path: project.path,
+          state,
+        } as ChangeStep,
+      ]);
     };
     try {
-
       //start shell
       changeStep({ step: 0, state: ChangeState.Finished });
       //shell finished
@@ -76,8 +82,9 @@ module.exports = class ProjectScraper {
       //in project
 
       const masterBranch = await GitShell.getMasterBranch(project.path);
-      console.log({ masterBranch })
-      const master = masterBranch === 'none' ? 'master' : masterBranch.split("/").pop();
+      console.log({ masterBranch });
+      const master =
+        masterBranch === "none" ? "master" : masterBranch.split("/").pop();
       console.log("change project: ", { master }, { issue }, { project });
 
       //update master and stash
@@ -95,7 +102,6 @@ module.exports = class ProjectScraper {
       changeStep({ step: 2, state: ChangeState.Finished });
       //finish update
 
-
       //goto branch
       changeStep({ step: 3, state: ChangeState.Started });
       try {
@@ -111,17 +117,29 @@ module.exports = class ProjectScraper {
       //went to branch
 
       Promise.all([
-        new Promise(resolve => GitShell.getCurrentBranch(project.path).then(resolve)),
-        new Promise(resolve => GitShell.getCurrentChanges(project.path).then(resolve))
-      ])
-        .then(data => {
-          event.sender.send("result/scrape/branches", [{
+        new Promise((resolve) =>
+          GitShell.getCurrentBranch(project.path).then(resolve)
+        ),
+        new Promise((resolve) =>
+          GitShell.getCurrentChanges(project.path).then(resolve)
+        ),
+      ]).then((data) => {
+        event.sender.send("result/scrape/branches", [
+          {
             path: project.path,
             branch: data[0],
-            changes: data[1]
-          } as Project]);
-        });
-      // shell.exec("phpstorm64 .", { windowsHide }); //open as project in current directory
+            changes: data[1],
+          } as Project,
+        ]);
+      });
+      if (project.ide) {
+        const shell = require("shelljs");
+        shell.exec(`"${project.ide.path}" ${project.path} &`, {
+          windowsHide: true,
+          silent: true,
+          async: true,
+        }); //open as project in current directory
+      }
       return true;
     } catch (e) {
       console.error("error: ", e);

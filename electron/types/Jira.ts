@@ -1,5 +1,6 @@
 import { ChangeState } from "./ChangeState";
 import { ApplicationType } from "./ApplicationType";
+import { StatusResult } from "simple-git";
 
 export type IDE = {
   id: string;
@@ -12,7 +13,7 @@ export type Project = {
   project: string;
   branch: string;
   defaultBranch?: string;
-  changes: Array<Array<string>>;
+  changes: StatusResult;
   ideId?: IDE["id"];
   ide?: IDE;
 };

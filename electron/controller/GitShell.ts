@@ -1,4 +1,6 @@
 import { Project } from "../types/Jira";
+import SimpleGit from "../service/SimpleGit";
+import { StatusResult } from "simple-git";
 
 module.exports = class GitShell {
   private static async exec(
@@ -33,10 +35,12 @@ module.exports = class GitShell {
     path: Project["path"]
   ): Promise<Project["branch"]> {
     try {
-      return (await GitShell.exec(path, "git symbolic-ref refs/remotes/origin/HEAD --short")).replace(
-        /(\r\n|\n|\r)/gm,
-        ""
-      );
+      return (
+        await GitShell.exec(
+          path,
+          "git symbolic-ref refs/remotes/origin/HEAD --short"
+        )
+      ).replace(/(\r\n|\n|\r)/gm, "");
     } catch (e) {
       return "none";
     }
@@ -57,16 +61,10 @@ module.exports = class GitShell {
 
   public static async getCurrentChanges(
     path: Project["path"]
-  ): Promise<Project["changes"]> {
-    const changes = await GitShell.exec(path, "git status -s");
-    if (changes) {
-      const output = changes
-        .split(/\r\n|\n|\r/)
-        .map((change: string) => change.split(/(D|M|A|\?\?) /));
-      output.pop();
-      return output;
-    }
-    return [];
+  ): Promise<StatusResult> {
+    const git = SimpleGit(path);
+    //await git.fetch();
+    return git.status();
   }
 };
 

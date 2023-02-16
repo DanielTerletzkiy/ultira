@@ -11,29 +11,32 @@ ipcMain.on(
     const project: Project = JSON.parse(arg.project);
     const res = await ProjectScraper.open(project, arg.issue, event);
 
-    event.sender.send(
-      "result/open/project",
-      res
-    );
+    event.sender.send("result/open/project", res);
   }
 );
 
-ipcMain.on(
-  "open/file",
-  (event: any, arg: { path: string; file: string }) => {
-    event.sender.send(
-      "result/open/file",
-      ProjectScraper.openFile(arg.path, arg.file)
-    );
-  }
-);
+ipcMain.on("open/file", (event: any, arg: { path: string; file: string }) => {
+  event.sender.send(
+    "result/open/file",
+    ProjectScraper.openFile(arg.path, arg.file)
+  );
+});
 
 ipcMain.on("scrape/directory", async (event: any, arg: { path: string }) => {
   const result = await ProjectScraper.scrape(arg.path);
   event.sender.send("result/scrape/directory", result);
 });
 
-ipcMain.on("scrape/branches", async (event: any, arg: { projectPaths: Array<Project["path"]> }) => {
-  const result = await ProjectScraper.scrapeBranches(arg.projectPaths);
-  event.sender.send("result/scrape/branches", result);
-});
+ipcMain.on(
+  "scrape/branches",
+  async (event: any, arg: { projectPaths: Array<Project["path"]> }) => {
+    let result = await ProjectScraper.scrapeBranches(arg.projectPaths);
+    result = result.map((result: Partial<Project>) => {
+      // @ts-ignore
+      delete result.changes?.isClean;
+      return result;
+    });
+    console.log(result);
+    event.sender.send("result/scrape/branches", result);
+  }
+);
