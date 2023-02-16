@@ -5,7 +5,7 @@
       @update:modelValue="onChange"
       mandatory
       width="100%"
-      class="font-weight-bold"
+      class="list font-weight-bold"
       style="max-height: calc(100% - 48px); overflow: hidden auto"
     >
       <d-card
@@ -13,6 +13,7 @@
         :key="group.name"
         background-color="transparent"
         block
+        class="group"
       >
         <d-card-title
           class="py-1 pl-3 group-header font-weight-bold font-size-medium"

@@ -7,10 +7,13 @@ const ProjectScraper = require("../controller/ProjectScraper");
 
 ipcMain.on(
   "open/project",
-  async (event: any, arg: { path: string; issue: Task["key"] }) => {
+  async (event: any, arg: { project: string; issue: Task["key"] }) => {
+    const project: Project = JSON.parse(arg.project);
+    const res = await ProjectScraper.open(project, arg.issue, event);
+
     event.sender.send(
       "result/open/project",
-      await ProjectScraper.open(arg.path, arg.issue, event)
+      res
     );
   }
 );
@@ -26,11 +29,11 @@ ipcMain.on(
 );
 
 ipcMain.on("scrape/directory", async (event: any, arg: { path: string }) => {
-    const result = await ProjectScraper.scrape(arg.path);
-    event.sender.send("result/scrape/directory", result);
+  const result = await ProjectScraper.scrape(arg.path);
+  event.sender.send("result/scrape/directory", result);
 });
 
-ipcMain.on("scrape/branches", async (event: any, arg: { projectPaths: Array<Project['path']> }) => {
-    const result = await ProjectScraper.scrapeBranches(arg.projectPaths);
-    event.sender.send("result/scrape/branches", result);
+ipcMain.on("scrape/branches", async (event: any, arg: { projectPaths: Array<Project["path"]> }) => {
+  const result = await ProjectScraper.scrapeBranches(arg.projectPaths);
+  event.sender.send("result/scrape/branches", result);
 });

@@ -2,15 +2,16 @@ import { createStore } from "vuex";
 import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
 import {
-  ChangeStep,
+  ChangeStep, IDE,
   JiraConfig,
   Project
 } from "../../types/Jira";
 import JiraTask from "../model/JiraTask";
 import JiraController from "../controller/JiraController";
-import { JiraIssue as Task} from "../../types/JiraIssue";
+import { JiraIssue as Task } from "../../types/JiraIssue";
 import { SortNames } from "../../types/SortNames";
 import { ApplicationType } from "../../types/ApplicationType";
+import { v4 } from "uuid";
 
 const store = createStore({
   plugins: [new VuexPersistence().plugin],
@@ -26,12 +27,20 @@ const store = createStore({
         applicationType: ApplicationType.Bitbucket
       }
     ],
+    ides: [
+      {
+        id: v4(),
+        path: "",
+        name: ""
+      }
+    ],
     projects: [
       {
         path: "",
         project: "",
         branch: "",
-        changes: [""]
+        changes: [""],
+        ideId: ""
       }
     ],
     changeSteps: [
@@ -68,9 +77,19 @@ const store = createStore({
     jiraConfigs(state): Array<JiraConfig> {
       return state.jiraConfigs;
     },
+    ides(state): Array<IDE> {
+      return state.ides;
+    },
     projects(state): Array<Project> {
       //@ts-ignore
       return state.projects;
+    },
+    fullProjects(state): Array<Project> {
+      //@ts-ignore
+      return state.projects.map(project => !!project.ideId ? {
+        ...project,
+        ide: state.ides.find(ide => ide.id === project.ideId)
+      } : project);
     },
     changeSteps(state): Array<ChangeStep> {
       //@ts-ignore
@@ -111,9 +130,16 @@ const store = createStore({
     setJiraConfigs(state, payload: Array<JiraConfig>) {
       state.jiraConfigs = payload;
     },
+    setIdes(state, payload: Array<IDE>) {
+      state.ides = payload;
+    },
     setProjects(state, payload: Array<Project>) {
       // @ts-ignore
       state.projects.push(...payload);
+    },
+    setRawProjects(state, payload: Array<Project>) {
+      // @ts-ignore
+      state.projects = payload;
     },
     setChangeSteps(state, payload: Array<ChangeStep>) {
       // @ts-ignore
@@ -138,7 +164,7 @@ const store = createStore({
       state.maxResults = payload;
     },
     setTheme(state, payload) {
-      Object.assign(state.theme,payload);
+      Object.assign(state.theme, payload);
     }
   },
   actions: {
@@ -154,12 +180,18 @@ const store = createStore({
     setJiraConfigs(context, payload: Array<JiraConfig>) {
       context.commit("setJiraConfigs", payload);
     },
+    setIdes(context, payload: Array<IDE>) {
+      context.commit("setIdes", payload);
+    },
     setProjects(context, payload: Array<Project>) {
+      console.log(payload, context.state.projects);
+
       const projects: Array<Project> = [];
       for (const project of payload) {
         const index = context.state.projects.findIndex(
           (x) => x.path === project.path
         );
+        console.log(index);
         if (index === -1) {
           projects.push(project);
         }
@@ -169,10 +201,14 @@ const store = createStore({
           context.state.projects[index].changes = project.changes;
         }
       }
+      console.log(context.state.projects);
       context.commit("setProjects", projects);
     },
-    setChangeSteps(context, payload: Array<ChangeStep>){
-      context.commit('setChangeSteps', payload);
+    setRawProjects(context, payload: Array<Project>) {
+      context.commit("setRawProjects", payload);
+    },
+    setChangeSteps(context, payload: Array<ChangeStep>) {
+      context.commit("setChangeSteps", payload);
     },
     setSearchDialogOpen(context, payload: boolean) {
       context.commit("setSearchDialogOpen", payload);
@@ -244,15 +280,25 @@ export const jiraConfigs = computed<Array<JiraConfig>>({
   }
 });
 
+export const ides = computed<Array<IDE>>({
+  get() {
+    return store.getters.ides;
+  },
+  set(value) {
+    store.dispatch("setIdes", value);
+  }
+});
+
 export const projects = computed<Array<Project>>({
   get() {
     return store.getters.projects;
   },
   set(value) {
-    store.dispatch("setProjects", value);
+    store.dispatch("setRawProjects", value);
   }
 });
 
+export const fullProjects = computed<Array<Project>>(()=>store.getters.fullProjects)
 export const changeSteps = computed<Array<ChangeStep>>({
   get() {
     return store.getters.changeSteps;

@@ -76,7 +76,7 @@
     <d-card-subtitle class="pl-0 font-weight-bold">
       Jira Configurations
     </d-card-subtitle>
-    <d-column v-for="(config, i) in jiraConfigs" :key="i" gap>
+    <d-column v-for="(config, i) in jiraConfigs" :key="config.id" gap>
       <JiraSettingsConfig
         :modelValue="config"
         @update:modelValue="(e) => (jiraConfigs[i] = e)"

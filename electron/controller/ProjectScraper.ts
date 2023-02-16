@@ -1,7 +1,6 @@
 import { ChangeStep, Project } from "../types/Jira";
 import { JiraIssue as Task } from "../types/JiraIssue";
 import { ChangeState } from "../types/ChangeState";
-import shell from "shelljs";
 import SimpleGit from "../service/SimpleGit";
 
 const Worker = require("worker_threads").Worker;
@@ -55,12 +54,11 @@ module.exports = class ProjectScraper {
     return projectBranches;
   }
 
-  static async open(path: Project["path"], issue: Task["key"], event: any) {
-
-    const windowsHide = true;
+  static async open(project: Project, issue: Task["key"], event: any) {
+    console.log({ project })
     const changeStep = ({ step, state }: Partial<ChangeStep>) => {
       event.sender.send("result/change/step", [{
-        step, path, state
+        step, path: project.path, state
       } as ChangeStep]);
     };
     try {
@@ -72,15 +70,15 @@ module.exports = class ProjectScraper {
       //go to project
       changeStep({ step: 1, state: ChangeState.Started });
 
-      const git = SimpleGit(path);
+      const git = SimpleGit(project.path);
 
       changeStep({ step: 1, state: ChangeState.Finished });
       //in project
 
-      const masterBranch = await GitShell.getMasterBranch(path);
+      const masterBranch = await GitShell.getMasterBranch(project.path);
       console.log({ masterBranch })
       const master = masterBranch === 'none' ? 'master' : masterBranch.split("/").pop();
-      console.log("change project: ", { master }, { issue }, { path });
+      console.log("change project: ", { master }, { issue }, { project });
 
       //update master and stash
       changeStep({ step: 2, state: ChangeState.Started });
@@ -113,12 +111,12 @@ module.exports = class ProjectScraper {
       //went to branch
 
       Promise.all([
-        new Promise(resolve => GitShell.getCurrentBranch(path).then(resolve)),
-        new Promise(resolve => GitShell.getCurrentChanges(path).then(resolve))
+        new Promise(resolve => GitShell.getCurrentBranch(project.path).then(resolve)),
+        new Promise(resolve => GitShell.getCurrentChanges(project.path).then(resolve))
       ])
         .then(data => {
           event.sender.send("result/scrape/branches", [{
-            path: path,
+            path: project.path,
             branch: data[0],
             changes: data[1]
           } as Project]);

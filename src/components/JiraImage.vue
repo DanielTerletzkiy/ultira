@@ -5,7 +5,6 @@
 <script setup lang="ts">
 import { inject, onMounted, Ref, ref } from "vue";
 import JiraController from "../controller/JiraController";
-
 const props = defineProps({
   url: { type: String, required: true }
 });

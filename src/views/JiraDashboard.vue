@@ -47,14 +47,14 @@
 
 <script setup lang="ts">
 import { computed, inject, onMounted, watch } from "vue";
-import {
+import jiraStore, {
   credentialsOpen,
   jiraConfigs,
   projects,
   currentIssueKey,
   selectedJiraConfig,
   currentIssue,
-  changeSteps,
+  changeSteps
 } from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -103,7 +103,7 @@ async function setJiraBase(id: string) {
     JiraController.setBase(
       new JiraBaseController({
         ...currentJiraConfig.value,
-        credentials: cookieCredentials,
+        credentials: cookieCredentials
       })
     );
     await JiraController.getAllIssues();
@@ -138,7 +138,7 @@ onMounted(() => {
 
   ProjectController.subscribeBranches((resProjects) => {
     console.log("projects branches: ", resProjects);
-    projects.value = resProjects;
+    jiraStore.dispatch("setProjects", resProjects);
   });
 
   ProjectController.subscribeChangeStep((resChangeSteps) => {

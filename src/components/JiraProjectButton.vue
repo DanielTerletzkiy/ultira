@@ -33,8 +33,8 @@
               <d-column>
                 <d-card-subtitle>
                   <strong v-if="project">{{
-                    project.branch.toUpperCase()
-                  }}</strong>
+                      project.branch.toUpperCase()
+                    }}</strong>
                   <span v-else>Project not installed</span>
                 </d-card-subtitle>
                 <d-divider />
@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { projects, currentIssueKey, changeSteps } from "../store/jira.store";
+import jiraStore, { projects, currentIssueKey, changeSteps, fullProjects } from "../store/jira.store";
 import { computed, PropType } from "vue";
 import ProjectController from "../controller/ProjectController";
 import { Position } from "vuelize/src/types/Vuelize";
@@ -80,12 +80,12 @@ import JiraButtonConfirm from "./JiraButtonConfirm.vue";
 
 const props = defineProps({
   repository: { type: String, required: true },
-  tooltipPosition: { type: String as PropType<Position>, default: "left" },
+  tooltipPosition: { type: String as PropType<Position>, default: "left" }
 });
 
 const project = computed<Project>(
   () =>
-    projects.value.find((project) => {
+    fullProjects.value.find((project) => {
       try {
         return project.project.toLowerCase() === props.repository.toLowerCase();
       } catch (e) {

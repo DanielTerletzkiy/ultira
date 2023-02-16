@@ -27,7 +27,7 @@ export default class ProjectController extends ApiController {
   }
 
   static open(project: Project, issue: Task["key"]) {
-    return ipcRenderer.send("open/project", { path: project.path, issue });
+    return ipcRenderer.send("open/project", { project: JSON.stringify(project), issue });
   }
 
   static openFile(project: Project, file: string) {

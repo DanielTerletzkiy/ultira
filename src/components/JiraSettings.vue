@@ -26,9 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import JiraSettingsTabProjects from "./JiraSettingsTabProjects.vue";
 import JiraSettingsTabGeneral from "./JiraSettingsTabGeneral.vue";
+import { zoomFactor } from "../store/jira.store";
+import { useZoomFactor } from "@vueuse/electron";
 
 defineEmits(["submit"]);
 defineProps({
@@ -53,6 +55,11 @@ const currentComponent = computed(() =>
     ? settingsList.find((item) => item.name === currentSetting.value)
     : settingsList[0])?.component
 );
+
+onBeforeMount(()=>{
+  const factor = useZoomFactor();
+  factor.value = zoomFactor.value;
+})
 </script>
 
 <style scoped lang="scss">

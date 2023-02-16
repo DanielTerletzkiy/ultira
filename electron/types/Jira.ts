@@ -14,6 +14,7 @@ export type Project = {
   defaultBranch?: string;
   changes: Array<Array<string>>;
   ideId?: IDE["id"];
+  ide?: IDE;
 };
 
 export type ChangeStep = {
