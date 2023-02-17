@@ -13,7 +13,7 @@ export default class ProjectController extends ApiController {
   }
 
   static subscribeBranches(callback: (data: Array<Project>) => void) {
-    ipcRenderer.on("result/scrape/branches", (event, arg) => callback(JSON.parse(arg)));
+    ipcRenderer.on("result/scrape/branches", (event, arg) => callback(arg));
   }
 
   static subscribeChangeStep(callback: (data: Array<ChangeStep>) => void) {

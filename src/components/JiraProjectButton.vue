@@ -45,7 +45,7 @@
               <d-divider vertical block class="my-3" size="4px" v-if="hasChanges" />
               <d-column v-if="hasChanges">
                 <d-card-subtitle>
-                  <strong>{{ project.changes.length }}</strong> Files
+                  <strong>{{ project.changes.files.length }}</strong> Files
                 </d-card-subtitle>
                 <d-divider />
                 <d-card-subtitle>
@@ -54,6 +54,12 @@
                 </d-card-subtitle>
               </d-column>
             </d-row>
+          </d-row>
+          <d-row v-if="!!project?.ideId">
+            <d-spacer/>
+            <d-card-subtitle>
+              Open using: {{ project.ide.name }}
+            </d-card-subtitle>
           </d-row>
           <d-card
             v-if="hasChangeSteps"
@@ -95,7 +101,7 @@ const project = computed<Project>(
 );
 
 const hasChanges = computed<boolean>(
-  () => project.value && project.value?.changes?.length > 0
+  () => project.value && project.value?.changes.files.length > 0
 );
 
 const hasChangeSteps = computed<boolean>(

@@ -128,7 +128,7 @@ onMounted(() => {
   setJiraBase(selectedJiraConfig.value);
   ProjectController.subscribe((resProjects) => {
     console.log("projects: ", resProjects);
-    projects.value = resProjects;
+    jiraStore.dispatch("setProjects", resProjects);
     vuelize.notify(
       "Scraper",
       `Found ${resProjects.length} Projects`,

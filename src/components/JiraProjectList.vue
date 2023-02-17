@@ -18,7 +18,6 @@
       <d-accordion
         v-for="(project, p) in list.projects"
         :key="p"
-        :disabled="!project.changes?.length"
         header-color="primary"
       >
         <template v-slot:header>
@@ -51,27 +50,23 @@
         <template v-slot:default>
           <d-column block>
             <d-card
-              v-for="change in project.changes"
-              :key="change"
+              v-for="file in project.changes.files"
+              :key="file"
               block
               background-color="transparent"
             >
               <d-row class="pa-0" gap>
                 <d-label
-                  v-for="(str, s) in change.slice(0, 2)"
-                  :key="str"
-                  :color="s <= 1 ? 'primary' : ''"
-                  v-show="str !== ' ' && str !== ''"
-                  :glowing="s <= 1"
+                  color="primary"
                 >
-                  {{ str }}
+                  {{ file.working_dir }}
                 </d-label>
                 <d-card-subtitle
                   glow
                   v-ripple
-                  @click="onFileClick(project, change.at(-1))"
+                  @click="onFileClick(project, file.path)"
                 >
-                  {{ change.at(-1) }}
+                  {{ file.path }}
                 </d-card-subtitle>
               </d-row>
               <d-divider elevation="8" />
@@ -141,6 +136,7 @@ function onFileClick(project: Project, file: string) {
 
 <style scoped lang="scss">
 .project {
+  height: 54px;
   .title {
     font-size: 1.2rem;
     font-weight: 600;
@@ -148,7 +144,8 @@ function onFileClick(project: Project, file: string) {
 
   .path {
     padding-left: 0;
-    margin-top: -10px;
+    margin-top: -8px;
+    padding-bottom: 0;
   }
 }
 
