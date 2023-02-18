@@ -34,6 +34,17 @@
       <template v-slot:suffix> seconds</template>
     </d-textfield>
     <d-textfield
+      v-model="scrapeTime"
+      full-width
+      color="primary"
+      filled
+      label="Scrape Interval"
+      type="number"
+      min="60"
+    >
+      <template v-slot:suffix> seconds</template>
+    </d-textfield>
+    <d-textfield
       v-model="maxResults"
       full-width
       color="primary"
@@ -95,7 +106,7 @@
 
 <script setup lang="ts">
 import JiraSettingsConfig from "./JiraSettingsConfig.vue";
-import { jiraConfigs, maxResults, refreshTime, theme, zoomFactor } from "../store/jira.store";
+import { jiraConfigs, maxResults, refreshTime, scrapeTime, theme, zoomFactor } from "../store/jira.store";
 import { v4 as uuidv4 } from "uuid";
 import { ApplicationType } from "../../types/ApplicationType";
 import { computed, inject, onBeforeMount, watch } from "vue";

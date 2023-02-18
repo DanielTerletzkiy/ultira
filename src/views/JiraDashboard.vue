@@ -54,7 +54,7 @@ import jiraStore, {
   currentIssueKey,
   selectedJiraConfig,
   currentIssue,
-  changeSteps
+  changeSteps, scrapeTime
 } from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -152,7 +152,7 @@ onMounted(() => {
     ProjectController.scrapeBranches(
       projects.value.map((project) => project.path)
     );
-  }, 300000);
+  }, scrapeTime.value * 1000);
 });
 </script>
 

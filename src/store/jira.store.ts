@@ -50,6 +50,7 @@ const store = createStore({
     historyDialogOpen: false,
     credentialsDialogOpen: false,
     refreshTime: 60,
+    scrapeTime: 3000,
     zoomFactor: 1,
     maxResults: 50,
     theme: {
@@ -113,6 +114,9 @@ const store = createStore({
     refreshTime(state): number {
       return state.refreshTime;
     },
+    scrapeTime(state): number {
+      return state.scrapeTime;
+    },
     zoomFactor(state): number {
       return state.zoomFactor;
     },
@@ -162,6 +166,9 @@ const store = createStore({
     },
     setRefreshTime(state, payload: number) {
       state.refreshTime = payload;
+    },
+    setScrapeTime(state, payload: number) {
+      state.scrapeTime = payload;
     },
     setZoomFactor(state, payload: number) {
       state.zoomFactor = payload;
@@ -229,6 +236,9 @@ const store = createStore({
     },
     setRefreshTime(context, payload: number) {
       context.commit("setRefreshTime", payload);
+    },
+    setScrapeTime(context, payload: number) {
+      context.commit("setScrapeTime", payload);
     },
     setZoomFactor(context, payload: number) {
       context.commit("setZoomFactor", payload);
@@ -351,6 +361,15 @@ export const refreshTime = computed<number>({
   },
   set(value: number) {
     store.dispatch("setRefreshTime", value);
+  },
+});
+
+export const scrapeTime = computed<number>({
+  get() {
+    return store.getters.scrapeTime;
+  },
+  set(value: number) {
+    store.dispatch("setScrapeTime", value);
   },
 });
 
