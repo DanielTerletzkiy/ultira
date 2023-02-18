@@ -21,6 +21,14 @@
       />
       <d-textfield
         full-width
+        v-model="project.defaultBranch"
+        color="primary"
+        filled
+        label="Default Branch"
+        placeholder="e.g master"
+      />
+      <d-textfield
+        full-width
         select
         v-model="selectedIDE"
         color="primary"

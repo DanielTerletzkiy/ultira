@@ -126,6 +126,7 @@ function connectCurrentData() {
 
 onMounted(() => {
   setJiraBase(selectedJiraConfig.value);
+
   ProjectController.subscribe((resProjects) => {
     console.log("projects: ", resProjects);
     jiraStore.dispatch("setProjects", resProjects);
@@ -134,6 +135,7 @@ onMounted(() => {
       `Found ${resProjects.length} Projects`,
       State.Success
     );
+    location.reload();
   });
 
   ProjectController.subscribeBranches((resProjects) => {

@@ -43,13 +43,16 @@ module.exports = class ProjectScraper {
       path: Project["path"];
       branch: Project["branch"];
       changes: Project["changes"];
+      defaultBranch: Project["defaultBranch"];
     }> = [];
     for (const path of paths) {
       const branch = await GitShell.getCurrentBranch(path);
+      const defaultBranch = await GitShell.getMasterBranch(path);
       const changes = await GitShell.getCurrentChanges(path).catch();
       projectBranches.push({
         path,
         branch,
+        defaultBranch: defaultBranch.split("/").pop(),
         changes: changes || null,
       });
     }
@@ -116,30 +119,11 @@ module.exports = class ProjectScraper {
       changeStep({ step: 3, state: ChangeState.Finished });
       //went to branch
 
-      Promise.all([
-        new Promise((resolve) =>
-          GitShell.getCurrentBranch(project.path).then(resolve)
-        ),
-        new Promise((resolve) =>
-          GitShell.getCurrentChanges(project.path).then(resolve)
-        ),
-      ]).then((data) => {
-        event.sender.send("result/scrape/branches", [
-          {
-            path: project.path,
-            branch: data[0],
-            changes: data[1],
-          } as Project,
-        ]);
+      this.scrapeBranches([project.path]).then((project) => {
+        event.sender.send("result/scrape/branches", project[0]);
       });
-      if (project.ide) {
-        const shell = require("shelljs");
-        shell.exec(`"${project.ide.path}" ${project.path} &`, {
-          windowsHide: true,
-          silent: true,
-          async: true,
-        }); //open as project in current directory
-      }
+
+      this.openWithIDE(project);
       return true;
     } catch (e) {
       console.error("error: ", e);
@@ -147,17 +131,28 @@ module.exports = class ProjectScraper {
     }
   }
 
-  static openFile(path: string, file: string) {
+  static openFile(project: Project, file: string) {
     try {
-      const shell = require("shelljs");
-      shell.config.execPath = shell.which("node").stdout;
-      shell.cd(path);
-      shell.exec("phpstorm64 " + file, { windowsHide: true }); //open as project in current directory
+      this.openWithIDE(project, `${project.path}/${file}`);
       return true;
     } catch (e) {
       console.error("error: ", e);
       return false;
     }
+  }
+
+  static openWithIDE(project: Project, path?: string) {
+    if (!project.ide) {
+      return;
+    }
+    const shell = require("shelljs");
+    const command = `"${project.ide.path}" ${path || project.path} &`;
+    console.log({ command });
+    shell.exec(command, {
+      windowsHide: true,
+      silent: true,
+      async: true,
+    });
   }
 };
 

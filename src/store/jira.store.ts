@@ -1,11 +1,7 @@
 import { createStore } from "vuex";
 import VuexPersistence from "vuex-persist";
 import { computed } from "vue";
-import {
-  ChangeStep, IDE,
-  JiraConfig,
-  Project
-} from "../../types/Jira";
+import { ChangeStep, IDE, JiraConfig, Project } from "../../types/Jira";
 import JiraTask from "../model/JiraTask";
 import JiraController from "../controller/JiraController";
 import { JiraIssue as Task } from "../../types/JiraIssue";
@@ -24,15 +20,15 @@ const store = createStore({
         id: "remove this",
         name: "don't use this",
         url: "https://only-a-sample.com",
-        applicationType: ApplicationType.Bitbucket
-      }
+        applicationType: ApplicationType.Bitbucket,
+      },
     ],
     ides: [
       {
         id: v4(),
         path: "",
-        name: ""
-      }
+        name: "",
+      },
     ],
     projects: [
       {
@@ -40,15 +36,15 @@ const store = createStore({
         project: "",
         branch: "",
         changes: [""],
-        ideId: ""
-      }
+        ideId: "",
+      },
     ],
     changeSteps: [
       {
         step: -1,
         success: false,
-        path: ""
-      }
+        path: "",
+      },
     ],
     searchDialogOpen: false,
     historyDialogOpen: false,
@@ -60,9 +56,9 @@ const store = createStore({
       isDark: true,
       primary: {
         light: "#A8B2FF",
-        dark: "#A8B2FF"
-      }
-    }
+        dark: "#A8B2FF",
+      },
+    },
   },
   getters: {
     currentIssueKey(state): Task["key"] | undefined {
@@ -86,10 +82,20 @@ const store = createStore({
     },
     fullProjects(state): Array<Project> {
       //@ts-ignore
-      return state.projects.map(project => !!project.ideId ? {
-        ...project,
-        ide: state.ides.find(ide => ide.id === project.ideId)
-      } : project);
+      return state.projects.map((project) =>
+        project.ideId
+          ? {
+              ...project,
+              ide: state.ides.find((ide) => ide.id === project.ideId),
+            }
+          : project
+      );
+    },
+    singleFullProject: (state) => (path: Project['path']) => {
+      // @ts-ignore
+      const project: Project = state.projects.find(project => project.path === path)
+      project.ide = state.ides.find((ide) => ide.id === project.ideId)
+      return project;
     },
     changeSteps(state): Array<ChangeStep> {
       //@ts-ignore
@@ -115,7 +121,7 @@ const store = createStore({
     },
     theme(state): object {
       return state.theme;
-    }
+    },
   },
   mutations: {
     setCurrentIssueKey(state, payload: Task["key"]) {
@@ -165,7 +171,7 @@ const store = createStore({
     },
     setTheme(state, payload) {
       Object.assign(state.theme, payload);
-    }
+    },
   },
   actions: {
     setCurrentIssueKey(context, payload: Task["key"]) {
@@ -197,6 +203,8 @@ const store = createStore({
         }
         if (index > -1) {
           context.state.projects[index].branch = project.branch;
+          // @ts-ignore
+          context.state.projects[index].defaultBranch = project.defaultBranch;
           // @ts-ignore
           context.state.projects[index].changes = project.changes;
         }
@@ -230,8 +238,8 @@ const store = createStore({
     },
     setTheme(context, payload: object) {
       context.commit("setTheme", payload);
-    }
-  }
+    },
+  },
 });
 
 export default store;
@@ -250,7 +258,7 @@ export const currentIssueKey = computed<Task["key"]>({
   },
   set(value: Task["key"]) {
     store.dispatch("setCurrentIssueKey", value);
-  }
+  },
 });
 
 export const currentSort = computed({
@@ -259,7 +267,7 @@ export const currentSort = computed({
   },
   set(value: SortNames) {
     store.dispatch("setCurrentSort", value);
-  }
+  },
 });
 
 export const selectedJiraConfig = computed({
@@ -268,7 +276,7 @@ export const selectedJiraConfig = computed({
   },
   set(value) {
     store.dispatch("setCurrentJiraConfig", value);
-  }
+  },
 });
 
 export const jiraConfigs = computed<Array<JiraConfig>>({
@@ -277,7 +285,7 @@ export const jiraConfigs = computed<Array<JiraConfig>>({
   },
   set(value) {
     store.dispatch("setJiraConfigs", value);
-  }
+  },
 });
 
 export const ides = computed<Array<IDE>>({
@@ -286,7 +294,7 @@ export const ides = computed<Array<IDE>>({
   },
   set(value) {
     store.dispatch("setIdes", value);
-  }
+  },
 });
 
 export const projects = computed<Array<Project>>({
@@ -295,17 +303,19 @@ export const projects = computed<Array<Project>>({
   },
   set(value) {
     store.dispatch("setRawProjects", value);
-  }
+  },
 });
 
-export const fullProjects = computed<Array<Project>>(()=>store.getters.fullProjects)
+export const fullProjects = computed<Array<Project>>(
+  () => store.getters.fullProjects
+);
 export const changeSteps = computed<Array<ChangeStep>>({
   get() {
     return store.getters.changeSteps;
   },
   set(value) {
     store.dispatch("setChangeSteps", value);
-  }
+  },
 });
 
 export const searchOpen = computed<boolean>({
@@ -314,7 +324,7 @@ export const searchOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setSearchDialogOpen", value);
-  }
+  },
 });
 
 export const historyOpen = computed<boolean>({
@@ -323,7 +333,7 @@ export const historyOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setHistoryDialogOpen", value);
-  }
+  },
 });
 
 export const credentialsOpen = computed<boolean>({
@@ -332,7 +342,7 @@ export const credentialsOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setCredentialsDialogOpen", value);
-  }
+  },
 });
 
 export const refreshTime = computed<number>({
@@ -341,7 +351,7 @@ export const refreshTime = computed<number>({
   },
   set(value: number) {
     store.dispatch("setRefreshTime", value);
-  }
+  },
 });
 
 export const zoomFactor = computed<number>({
@@ -350,7 +360,7 @@ export const zoomFactor = computed<number>({
   },
   set(value: number) {
     store.dispatch("setZoomFactor", value);
-  }
+  },
 });
 
 export const maxResults = computed<number>({
@@ -359,7 +369,7 @@ export const maxResults = computed<number>({
   },
   set(value: number) {
     store.dispatch("setMaxResults", value);
-  }
+  },
 });
 
 export const theme = computed<Partial<{ isDark: boolean, primary: { dark: string, light: string } }>>({

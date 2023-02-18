@@ -31,8 +31,7 @@ export default class ProjectController extends ApiController {
   }
 
   static openFile(project: Project, file: string) {
-    console.log(project, file);
-    return ipcRenderer.send("open/file", { path: project.path, file });
+    return ipcRenderer.send("open/file", { project: JSON.stringify(project), file });
   }
 
   static scrape(path: Project["path"]) {

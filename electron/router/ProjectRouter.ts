@@ -15,12 +15,15 @@ ipcMain.on(
   }
 );
 
-ipcMain.on("open/file", (event: any, arg: { path: string; file: string }) => {
-  event.sender.send(
-    "result/open/file",
-    ProjectScraper.openFile(arg.path, arg.file)
-  );
-});
+ipcMain.on(
+  "open/file",
+  async (event: any, arg: { project: string; file: string }) => {
+    const project: Project = JSON.parse(arg.project);
+    const res = await ProjectScraper.openFile(project, arg.file);
+
+    event.sender.send("result/open/file", res);
+  }
+);
 
 ipcMain.on("scrape/directory", async (event: any, arg: { path: string }) => {
   const result = await ProjectScraper.scrape(arg.path);

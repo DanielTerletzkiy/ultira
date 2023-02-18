@@ -42,7 +42,7 @@ module.exports = class GitShell {
         )
       ).replace(/(\r\n|\n|\r)/gm, "");
     } catch (e) {
-      return "none";
+      return "master";
     }
   }
 
@@ -63,7 +63,7 @@ module.exports = class GitShell {
     path: Project["path"]
   ): Promise<StatusResult> {
     const git = SimpleGit(path);
-    //await git.fetch();
+    await git.fetch().catch((e) => console.warn(e));
     return git.status();
   }
 };
