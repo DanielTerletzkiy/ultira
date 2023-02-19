@@ -92,7 +92,7 @@
                 v-ripple
                 @click="onFileClick(file.to || file)"
               >
-                <d-row class="pa-0" gap>
+                <d-row class="pa-0 px-1" gap>
                   <d-avatar
                     size="30"
                     color="transparent"
