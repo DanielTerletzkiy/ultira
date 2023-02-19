@@ -18,7 +18,7 @@ export default class JiraController extends ApiController {
   static async getAllIssues(): Promise<any> {
     const searchResult = await ApiController.fetchJira(
       JiraController.controller.url,
-      `rest/api/latest/search?maxResults=${maxResults.value}&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`,
+      `rest/api/latest/search?maxResults=${maxResults.value}&expand=names,editmeta,changelog&jql=assignee=currentuser() OR reporter=currentuser() OR watcher = currentUser() ORDER BY updated desc`,
       "GET",
       JiraController.controller.credentials
     );
@@ -33,20 +33,21 @@ export default class JiraController extends ApiController {
       if (
         JiraController.issues.value.length > 0 &&
         JiraController.issues.value.findIndex((x) => x.task.key === issue.key) >
-        -1
+          -1
       ) {
         //return this.issues.find((x) => x.task.key === issue.key);
       } else {
         JiraController.issues.value.push(
           await new JiraTask(issue, JiraController.controller)
         );
+        JiraController.issues.value.find((x)=>x.task.key === issue.key)?.updateSelf(true);
       }
     }
 
     JiraController.totalIssues = searchResult.total;
     return {
       issues: JiraController.issues.value,
-      total: JiraController.totalIssues
+      total: JiraController.totalIssues,
     };
   }
 
@@ -65,25 +66,7 @@ export default class JiraController extends ApiController {
       FetchContentType.FILES
     );
 
-    const contentType = response.headers.get("content-type");
-
-    switch (contentType) {
-      case "image/svg+xml":
-      case "image/svg+xml;charset=UTF-8": {
-        const text = await response.text();
-        return `data:image/svg+xml,${encodeURIComponent(text)}`;
-      }
-      default: {
-        const buffer = await response.arrayBuffer();
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
-        let binary = "";
-        for (let i = 0; i < len; i++) {
-          binary += String.fromCharCode(bytes[i]);
-        }
-        return `data:image/jpeg;base64,${btoa(binary)}`;
-      }
-    }
+    return URL.createObjectURL(response);
   }
 
   static async getMyself() {

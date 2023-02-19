@@ -56,8 +56,8 @@ export default class ApiController {
     );
     if (type === FetchContentType.JSON) {
       return response.json();
-    } else {
-      return response;
+    } else if(type === FetchContentType.FILES){
+      return response.blob();
     }
   }
 }

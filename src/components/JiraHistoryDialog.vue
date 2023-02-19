@@ -23,7 +23,7 @@
         :wrap="false"
         style="max-height: calc(100% - 100px - 70px); overflow: hidden auto"
       >
-        <d-card-subtitle v-for="line in fullText" elevation="2" class="font-size-medium">
+        <d-card-subtitle v-for="(line, l) in fullText" :key="l" elevation="2" class="font-size-medium">
           {{ line }}
         </d-card-subtitle>
         <d-column v-if="!fullText.length" style="user-select: none">
@@ -70,7 +70,7 @@ function filter() {
   const logs = items.map((item) => {
     return {
       item,
-      history: item.changelogData?.changelog.histories?.filter(
+      history: item.task.changelog.histories?.filter(
         (history) =>
           new Date(history.created).getTime() >= dateStart.getTime() &&
           history.author.key === JiraController.myself.value?.key)

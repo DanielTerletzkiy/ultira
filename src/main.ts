@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import vuelize from "vuelize/src/index";
+import vuelize from "vuelize";
 // @ts-ignore
 import { vLongpress } from "@nanogiants/vue3-longpress";
 import jiraStore from "./store/jira.store";

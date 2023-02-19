@@ -15,13 +15,10 @@ import { PropType } from "vue";
 //@ts-ignore
 import JiraUserItem from "./JiraUserItem.vue";
 import JiraMarkup from "./JiraMarkup.vue";
-/* TODO why? when everything else works nearly the same?
-import {JiraComments} from "../../types/Jira";
-import Comment = JiraComments.Comment;
-*/
+import { CommentItem } from "../../types/JiraIssue";
 
-const props = defineProps({
-  comment: Object as PropType<any>,
+defineProps({
+  comment: Object as PropType<CommentItem>,
 });
 </script>
 

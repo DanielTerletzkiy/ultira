@@ -1,22 +1,22 @@
 <template>
   <JiraViewWrapper class="jira-comments">
     <template v-slot:icon="{hidden}">
-      <d-badge :value="hidden && currentIssue?.commentsData?.comments.length > 0" color="primary" background-color="primary">
+      <d-badge :value="hidden && currentIssue?.task.fields.comment?.comments.length > 0" color="primary" background-color="primary">
         <d-icon
           name="comment-message"
           :size="30"
           icon-style="monochrome"
           color="primary"
         />
-        <template v-slot:content>{{currentIssue?.commentsData?.comments.length}}</template>
+        <template v-slot:content>{{currentIssue?.task.fields.comment?.comments.length}}</template>
       </d-badge>
     </template>
     <template v-slot:title> Comments</template>
     <d-column
       key="content"
       v-if="
-        currentIssue?.commentsData &&
-        currentIssue?.commentsData?.comments.length > 0
+        currentIssue?.task.fields.comment &&
+        currentIssue?.task.fields.comment?.comments.length > 0
       "
       class="px-2"
       style="max-height: calc(100% - 3rem); overflow: auto"
@@ -25,12 +25,13 @@
       :wrap="false"
     >
       <JiraCommentsViewItem
-        v-for="comment in currentIssue.commentsData.comments.slice().reverse()"
+        v-for="comment in currentIssue?.task.fields.comment?.comments.slice().reverse()"
+        :key="comment.id"
         :comment="comment"
       />
     </d-column>
     <d-column
-      v-else-if="currentIssue?.commentsData?.comments?.length === 0"
+      v-else-if="currentIssue?.task.fields.comment?.comments.length === 0"
       style="user-select: none"
     >
       <d-card-title color="primary" class="mx-3 font-size-medium">
@@ -74,7 +75,7 @@ import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraLoader from "./JiraLoader.vue";
 import { currentIssue } from "../store/jira.store";
 
-// eslint-disable-next-line no-undef
+// eslint-disable-next-line no-undef,no-unused-vars
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 const loading = ref(false);

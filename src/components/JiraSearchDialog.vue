@@ -18,8 +18,8 @@
         solo
         label="Key"
         placeholder="KEY-1..."
-        autofocus
         outlined
+        ref="searchField"
       >
         <template v-slot:prefix>
           <d-icon name="search-alt" />
@@ -52,16 +52,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
 import JiraController from "../controller/JiraController";
 import JiraList from "./JiraList.vue";
 import { currentIssueKey } from "../store/jira.store";
 import JiraTask from "../model/JiraTask";
 import { watchDebounced } from "@vueuse/core";
+import { useFocus } from "@vueuse/core";
 
 const props = defineProps({
-  open: Boolean
+  open: Boolean,
 });
+
+const searchField = ref();
+
 const searchKey = ref<string>();
 
 const searchResults = ref<Array<JiraTask>>([]);
@@ -111,12 +115,25 @@ function clearSearchKey() {
   searchKey.value = "";
 }
 
-watchDebounced(
-  [searchKey, () => props.open],
-  search,
-  { debounce: 200, maxWait: 1000 });
+function init() {
+  search();
+  try {
+    nextTick().then(() => {
+      useFocus(searchField.value.input, { initialValue: true });
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
 
-onMounted(search);
+watch(() => props.open, init);
+
+watchDebounced([searchKey], search, {
+  debounce: 200,
+  maxWait: 1000,
+});
+
+onMounted(init);
 </script>
 
 <style scoped lang="scss"></style>

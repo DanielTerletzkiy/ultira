@@ -1,12 +1,20 @@
 <template>
-  <d-column no-padding block elevation="n1" height="100%" class="pa-0" :wrap="false">
+  <d-column
+    no-padding
+    block
+    elevation="n1"
+    height="100%"
+    class="wrapper pa-0"
+    :wrap="false"
+  >
     <d-list
-      v-model="modelValue"
+      v-if="debouncedSortedGroups.length"
+      :model-value="modelValue"
       @update:modelValue="onChange"
       mandatory
       width="100%"
       class="list font-weight-bold"
-      style="max-height: calc(100% - 48px); overflow: hidden auto"
+      style="max-height: calc(100% - 48px); height: 100%; overflow: hidden auto"
     >
       <d-card
         v-for="group in debouncedSortedGroups"
@@ -32,10 +40,10 @@
                 color="transparent"
                 :size="30"
                 :style="{
-                    backgroundImage: `url(${base64})`,
-                    backgroundPosition: 'center',
-                    backgroundSize: 'cover',
-                  }"
+                  backgroundImage: `url(${base64})`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                }"
               >
                 <div />
               </d-avatar>
@@ -60,15 +68,24 @@
             :key="issue.task.key"
             :hide="hidden.has(issue.task.key)"
           >
-              <span
-                class="observer"
-                v-intersection-observer="(e)=>intersectObserver(e, issue.task.key === modelValue, issue.task.key)"
-              ></span>
+            <span
+              class="observer"
+              v-intersection-observer="
+                (e) =>
+                  intersectObserver(
+                    e,
+                    issue.task.key === modelValue,
+                    issue.task.key
+                  )
+              "
+            ></span>
           </JiraListItem>
         </d-column>
       </d-card>
     </d-list>
-    <d-spacer />
+    <d-row v-else block justify="center" height="100%" width="100%">
+      <JiraLoader />
+    </d-row>
     <d-card
       v-if="!hideSorter"
       style="max-height: 48px"
@@ -115,13 +132,14 @@ import {
   currentIssue,
   currentIssueKey,
   currentSort,
-  refreshTime
+  refreshTime,
 } from "../store/jira.store";
 import { vIntersectionObserver } from "@vueuse/components";
 import JiraImage from "./JiraImage.vue";
 import { times } from "../constants/Times";
 import { SortNames } from "../../types/SortNames";
 import { debounce } from "lodash";
+import JiraLoader from "./JiraLoader.vue";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
@@ -130,8 +148,8 @@ const props = defineProps({
   issueList: {
     type: Object as PropType<Array<JiraTask>>,
     // eslint-disable-next-line vue/require-valid-default-prop
-    default: []
-  }
+    default: [],
+  },
 });
 
 onMounted(() => {
@@ -146,7 +164,7 @@ function scrollIntoView(id: string) {
   document?.getElementById(id)?.scrollIntoView({
     behavior: "smooth",
     block: "center",
-    inline: "center"
+    inline: "center",
   });
 }
 
@@ -161,7 +179,7 @@ async function intersectObserver(e: any, selected: boolean, key: string) {
     if (timeout && isIntersecting) {
       clearTimeout(timeout);
     }
-    if (!isIntersecting && (props.modelValue !== key)) {
+    if (!isIntersecting && props.modelValue !== key) {
       scrollTimeout(60000);
     }
     hidden.value.delete(key);
@@ -192,17 +210,17 @@ const sortOptions = [
   {
     name: SortNames.Latest,
     icon: "clock",
-    color: "primary"
+    color: "primary",
   },
   {
     name: SortNames.Priority,
     icon: "exclamation-triangle",
-    color: "warning"
+    color: "warning",
   },
   {
     name: SortNames.Type,
     icon: "list-ui-alt",
-    color: "primary"
+    color: "primary",
   },
   /*{ TODO
     name: SortNames.State,
@@ -212,8 +230,8 @@ const sortOptions = [
   {
     name: SortNames.Project,
     icon: "parcel",
-    color: "primary"
-  }
+    color: "primary",
+  },
 ];
 
 const sortGroups = () => {
@@ -234,7 +252,6 @@ const sortGroups = () => {
 
   switch (currentSort.value) {
     case SortNames.Latest: {
-
       for (const time of times) {
         const dateStart = new Date();
         dateStart.setHours(dateStart.getHours() - time.hours);
@@ -260,9 +277,9 @@ const sortGroups = () => {
             name: time.name,
             icon: {
               type: "icon",
-              url: "calendar-alt"
+              url: "calendar-alt",
             },
-            items
+            items,
           });
         }
       }
@@ -287,9 +304,9 @@ const sortGroups = () => {
           name: priority.name,
           icon: {
             type: "image",
-            url: priority.iconUrl
+            url: priority.iconUrl,
           },
-          items
+          items,
         });
       }
       break;
@@ -314,9 +331,9 @@ const sortGroups = () => {
           name: type.name,
           icon: {
             type: "image",
-            url: type.iconUrl
+            url: type.iconUrl,
           },
-          items
+          items,
         });
       }
       break;
@@ -340,9 +357,9 @@ const sortGroups = () => {
           name: project.name,
           icon: {
             type: "image",
-            url: project.avatarUrls["32x32"]
+            url: project.avatarUrls["32x32"],
           },
-          items
+          items,
         });
       }
       break;
@@ -351,11 +368,13 @@ const sortGroups = () => {
   return groups;
 };
 
-const debouncedSortedGroups = ref<Array<{
-  name: string;
-  icon: { type: string; url: string };
-  items: Array<JiraTask>;
-}>>([]);
+const debouncedSortedGroups = ref<
+  Array<{
+    name: string;
+    icon: { type: string; url: string };
+    items: Array<JiraTask>;
+  }>
+>([]);
 watch(
   () => props.issueList,
   debounce(
@@ -381,6 +400,8 @@ watch(
 </script>
 
 <style scoped lang="scss">
+.wrapper {
+}
 .group-header {
   position: sticky;
   top: -8px;
@@ -390,9 +411,9 @@ watch(
 
   &__divider {
     background: linear-gradient(
-        90deg,
-        rgba(0, 212, 255, 0) 0%,
-        currentColor 100%
+      90deg,
+      rgba(0, 212, 255, 0) 0%,
+      currentColor 100%
     );
   }
 }

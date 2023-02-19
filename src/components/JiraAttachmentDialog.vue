@@ -7,15 +7,15 @@
       </d-column>
       <Carousel :wrapAround="true">
         <Slide
-          v-for="attachment in currentIssue.task.fields.attachment"
-          :key="attachment.id"
-          class="pa-6">
+          v-for="attachment in currentIssue?.task.fields.attachment"
+          :key="attachment.id">
           <JiraImage :url="attachment.content" :key="attachment.id">
             <template v-slot:default="{ base64, width, height }">
               <d-column gap style="align-items: center">
                 <d-avatar
                   v-if="base64"
                   rounded="xl"
+                  color="transparent"
                   :style="{
                     maxHeight: '60vh', maxWidth: '40vw', width: width + 'px', height: height + 'px',
                     backgroundImage: `url(${base64})`,
@@ -41,8 +41,8 @@
           </JiraImage>
         </Slide>
         <template #addons>
-          <Pagination v-if="currentIssue.task.fields.attachment.length > 1" />
-          <Navigation v-if="currentIssue.task.fields.attachment.length > 1" />
+          <Pagination v-if="currentIssue?.task.fields.attachment.length > 1" />
+          <Navigation v-if="currentIssue?.task.fields.attachment.length > 1" />
         </template>
       </Carousel>
     </d-card>
@@ -79,6 +79,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+.carousel__track {
+  transform: none !important;
+}
 .carousel__prev {
   top: 50%;
   left: 0;

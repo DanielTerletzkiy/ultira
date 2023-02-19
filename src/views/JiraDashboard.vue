@@ -1,7 +1,7 @@
 <template>
   <d-column gap block style="position: relative">
     <d-card v-if="selectedJiraConfig" background-color="transparent" block>
-      <d-column :wrap="false" gap>
+      <d-column :wrap="false" gap style="height: calc(100vh - 2.6rem);">
         <d-row
           :wrap="false"
           style="flex: 1; max-height: 500px; min-height: 500px"

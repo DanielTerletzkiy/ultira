@@ -92,9 +92,15 @@ const store = createStore({
           : project
       );
     },
-    singleFullProject: (state) => (path: Project['path']) => {
+    singleFullProject: (state) => (path: Project['path']): Project => {
       // @ts-ignore
       const project: Project = state.projects.find(project => project.path === path)
+      project.ide = state.ides.find((ide) => ide.id === project.ideId)
+      return project;
+    },
+    singleFullProjectByName: (state) => (name: Project['project']): Project => {
+      // @ts-ignore
+      const project: Project = state.projects.find(project => project.project === name)
       project.ide = state.ides.find((ide) => ide.id === project.ideId)
       return project;
     },

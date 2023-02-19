@@ -1,7 +1,7 @@
 <template>
-  <d-accordion header-color="primary" >
+  <d-accordion header-color="primary" elevation="4">
     <template v-slot:header>
-      <d-row class="px-3" gap>
+      <d-row class="px-3 pr-1" gap>
         <d-column class="project">
           <d-card-title class="title">
             {{ project.project }}
