@@ -11,7 +11,7 @@
     "build": "vite build",
     "dev": "concurrently \"cross-env NODE_ENV=development&& vite\" \"npm run node\" ",
     "node": "npx nodemon electron/Server.ts",
-    "electron:start": "cross-env NODE_ENV=development concurrently \"vite\" \"electron electron/main\" ",
+    "electron:start": "cross-env NODE_ENV=development vite",
     "electron:dist": "npm run build && electron-builder build",
     "electron:release": "npm run build && electron-builder build --publish always",
     "preview": "vite preview",
