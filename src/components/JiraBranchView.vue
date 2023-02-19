@@ -15,7 +15,6 @@
         v-if="currentIssue?.hasCommits"
         v-model="currentViewSwitch"
         color="primary"
-        show-indicator
       >
         <d-list-item
           v-for="option in viewSwitchKeys"
@@ -31,7 +30,7 @@
       block
       background-color="transparent"
       style="
-        max-height: calc(500px - 50px - 8px);
+        max-height: 100%;
         overflow: overlay;
         overflow-x: hidden;
       "
@@ -79,9 +78,7 @@
               <d-spacer />
               <d-tooltip>
                 <JiraPRButton :repository="repository" />
-                <template v-slot:tooltip>
-                  Create PR
-                </template>
+                <template v-slot:tooltip> Create PR</template>
               </d-tooltip>
               <JiraProjectButton
                 :repository="
@@ -97,6 +94,10 @@
               header-color="primary"
             >
               <template v-slot:header>
+                <d-label v-if="!commit.merge" class="ml-1">
+                  {{ commit.fileCount }}
+                </d-label>
+                <d-icon v-if="commit.merge" name="arrows-merge" class="ml-3" />
                 <JiraMarkup :body="commit.message" />
                 <d-spacer />
                 <JiraLinkIconButton :url="commit.url" />
@@ -192,23 +193,11 @@
           currentIssue.commitsEmpty || currentViewSwitch === ViewSwitch.Local
         "
       >
-        <d-column style="user-select: none">
-          <d-card-subtitle class="ml-4">
-            Select Project below to
-            <d-card-subtitle
-              root-tag="pre"
-              elevation="3"
-              style="user-select: text"
-              class="font-weight-bold"
-            >
-              <d-icon name="brackets-curly" :size="18" />
-              git stash && git checkout -b {{ currentIssueKey }}
-            </d-card-subtitle>
-          </d-card-subtitle>
-        </d-column>
         <JiraProjectList />
       </d-column>
-      <JiraLoader key="loader" v-else />
+      <d-row v-else block justify="center">
+        <JiraLoader/>
+      </d-row>
     </d-card>
   </JiraViewWrapper>
 </template>
@@ -219,7 +208,7 @@ import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraProjectList from "./JiraProjectList.vue";
-import { currentIssue, currentIssueKey } from "../store/jira.store";
+import { currentIssue } from "../store/jira.store";
 import JiraLoader from "./JiraLoader.vue";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 import { ref } from "vue";

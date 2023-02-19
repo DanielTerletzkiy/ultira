@@ -1,6 +1,6 @@
 {
   "name": "ultira",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "private": true,
   "description": "ultimate jira tool",
   "author": {
@@ -14,7 +14,8 @@
     "electron:start": "cross-env NODE_ENV=development concurrently \"vite\" \"electron electron/main\" ",
     "electron:dist": "npm run build && electron-builder build",
     "electron:release": "npm run build && electron-builder build --publish always",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "removejs": "find src/ -name \"*.js\" -type f -delete && find types/ -name \"*.js\" -type f -delete"
   },
   "debug": {
     "env": {

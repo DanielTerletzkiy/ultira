@@ -1,5 +1,5 @@
 <template>
-  <d-accordion header-color="primary">
+  <d-accordion header-color="primary" >
     <template v-slot:header>
       <d-row class="px-3" gap>
         <d-column class="project">
@@ -60,7 +60,7 @@
       <d-column
         block
         no-padding
-        elevation="4"
+        elevation="2"
         v-for="group in changeGroups"
         :key="group.name"
         v-show="group.files.length"
@@ -88,6 +88,9 @@
                 block
                 background-color="transparent"
                 class="file"
+                glow
+                v-ripple
+                @click="onFileClick(file.to || file)"
               >
                 <d-row class="pa-0" gap>
                   <d-avatar
@@ -95,11 +98,7 @@
                     color="transparent"
                     :src="getMaterialFileIcon(file.to || file)"
                   />
-                  <d-card-subtitle
-                    glow
-                    v-ripple
-                    @click="onFileClick(file.to || file)"
-                  >
+                  <d-card-subtitle>
                     <d-row v-if="file.from && file.to">
                       {{ file.from }}
                       <d-icon name="arrow-right" />

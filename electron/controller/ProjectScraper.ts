@@ -3,6 +3,7 @@ import { JiraIssue as Task } from "../types/JiraIssue";
 import { ChangeState } from "../types/ChangeState";
 import SimpleGit from "../service/SimpleGit";
 import shell from "shelljs";
+import { projects } from "../../src/store/jira.store";
 
 const Worker = require("worker_threads").Worker;
 const path = require("path");
@@ -119,8 +120,11 @@ module.exports = class ProjectScraper {
       changeStep({ step: 3, state: ChangeState.Finished });
       //went to branch
 
-      this.scrapeBranches([project.path]).then((project) => {
-        event.sender.send("result/scrape/branches", project[0]);
+      this.scrapeBranches([project.path]).then((projects) => {
+        const project = projects[0];
+        // @ts-ignore
+        delete project.changes?.isClean;
+        event.sender.send("result/scrape/branches", [project]);
       });
 
       this.openWithIDE(project);

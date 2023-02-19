@@ -11,6 +11,9 @@
       <template v-slot:prefix>
         <d-icon name="search" />
       </template>
+      <template v-slot:suffix>
+        <d-icon-button v-if="!!search" name="times" :size="30" @click="clearSearch"/>
+      </template>
     </d-textfield>
     <d-column
       v-for="list in lists"
@@ -38,6 +41,10 @@ import { Project } from "../../types/Jira";
 import JiraProjectListItem from "./JiraProjectListItem.vue";
 
 const search = ref("");
+
+function clearSearch(){
+  search.value = "";
+}
 
 const lists = computed<Array<{ title: string; projects: Array<Project> }>>(
   () => {
@@ -76,14 +83,14 @@ const recommendedProjects = computed<Array<Project>>(() => {
 <style scoped lang="scss">
 .sticky {
   position: sticky;
-  top: 0;
+  top: 48px;
   z-index: 1;
   user-select: none;
   backdrop-filter: blur(10px);
 }
 
 .search {
-  top: 35px;
+  top: 0;
   z-index: 2;
 }
 

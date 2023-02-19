@@ -57,7 +57,7 @@
           </d-row>
           <d-row v-if="!!project?.ideId">
             <d-spacer/>
-            <d-card-subtitle>
+            <d-card-subtitle class="pt-0">
               Open using: {{ project.ide.name }}
             </d-card-subtitle>
           </d-row>
@@ -76,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import jiraStore, { projects, currentIssueKey, changeSteps, fullProjects } from "../store/jira.store";
+import { currentIssueKey, changeSteps, fullProjects } from "../store/jira.store";
 import { computed, PropType } from "vue";
 import ProjectController from "../controller/ProjectController";
 import { Position } from "vuelize/src/types/Vuelize";

@@ -1,20 +1,23 @@
 <template>
   <d-column gap block style="position: relative">
     <d-card v-if="selectedJiraConfig" background-color="transparent" block>
-      <d-column :wrap="false">
+      <d-column :wrap="false" gap>
         <d-row
           :wrap="false"
           style="flex: 1; max-height: 500px; min-height: 500px"
+          align="stretch"
         >
           <JiraInfoView
+            v-on-long-press.prevent="() => setDialog(JiraInfoView)"
             v-if="currentIssue"
             class="card"
             style="flex: 1; min-height: inherit; max-height: inherit"
           />
           <JiraBranchView
+            v-on-long-press.prevent="() => setDialog(JiraBranchView)"
             v-if="currentIssue"
             class="card"
-            style="flex: 1; max-height: 500px; min-height: 500px"
+            style="flex: 1; max-height: inherit; min-height: inherit"
           />
         </d-row>
         <d-row
@@ -30,11 +33,13 @@
             :issue-list="JiraController.issues.value"
           />
           <JiraCommentsView
+            v-on-long-press.prevent="() => setDialog(JiraCommentsView)"
             class="card card--bottom"
             style="flex: 1"
             v-if="currentIssue"
           />
           <JiraPullRequestView
+            v-on-long-press.prevent="() => setDialog(JiraPullRequestView)"
             class="card card--bottom"
             style="flex: 3"
             v-if="currentIssue"
@@ -43,10 +48,22 @@
       </d-column>
     </d-card>
   </d-column>
+  <d-dialog
+    :model-value="!!currentDialogComponent"
+    @update:model-value="() => setDialog(null)"
+  >
+    <d-row
+      :wrap="false"
+      class="dialog-component"
+      align="stretch"
+    >
+      <Component :is="currentDialogComponent"  />
+    </d-row>
+  </d-dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, watch } from "vue";
+import { computed, inject, onMounted, ref, watch } from "vue";
 import jiraStore, {
   credentialsOpen,
   jiraConfigs,
@@ -54,7 +71,8 @@ import jiraStore, {
   currentIssueKey,
   selectedJiraConfig,
   currentIssue,
-  changeSteps, scrapeTime
+  changeSteps,
+  scrapeTime,
 } from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -66,6 +84,7 @@ import JiraCommentsView from "../components/JiraCommentsView.vue";
 import ProjectController from "../controller/ProjectController";
 import { State } from "vuelize/src/types/Vuelize";
 import { JiraConfig } from "../../types/Jira";
+import { vOnLongPress } from "@vueuse/components";
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
@@ -98,12 +117,11 @@ async function setJiraBase(id: string) {
       credentialsOpen.value = true;
       return;
     }
-    //selectedJiraConfig.value = name;
     JiraController.clearIssues();
     JiraController.setBase(
       new JiraBaseController({
         ...currentJiraConfig.value,
-        credentials: cookieCredentials
+        credentials: cookieCredentials,
       })
     );
     await JiraController.getAllIssues();
@@ -122,6 +140,13 @@ function connectCurrentData() {
   if (currentIssue.value) {
     currentIssue.value.getConnectedData();
   }
+}
+
+const currentDialogComponent = ref<unknown | null>(null);
+
+function setDialog(component: unknown) {
+  console.log({ component });
+  currentDialogComponent.value = component;
 }
 
 onMounted(() => {
@@ -158,7 +183,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .card {
-  margin: 6px 3px;
+  margin: 3px 4px;
 
   &--bottom {
     max-height: calc(100vh - 60px - 500px);
@@ -171,5 +196,12 @@ onMounted(() => {
   > * {
     word-break: break-word;
   }
+}
+
+.dialog-component {
+  min-height: 80vh;
+  min-width: 80vw;
+  max-height: 80vh;
+  max-width: 80vw;
 }
 </style>
