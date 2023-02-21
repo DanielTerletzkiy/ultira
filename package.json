@@ -93,7 +93,7 @@
     "file-extension-icon-js": "^1.1.6",
     "http-proxy-middleware": "^2.0.6",
     "install": "^0.13.0",
-    "jira2md": "2.1.0",
+    "jira2md": "^3.0.0",
     "lodash": "^4.17.21",
     "npm": "^9.4.2",
     "shelljs": "^0.8.5",

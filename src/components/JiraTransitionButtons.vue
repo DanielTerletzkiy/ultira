@@ -5,25 +5,27 @@
     :wrap="false"
     gap
   >
-    <component :is="disableTooltip?'span':DTooltip"
-               v-for="transition in issue.transitionData.transitions"
-               :key="transition.id" position="bottom"
+    <d-tooltip
+      v-for="transition in issue.transitionData.transitions"
+      :key="transition.id" position="bottom" :inactive="disableTooltip"
     >
       <d-list-item color="secondary" @click="onClick(transition.id)">
+        <d-avatar v-if="disableTooltip" :color="transition.to.statusCategory.colorName" :size="8" rounded="circle">
+          <div />
+        </d-avatar>
         {{ transition.name }}
       </d-list-item>
       <template v-slot:tooltip>
         Status
-        <d-icon name="arrow-right" :size="20" />
+        <d-icon name="arrow-right" :size="20" :color="transition.to.statusCategory.colorName" />
         <strong>{{ transition.to.name }}</strong>
       </template>
-    </component>
+    </d-tooltip>
   </d-tab-list>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, PropType, ref } from "vue";
-import { currentIssue } from "../store/jira.store";
+import { inject, PropType } from "vue";
 import JiraTask from "../model/JiraTask";
 import DTooltip from "vuelize/src/components/tooltip/DTooltip.vue";
 

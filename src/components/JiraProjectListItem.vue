@@ -71,7 +71,7 @@
                 <d-row class="pa-2" gap>
                   <d-label class="font-weight-bold">
                     <template v-slot:prefix>
-                      <d-icon name="file" />
+                      <d-icon :name="group.icon || 'file'" />
                     </template>
                     {{ group.files.length }}
                   </d-label>
@@ -97,7 +97,7 @@
                       <d-avatar
                         size="30"
                         color="transparent"
-                        :src="getMaterialFileIcon(file.to || file)"
+                        :src="getVSIFileIcon(file.to || file)"
                       />
                       <d-card-subtitle>
                         <d-row v-if="file.from && file.to">
@@ -129,10 +129,10 @@ import jiraStore, { currentIssueKey } from "../store/jira.store";
 import JiraController from "../controller/JiraController";
 import ProjectController from "../controller/ProjectController";
 import JiraProjectButton from "./JiraProjectButton.vue";
-import { getMaterialFileIcon } from "file-extension-icon-js";
+import { getMaterialFileIcon, getVSIFileIcon } from "file-extension-icon-js";
 
 const props = defineProps({
-  project: { type: Object as PropType<Project>, required: true },
+  project: { type: Object as PropType<Project>, required: true }
 });
 
 function setIssue(branch: string) {
@@ -160,32 +160,38 @@ const changeGroups = computed(() => {
       name: "Staged",
       files: props.project?.changes.staged,
       color: "primary",
+      icon: "book-medical"
     },
     {
       name: "Modified",
       files: props.project?.changes.modified,
       color: "warning",
+      icon: "edit"
     },
     {
       name: "Created",
       files: props.project?.changes.created,
       color: "success",
+      icon: "plus"
     },
     {
       name: "Deleted",
       files: props.project?.changes.deleted,
       color: "error",
+      icon: "trash"
     },
     {
       name: "Renamed",
       files: props.project?.changes.renamed,
       color: "secondary",
+      icon: "text-fields"
     },
     {
       name: "Not Added",
       files: props.project?.changes.not_added,
       color: "secondary",
-    },
+      icon: "file-question"
+    }
   ];
 });
 </script>

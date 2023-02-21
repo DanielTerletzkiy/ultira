@@ -92,7 +92,8 @@ function addProject() {
     project: "",
     path: "",
     branch: "none",
-    changes: [],
+    //@ts-ignore
+    changes: {},
     ideId: ""
   });
   console.log(projects.value);
