@@ -187,7 +187,7 @@ async function intersectObserver(e: any, selected: boolean, key: string) {
     if (isIntersecting) {
       hidden.value.delete(key);
     } else if (props.modelValue !== key) {
-      hidden.value.add(key);
+      // hidden.value.add(key); //TODO: check if more performance or not
     }
   }
 }

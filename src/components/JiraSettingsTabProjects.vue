@@ -6,7 +6,7 @@
       </d-card-subtitle>
       <d-column gap>
         <d-column v-for="(ide, i) in ides" :key="ide.id" gap>
-          <JiraSettingsIDE :modelValue="ide" @update:modelValue="(e) => (ides[i] = e)" @remove="removeIDE(i)" />
+          <JiraSettingsIDE :modelValue="ide" @update:modelValue="(e) => (ides[i] = e)" @remove="removeIDE(ide.id)" />
           <d-divider />
         </d-column>
         <d-button color="primary" glow type="button" @click="addIDE">
@@ -40,10 +40,10 @@
       </d-textfield>
       <JiraProjectBranchRefreshButton />
     </d-column>
-    <d-column v-for="(project, i) in projects" :key="project.id" gap>
+    <d-column v-for="(project, i) in projects" :key="project.path" gap>
       <JiraSettingsProject :modelValue="project"
                            @update:modelValue="(e) => (projects[i] = e)"
-                           @remove="removeProject(i)" />
+                           @remove="removeProject(project.path)" />
       <d-divider />
     </d-column>
     <d-button color="primary" glow type="button" @click="addProject">
@@ -59,14 +59,13 @@
 import { ref, watch } from "vue";
 import jiraStore, { ides, projects } from "../store/jira.store";
 import ProjectController from "../controller/ProjectController";
-import { useStore } from "vuex";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 import JiraSettingsProject from "./JiraSettingsProject.vue";
 import { v4 as uuidv4 } from "uuid";
 import JiraSettingsIDE from "./JiraSettingsIDE.vue";
 import { Project } from "../../types/Jira";
 
-const store = useStore();
+const store = jiraStore;
 
 watch(
   projects,
@@ -99,10 +98,11 @@ function addProject() {
   console.log(projects.value);
 }
 
-function removeProject(index: number) {
-  console.log(typeof projects.value, projects.value);
-  projects.value.splice(index, 1);
-  console.log(index, jiraStore.state.projects);
+function removeProject(path: string) {
+  const index = projects.value.findIndex((project) => project.path === path);
+  if (index > -1) {
+    projects.value.splice(index, 1);
+  }
 }
 
 function updateProject(project: Project, i: number) {
@@ -123,8 +123,11 @@ function addIDE() {
   });
 }
 
-function removeIDE(index: number) {
-  ides.value.splice(index, 1);
+function removeIDE(id: string) {
+  const index = ides.value.findIndex((ide) => ide.id === id);
+  if (index > -1) {
+    ides.value.splice(index, 1);
+  }
 }
 </script>
 

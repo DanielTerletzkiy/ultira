@@ -1,6 +1,6 @@
 <template>
   <d-card class="jira-info" elevation="1" block>
-    <d-column gap block :wrap="false">
+    <d-column no-padding gap block :wrap="false">
       <d-row class="px-1" gap :wrap="false">
         <d-tooltip position="right" filled color="primary">
           <JiraImage
@@ -86,11 +86,12 @@
         </d-column>
       </d-row>
       <d-row class="info-row" gap block :wrap="false" align="start">
-        <d-column class="description-column" :wrap="false" block height="100%">
+        <d-column class="description-column" :wrap="false" no-padding block height="100%">
           <d-column
             v-if="currentIssue.task.fields.description"
             :wrap="false"
             block
+            no-padding
           >
             <d-row>
               <d-card-subtitle class="pa-0 font-weight-bold">
@@ -165,7 +166,7 @@ function toggleAttachmentDialog() {
   overflow: hidden;
 
   .info-row {
-    max-height: calc(100% - 78px - 8px);
+    max-height: calc(100% - 78px - 6px);
 
     .description-column {
       max-height: 100%;

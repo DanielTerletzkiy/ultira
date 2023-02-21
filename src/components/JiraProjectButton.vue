@@ -64,7 +64,6 @@
                 </d-column>
               </d-row>
             </d-row>
-            <d-divider/>
             <d-row v-if="hasIDE && false"> <!--TODO: looks too clunky, an icon would be nice-->
               <d-spacer />
               <d-card-subtitle class="pt-1">

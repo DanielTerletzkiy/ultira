@@ -4,7 +4,7 @@
     gap
     elevation="2"
     height="100%"
-    style="min-width: 200px"
+    style="min-width: 250px"
   >
     <d-row>
       <d-card-subtitle class="pa-0 font-weight-bold"> Sidebar</d-card-subtitle>
@@ -29,11 +29,11 @@
     <d-divider class="mx-3" elevation="10" />
     <d-card-subtitle class="pb-0">
       <d-icon name="clock" :size="20" color="primary" />
-      {{ secondsToTime(currentIssue.task.fields.timespent) }}
+      {{ currentIssue?.task.renderedFields.timespent }}
     </d-card-subtitle>
     <d-row :wrap="false" gap justify="space-between" :disabled="loadingWorkLog">
       <d-icon-button
-        v-for="i in [0.5, 1, 4, 8]"
+        v-for="i in [0.5, 1, 2, 4, 8]"
         color="secondary"
         :size="40"
         :disabled="loadingWorkLog"
@@ -43,40 +43,54 @@
       </d-icon-button>
     </d-row>
     <d-tooltip :key="currentIssue.task.key" color="primary" position="bottom">
-      <DProgressbar
+      <d-progressbar
         class="mx-2"
         v-model="currentIssue.task.fields.timespent"
         :max="currentIssue.task.fields.timeoriginalestimate"
         color="primary"
         show-label
       >
-        <template v-slot:progress>
-          <strong>
-            {{ Math.round((currentIssue.task.fields.timespent / 3600) * 100) / 100 }}h /
-            {{ Math.round((currentIssue.task.fields.timeoriginalestimate / 3600) * 100) / 100 }}h
-          </strong>
+        <template v-slot:progress="{progress}">
+          <d-row>
+            {{ Math.round(progress) }}%
+            /
+            {{ currentIssue?.task.renderedFields.timeoriginalestimate }}
+          </d-row>
         </template>
-      </DProgressbar>
+      </d-progressbar>
       <template v-slot:tooltip>
-        {{ secondsToTime(currentIssue.task.fields.timespent) }} /
-        {{ secondsToTime(currentIssue.task.fields.timeoriginalestimate) }}
+        {{ currentIssue?.task.renderedFields.timespent }} /
+        {{ currentIssue?.task.renderedFields.timeoriginalestimate }}
       </template>
     </d-tooltip>
     <d-divider class="mx-3" elevation="10" />
     <JiraComponentLabels />
+    <d-button @click="onDialogOpen">
+      custom vars
+    </d-button>
+    <d-dialog v-model="customDialogOpen">
+      <d-row
+        :wrap="false"
+        class="dialog-component"
+        align="stretch"
+      >
+        <JiraInfoViewCustom />
+      </d-row>
+    </d-dialog>
   </d-column>
 </template>
 
 <script setup lang="ts">
 import JiraUserItem from "./JiraUserItem.vue";
 import { ref } from "vue";
-//TODO WTH? not registered with vite?
-import DProgressbar from "vuelize/src/components/progress/DProgressbar.vue";
 import JiraComponentLabels from "./JiraComponentLabels.vue";
 import { currentIssue } from "../store/jira.store";
+import JiraInfoViewCustom from "./JiraInfoViewCustom.vue";
 
-function secondsToTime(seconds: number) {
-  return new Date(seconds * 1000).toISOString().substr(5, 11);
+const customDialogOpen = ref(false);
+
+function onDialogOpen() {
+  customDialogOpen.value = true;
 }
 
 const loadingWorkLog = ref(false);
@@ -88,4 +102,11 @@ async function addWorkLog(hours: number) {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.dialog-component {
+  min-height: 50vh;
+  min-width: 50vw;
+  max-height: 50vh;
+  max-width: 50vw;
+}
+</style>

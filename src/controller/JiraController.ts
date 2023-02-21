@@ -30,24 +30,20 @@ export default class JiraController extends ApiController {
     }
 
     for (const issue of searchResult.issues) {
-      if (
+      if (!(
         JiraController.issues.value.length > 0 &&
         JiraController.issues.value.findIndex((x) => x.task.key === issue.key) >
-          -1
-      ) {
-        //return this.issues.find((x) => x.task.key === issue.key);
-      } else {
-        JiraController.issues.value.push(
-          await new JiraTask(issue, JiraController.controller)
-        );
-        JiraController.issues.value.find((x)=>x.task.key === issue.key)?.updateSelf(true);
+        -1
+      )) {
+        const task = new JiraTask(issue, JiraController.controller);
+        task.updateSelf(true).then(() => JiraController.issues.value.push(task));
       }
     }
 
     JiraController.totalIssues = searchResult.total;
     return {
       issues: JiraController.issues.value,
-      total: JiraController.totalIssues,
+      total: JiraController.totalIssues
     };
   }
 
