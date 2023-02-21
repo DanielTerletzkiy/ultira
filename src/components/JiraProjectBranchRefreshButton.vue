@@ -3,7 +3,7 @@
     <template v-slot:prefix>
       <d-icon name="sync" :size="20" />
     </template>
-    Refresh local
+    Refresh Projects
   </d-button>
 </template>
 

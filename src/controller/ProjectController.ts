@@ -30,6 +30,10 @@ export default class ProjectController extends ApiController {
     return ipcRenderer.send("project/change", { project: JSON.stringify(project), issue });
   }
 
+  static changeDefault(project: Project) {
+    return ipcRenderer.send("project/change/default", { project: JSON.stringify(project) });
+  }
+
   static update(project: Project) {
     return ipcRenderer.send("project/update", { project: JSON.stringify(project) });
   }

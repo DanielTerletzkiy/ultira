@@ -18,6 +18,17 @@ ipcMain.on(
 );
 
 ipcMain.on(
+  "project/change/default",
+  async (event: any, arg: { project: string; }) => {
+    const project: Project = JSON.parse(arg.project);
+    const controller = new ProjectActions(project, event);
+    const res = await controller.changeDefault().catch();
+
+    event.sender.send("result/project/change", res);
+  }
+);
+
+ipcMain.on(
   "project/update",
   async (event: any, arg: { project: string; }) => {
     const project: Project = JSON.parse(arg.project);

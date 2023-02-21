@@ -23,8 +23,8 @@ const projectActions = class ProjectActions {
       {
         step,
         path: this.project.path,
-        state,
-      } as ChangeStep,
+        state
+      } as ChangeStep
     ]);
   }
 
@@ -71,7 +71,7 @@ const projectActions = class ProjectActions {
     this.changeStep(2, ChangeState.Started);
     try {
       await this.git.fetch();
-      await this.git.pull('origin', master);
+      await this.git.pull("origin", master);
       this.scrapeProject();
     } catch (e) {
       console.error("fetch:", e);
@@ -114,7 +114,7 @@ const projectActions = class ProjectActions {
     shell.exec(command, {
       windowsHide: true,
       silent: true,
-      async: true,
+      async: true
     });
   }
 
@@ -123,6 +123,11 @@ const projectActions = class ProjectActions {
     await this.changeBranch(branch);
     this.scrapeProject();
     this.openWithIDE();
+  }
+
+  public async changeDefault() {
+    await this.pullMaster();
+    this.scrapeProject();
   }
 };
 

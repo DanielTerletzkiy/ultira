@@ -5,6 +5,8 @@
     filled
     :key="hasChangeSteps"
     popover
+    v-if="hasIDE"
+    :inactive="!hasIDE"
   >
     <d-card
       :outlined="hasChanges"
@@ -15,7 +17,7 @@
         icon="code-branch"
         color="primary"
         askColor="primary"
-        :disabled="!project"
+        :disabled="!project || !hasIDE"
         @confirm="onClick"
       />
     </d-card>
@@ -63,7 +65,7 @@
               </d-row>
             </d-row>
             <d-divider/>
-            <d-row v-if="!!project?.ideId">
+            <d-row v-if="hasIDE && false"> <!--TODO: looks too clunky, an icon would be nice-->
               <d-spacer />
               <d-card-subtitle class="pt-1">
                 {{ project.ide.name }}
@@ -125,6 +127,8 @@ const hasChangeSteps = computed<boolean>(
     project.value &&
     changeSteps.value.findIndex((step) => step.path === project.value.path) >= 0
 );
+
+const hasIDE = computed(()=>!!project.value.ideId)
 
 function onClick() {
   ProjectController.clearChangeSteps();
