@@ -46,7 +46,7 @@ const projectActions = class ProjectActions {
   }
 
   public async getMasterBranch() {
-    const masterBranch = await GitShell.getMasterBranch(this.project.path);
+    const masterBranch = this.project.defaultBranch || await GitShell.getMasterBranch(this.project.path);
     return masterBranch === "none" ? "master" : masterBranch.split("/").pop();
   }
 
@@ -58,6 +58,21 @@ const projectActions = class ProjectActions {
       await this.git.checkout(master);
       await this.git.fetch();
       await this.git.pull();
+    } catch (e) {
+      console.error("fetch:", e);
+      this.changeStep(2, ChangeState.Failed);
+      throw e;
+    }
+    this.changeStep(2, ChangeState.Finished);
+  }
+
+  public async updateWithDefault() {
+    const master = await this.getMasterBranch();
+    this.changeStep(2, ChangeState.Started);
+    try {
+      await this.git.fetch();
+      await this.git.pull('origin', master);
+      this.scrapeProject();
     } catch (e) {
       console.error("fetch:", e);
       this.changeStep(2, ChangeState.Failed);

@@ -43,7 +43,7 @@ module.exports = class ProjectScraper {
     for (const path of paths) {
       const branch = await GitShell.getCurrentBranch(path);
       const defaultBranch = await GitShell.getMasterBranch(path);
-      const changes = await GitShell.getCurrentChanges(path).catch();
+      const changes = await GitShell.getCurrentChanges(path).catch(console.error);
       projectBranches.push({
         path,
         branch,

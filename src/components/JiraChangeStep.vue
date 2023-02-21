@@ -16,10 +16,15 @@
 <script setup lang="ts">
 import { changeSteps } from "../store/jira.store";
 import { changeStepsInfo } from "../constants/ChangeSteps";
-import { computed } from "vue";
+import { computed, PropType } from "vue";
 import { cloneDeep, groupBy } from "lodash";
 import ProjectController from "../controller/ProjectController";
 import { ChangeState } from "../../types/ChangeState";
+import { Project } from "../../types/Jira";
+
+const props = defineProps({
+  project: { type: Object as PropType<Project>, required: true }
+});
 
 const steps = computed(() => {
   const stepGroup = getGroup();
@@ -44,16 +49,16 @@ const steps = computed(() => {
       currentStep.state === ChangeState.Started
         ? "warning"
         : currentStep.state === ChangeState.Finished
-        ? "success"
-        : currentStep.state === ChangeState.Failed
-        ? "error"
-        : "inherit";
+          ? "success"
+          : currentStep.state === ChangeState.Failed
+            ? "error"
+            : "inherit";
   }
   return clone;
 });
 
 function getGroup() {
-  return groupBy(changeSteps.value, (n) => n.step);
+  return groupBy(changeSteps.value.filter((step) => step.path === props.project.path), (n) => n.step);
 }
 
 function onClear() {

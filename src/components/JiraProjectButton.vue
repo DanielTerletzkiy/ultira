@@ -69,13 +69,14 @@
                 {{ project.ide.name }}
               </d-card-subtitle>
             </d-row>
-            <d-card
+            <d-row
               v-if="hasChangeSteps"
-              class="ma-2 pa-2 mt-0"
+              class="pa-2"
               elevation="3"
+              justify="center"
             >
-              <JiraChangeStep />
-            </d-card>
+              <JiraChangeStep :project="project"/>
+            </d-row>
           </d-column>
           <d-divider vertical block/>
           <JiraProjectActions :project="project" />
@@ -127,7 +128,7 @@ const hasChangeSteps = computed<boolean>(
 
 function onClick() {
   ProjectController.clearChangeSteps();
-  ProjectController.open(project.value, currentIssueKey.value);
+  ProjectController.changeBranch(project.value, currentIssueKey.value);
 }
 </script>
 

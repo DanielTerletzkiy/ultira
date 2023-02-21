@@ -7,24 +7,46 @@ const { ipcMain } = require("electron");
 const ProjectScraper = require("../controller/ProjectScraper");
 
 ipcMain.on(
-  "open/project",
+  "project/change",
   async (event: any, arg: { project: string; issue: Task["key"] }) => {
     const project: Project = JSON.parse(arg.project);
     const controller = new ProjectActions(project, event);
-    const res = await controller.changeBranchSequence(arg.issue);
+    const res = await controller.changeBranchSequence(arg.issue).catch();
 
-    event.sender.send("result/open/project", res);
+    event.sender.send("result/project/change", res);
   }
 );
 
 ipcMain.on(
-  "open/file",
+  "project/update",
+  async (event: any, arg: { project: string; }) => {
+    const project: Project = JSON.parse(arg.project);
+    const controller = new ProjectActions(project, event);
+    await controller.updateWithDefault().catch();
+
+    event.sender.send("result/project/update", true);
+  }
+);
+
+ipcMain.on(
+  "project/open",
+  async (event: any, arg: { project: string; }) => {
+    const project: Project = JSON.parse(arg.project);
+    const controller = new ProjectActions(project, event);
+    controller.openWithIDE();
+
+    event.sender.send("result/project/open", true);
+  }
+);
+
+ipcMain.on(
+  "project/file",
   async (event: any, arg: { project: string; file: string }) => {
     const project: Project = JSON.parse(arg.project);
     const controller = new ProjectActions(project, event);
     const res = controller.openFile(arg.file);
 
-    event.sender.send("result/open/file", res);
+    event.sender.send("result/project/file", res);
   }
 );
 

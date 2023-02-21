@@ -26,12 +26,20 @@ export default class ProjectController extends ApiController {
     console.log(store.state.changeSteps);
   }
 
-  static open(project: Project, issue: Task["key"]) {
-    return ipcRenderer.send("open/project", { project: JSON.stringify(project), issue });
+  static changeBranch(project: Project, issue: Task["key"]) {
+    return ipcRenderer.send("project/change", { project: JSON.stringify(project), issue });
+  }
+
+  static update(project: Project) {
+    return ipcRenderer.send("project/update", { project: JSON.stringify(project) });
+  }
+
+  static open(project: Project) {
+    return ipcRenderer.send("project/open", { project: JSON.stringify(project) });
   }
 
   static openFile(project: Project, file: string) {
-    return ipcRenderer.send("open/file", { project: JSON.stringify(project), file });
+    return ipcRenderer.send("project/file", { project: JSON.stringify(project), file });
   }
 
   static scrape(path: Project["path"]) {
