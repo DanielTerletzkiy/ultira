@@ -57,61 +57,67 @@
       </d-row>
     </template>
     <template v-slot:default>
-      <d-column
-        block
-        no-padding
-        elevation="2"
-        v-for="group in changeGroups"
-        :key="group.name"
-        v-show="group.files.length"
-      >
-        <d-accordion :header-color="group.color">
-          <template v-slot:header>
-            <d-row class="pa-2" gap>
-              <d-label class="font-weight-bold">
-                <template v-slot:prefix>
-                  <d-icon name="file" />
-                </template>
-                {{ group.files.length }}
-              </d-label>
-              <span>
-                {{ group.name }}
-              </span>
-            </d-row>
-          </template>
-          <d-row :wrap="false">
-            <d-divider vertical block :color="group.color" size="2px" />
-            <d-column block>
-              <d-card
-                v-for="(file, f) in group.files"
-                :key="file"
-                block
-                background-color="transparent"
-                class="file"
-                glow
-                v-ripple
-                @click="onFileClick(file.to || file)"
-              >
-                <d-row class="pa-0 px-1" gap>
-                  <d-avatar
-                    size="30"
-                    color="transparent"
-                    :src="getMaterialFileIcon(file.to || file)"
-                  />
-                  <d-card-subtitle>
-                    <d-row v-if="file.from && file.to">
-                      {{ file.from }}
-                      <d-icon name="arrow-right" />
-                      {{ file.to }}
-                    </d-row>
-                    <span v-else>{{ file }}</span>
-                  </d-card-subtitle>
+      <d-column gap>
+        <d-card block elevation="2">
+          <d-column
+            block
+            no-padding
+            v-for="group in changeGroups"
+            :key="group.name"
+            v-show="group.files.length"
+          >
+            <d-accordion :header-color="group.color">
+              <template v-slot:header>
+                <d-row class="pa-2" gap>
+                  <d-label class="font-weight-bold">
+                    <template v-slot:prefix>
+                      <d-icon name="file" />
+                    </template>
+                    {{ group.files.length }}
+                  </d-label>
+                  <span>
+                    {{ group.name }}
+                  </span>
                 </d-row>
-                <d-divider elevation="8" v-if="f !== group.files.length - 1" />
-              </d-card>
-            </d-column>
-          </d-row>
-        </d-accordion>
+              </template>
+              <d-row :wrap="false">
+                <d-divider vertical block :color="group.color" size="2px" />
+                <d-column block>
+                  <d-card
+                    v-for="(file, f) in group.files"
+                    :key="file"
+                    block
+                    background-color="transparent"
+                    class="file"
+                    glow
+                    v-ripple
+                    @click="onFileClick(file.to || file)"
+                  >
+                    <d-row class="pa-0 px-1" gap>
+                      <d-avatar
+                        size="30"
+                        color="transparent"
+                        :src="getMaterialFileIcon(file.to || file)"
+                      />
+                      <d-card-subtitle>
+                        <d-row v-if="file.from && file.to">
+                          {{ file.from }}
+                          <d-icon name="arrow-right" />
+                          {{ file.to }}
+                        </d-row>
+                        <span v-else>{{ file }}</span>
+                      </d-card-subtitle>
+                    </d-row>
+                    <d-divider
+                      elevation="8"
+                      v-if="f !== group.files.length - 1"
+                    />
+                  </d-card>
+                </d-column>
+              </d-row>
+            </d-accordion>
+          </d-column>
+        </d-card>
       </d-column>
     </template>
   </d-accordion>

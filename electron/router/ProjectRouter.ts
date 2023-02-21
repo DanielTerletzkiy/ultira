@@ -1,5 +1,6 @@
 import { Project } from "../types/Jira";
 import { JiraIssue as Task } from "../types/JiraIssue";
+import ProjectActions from "../controller/ProjectActions";
 
 const { ipcMain } = require("electron");
 
@@ -9,7 +10,8 @@ ipcMain.on(
   "open/project",
   async (event: any, arg: { project: string; issue: Task["key"] }) => {
     const project: Project = JSON.parse(arg.project);
-    const res = await ProjectScraper.open(project, arg.issue, event);
+    const controller = new ProjectActions(project, event);
+    const res = await controller.changeBranchSequence(arg.issue);
 
     event.sender.send("result/open/project", res);
   }
@@ -19,7 +21,8 @@ ipcMain.on(
   "open/file",
   async (event: any, arg: { project: string; file: string }) => {
     const project: Project = JSON.parse(arg.project);
-    const res = await ProjectScraper.openFile(project, arg.file);
+    const controller = new ProjectActions(project, event);
+    const res = controller.openFile(arg.file);
 
     event.sender.send("result/open/file", res);
   }

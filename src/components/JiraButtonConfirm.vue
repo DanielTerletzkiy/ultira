@@ -7,6 +7,7 @@
       @click="onClick"
       :disabled="disabled"
       :name="icon"
+      :size="size"
       :outlined="state"
       :outline-color="color"
       outline-offset="2px"
@@ -40,6 +41,7 @@ const props = defineProps({
   askColor: { type: String, default: "primary" },
   icon: { type: String },
   disabled: { type: Boolean },
+  size: { type: Number },
 });
 
 const state = ref(false);
