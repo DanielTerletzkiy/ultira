@@ -1,5 +1,5 @@
 <template>
-  <d-accordion header-color="primary" elevation="4">
+  <d-accordion header-color="primary" elevation="4" :disabled="!hasChanges">
     <template v-slot:header>
       <d-row class="px-3 pr-1" gap>
         <d-column class="project">
@@ -129,7 +129,7 @@ import jiraStore, { currentIssueKey } from "../store/jira.store";
 import JiraController from "../controller/JiraController";
 import ProjectController from "../controller/ProjectController";
 import JiraProjectButton from "./JiraProjectButton.vue";
-import { getMaterialFileIcon, getVSIFileIcon } from "file-extension-icon-js";
+import { getVSIFileIcon } from "file-extension-icon-js";
 
 const props = defineProps({
   project: { type: Object as PropType<Project>, required: true }
@@ -194,6 +194,8 @@ const changeGroups = computed(() => {
     }
   ];
 });
+
+const hasChanges = computed(() => props.project?.changes.files.length > 0);
 </script>
 <style scoped lang="scss">
 .project {
