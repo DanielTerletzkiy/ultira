@@ -6,6 +6,14 @@ const { ipcMain } = require("electron");
 
 const ProjectScraper = require("../controller/ProjectScraper");
 
+/*! TODO: file watcher for auto project scraping
+const { watch } = require("chokidar");
+
+const watcher = watch("."); // test
+watcher.on("ready", () => console.log("Watching dir..."));
+watcher.on("change", (path: string) => console.log(`File ${path} has been changed`));
+!*/
+
 ipcMain.on(
   "project/change",
   async (event: any, arg: { project: string; issue: Task["key"] }) => {
