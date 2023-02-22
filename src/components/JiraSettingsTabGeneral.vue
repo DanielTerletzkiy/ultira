@@ -40,7 +40,7 @@
       filled
       label="Scrape Interval"
       type="number"
-      min="60"
+      min="10"
     >
       <template v-slot:suffix> seconds</template>
     </d-textfield>

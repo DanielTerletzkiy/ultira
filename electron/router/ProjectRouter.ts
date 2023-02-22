@@ -83,7 +83,6 @@ ipcMain.on(
       delete result.changes?.isClean;
       return result;
     });
-    console.log(result);
     event.sender.send("result/scrape/branches", result);
   }
 );

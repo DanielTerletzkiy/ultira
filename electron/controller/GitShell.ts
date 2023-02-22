@@ -2,7 +2,7 @@ import { Project } from "../types/Jira";
 import SimpleGit from "../service/SimpleGit";
 import { StatusResult } from "simple-git";
 
-module.exports = class GitShell {
+const gitShell = class GitShell {
   private static async exec(
     path: Project["path"],
     command: string
@@ -68,4 +68,5 @@ module.exports = class GitShell {
   }
 };
 
-export default {};
+export default gitShell;
+module.exports = gitShell;

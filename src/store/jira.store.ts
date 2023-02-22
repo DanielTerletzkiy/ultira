@@ -50,7 +50,7 @@ const store = createStore({
     historyDialogOpen: false,
     credentialsDialogOpen: false,
     refreshTime: 60,
-    scrapeTime: 3000,
+    scrapeTime: 30,
     zoomFactor: 1,
     maxResults: 50,
     theme: {
@@ -203,14 +203,12 @@ const store = createStore({
       context.commit("setIdes", payload);
     },
     setProjects(context, payload: Array<Project>) {
-      console.log(payload, context.state.projects);
 
       const projects: Array<Project> = [];
       for (const project of payload) {
         const index = context.state.projects.findIndex(
           (x) => x.path === project.path
         );
-        console.log(index);
         if (index === -1) {
           projects.push(project);
         }
@@ -222,7 +220,6 @@ const store = createStore({
           context.state.projects[index].changes = project.changes;
         }
       }
-      console.log(context.state.projects);
       context.commit("setProjects", projects);
     },
     setRawProjects(context, payload: Array<Project>) {
