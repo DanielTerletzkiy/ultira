@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { inject, onBeforeMount, ref } from "vue";
 import JiraDashboard from "./views/JiraDashboard.vue";
 import JiraSettings from "./components/JiraSettings.vue";
 import JiraBaseSelector from "./components/JiraBaseSelector.vue";
 import JiraSearchDialog from "./components/JiraSearchDialog.vue";
-import { searchOpen, historyOpen } from "./store/jira.store";
+import { searchOpen, historyOpen, theme } from "./store/jira.store";
 import AppToolbarControls from "./components/AppToolbarControls.vue";
 import JiraHistoryDialog from "./components/JiraHistoryDialog.vue";
 import { version } from "../package.json";
+
+const vuelize: Vuelize = inject("vuelize") as Vuelize;
 
 const settingsOpen = ref(false);
 
@@ -24,6 +26,14 @@ function onToggleSearch() {
 }
 
 const baseurl = import.meta.env.BASE_URL;
+
+onBeforeMount(() => {
+  vuelize.theme.dark = theme.value.isDark as boolean;
+  ["dark", "light"].forEach((mode) => {
+    //@ts-ignore
+    vuelize.theme.themes[mode].primary = theme.value.primary[mode];
+  });
+});
 </script>
 
 <template>
@@ -52,7 +62,7 @@ const baseurl = import.meta.env.BASE_URL;
           ULTIRA
         </DCardTitle>
         <d-tooltip filled color="secondary">
-          <d-icon-button class="title action" name="search" @click="onToggleSearch" size="30"/>
+          <d-icon-button class="title action" name="search" @click="onToggleSearch" size="30" />
           <template v-slot:tooltip>
             <kbd>CTR</kbd> + <kbd>SHIFT</kbd> + <kbd>S</kbd>
           </template>

@@ -169,15 +169,6 @@ function setElectronZoom(value: string | number) {
     factor.value = value;
   }
 }
-
-onBeforeMount(() => {
-  setElectronZoom(zoomFactor.value);
-  vuelize.theme.dark = theme.value.isDark as boolean;
-  ["dark", "light"].forEach((mode) => {
-    //@ts-ignore
-    vuelize.theme.themes[mode].primary = theme.value.primary[mode];
-  });
-});
 </script>
 
 <style scoped lang="scss">
