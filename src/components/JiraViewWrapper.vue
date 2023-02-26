@@ -1,7 +1,6 @@
 <template>
   <d-card
     class="jira-view-wrapper"
-    elevation="1"
     block
     :max-width="hidden ? '50px' : ''"
   >

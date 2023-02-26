@@ -56,30 +56,42 @@
     <d-card-subtitle class="pl-0 pb-0 font-weight-bold">
       Zoom
     </d-card-subtitle>
-    <d-row gap block outlined space-between :wrap="false">
-      <d-icon-button
-        :size="40"
-        name="angle-left-b"
-        type="button"
-        @click="zoomFactor > 0.1 ? (zoomFactor -= 0.1) : null"
-      />
+    <d-row elevation="3" block space-between :wrap="false">
       <d-button
         block
-        color="secondary"
         type="button"
-        style="font-size: 1.5rem"
-        @click="zoomFactor = 1"
+        @click="zoomFactor > 0.1 ? (zoomFactor -= 0.1) : null"
       >
-        {{
-          (Math.round(zoomFactor * 10) / 10).toString().padEnd(3, ".0")
-        }}
+        Decrease
+        <template v-slot:prefix>
+          <d-icon name="angle-left-b" />
+        </template>
       </d-button>
-      <d-icon-button
-        :size="40"
-        name="angle-right-b"
-        type="button"
+      <d-tooltip>
+        <d-button
+          color="secondary"
+          type="button"
+          style="font-size: 1.5rem"
+          @click="zoomFactor = 1"
+        >
+          {{
+            (Math.round(zoomFactor * 10) / 10).toString().padEnd(3, ".0")
+          }}
+        </d-button>
+        <template v-slot:tooltip>
+          Reset
+        </template>
+      </d-tooltip>
+      <d-button
+        block
+        type="right"
         @click="zoomFactor < 5 ? (zoomFactor += 0.1) : null"
-      />
+      >
+        Increase
+        <template v-slot:suffix>
+          <d-icon name="angle-right-b" />
+        </template>
+      </d-button>
     </d-row>
   </d-column>
   <d-divider />
@@ -126,12 +138,13 @@ watch(
   },
   { deep: true }
 );
+
 function addConfig() {
   jiraConfigs.value.push({
     id: uuidv4(),
     name: "",
     url: "",
-    applicationType: ApplicationType.Bitbucket,
+    applicationType: ApplicationType.Bitbucket
   });
 }
 

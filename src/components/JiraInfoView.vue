@@ -1,5 +1,5 @@
 <template>
-  <d-card class="jira-info" elevation="1" block>
+  <d-card class="jira-info" block>
     <d-column no-padding gap block :wrap="false">
       <d-row class="px-1" gap :wrap="false">
         <d-tooltip position="right" filled color="primary">
@@ -81,7 +81,7 @@
               {{ currentIssue.task.key }}
             </d-button>
             <d-spacer />
-            <JiraTransitionButtons :issue="currentIssue"/>
+            <JiraTransitionButtons :issue="currentIssue" />
           </d-card-subtitle>
         </d-column>
       </d-row>
@@ -101,16 +101,17 @@
             </d-row>
             <JiraMarkup :body="currentIssue.task.fields.description" />
           </d-column>
-          <d-spacer/>
-          <d-button :disabled="!currentIssue.task.fields.attachment || currentIssue.task.fields.attachment?.length === 0"
-                    color="primary" block
-                    @click="toggleAttachmentDialog">
+          <d-spacer />
+          <d-button
+            :disabled="!currentIssue.task.fields.attachment || currentIssue.task.fields.attachment?.length === 0"
+            color="primary" block
+            @click="toggleAttachmentDialog">
             <template v-slot:prefix>
               <d-icon name="file" :size="20" />
             </template>
             Open Attachments
           </d-button>
-          <JiraAttachmentDialog v-model="attachmentDialog"/>
+          <JiraAttachmentDialog v-model="attachmentDialog" />
         </d-column>
         <JiraInfoViewSidebar />
       </d-row>

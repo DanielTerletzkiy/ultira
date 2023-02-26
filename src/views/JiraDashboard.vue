@@ -4,29 +4,29 @@
       <d-column :wrap="false" gap style="height: calc(100vh - 2.6rem);">
         <d-row
           :wrap="false"
-          style="flex: 1; max-height: 500px; min-height: 500px"
+          class="top"
           align="stretch"
         >
           <JiraInfoView
             v-on-long-press.prevent="() => setDialog(JiraInfoView)"
             v-if="currentIssue"
             class="card"
-            style="flex: 1; min-height: inherit; max-height: inherit"
+            style="flex: 1;"
           />
           <JiraBranchView
             v-on-long-press.prevent="() => setDialog(JiraBranchView)"
             v-if="currentIssue"
             class="card"
-            style="flex: 1; max-height: inherit; min-height: inherit"
+            style="flex: 1;"
           />
         </d-row>
         <d-row
           :wrap="false"
-          style="flex: 1; max-width: calc(100vw - 16px)"
+          class="bottom"
           align="stretch"
         >
           <JiraList
-            class="card card--bottom"
+            class="card"
             style="flex: 3"
             v-if="selectedJiraConfig && JiraController.issues.value"
             v-model="currentIssueKey"
@@ -34,13 +34,13 @@
           />
           <JiraCommentsView
             v-on-long-press.prevent="() => setDialog(JiraCommentsView)"
-            class="card card--bottom"
+            class="card"
             style="flex: 1"
             v-if="currentIssue"
           />
           <JiraPullRequestView
             v-on-long-press.prevent="() => setDialog(JiraPullRequestView)"
-            class="card card--bottom"
+            class="card"
             style="flex: 3"
             v-if="currentIssue"
           />
@@ -57,7 +57,7 @@
       class="dialog-component"
       align="stretch"
     >
-      <Component :is="currentDialogComponent"  />
+      <Component :is="currentDialogComponent" />
     </d-row>
   </d-dialog>
 </template>
@@ -72,7 +72,7 @@ import jiraStore, {
   selectedJiraConfig,
   currentIssue,
   changeSteps,
-  scrapeTime,
+  scrapeTime
 } from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -121,7 +121,7 @@ async function setJiraBase(id: string) {
     JiraController.setBase(
       new JiraBaseController({
         ...currentJiraConfig.value,
-        credentials: cookieCredentials,
+        credentials: cookieCredentials
       })
     );
     await JiraController.getAllIssues();
@@ -182,16 +182,16 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.card {
-  margin: 3px 4px;
+.top {
+  min-height: 50vh;
+}
 
-  &--bottom {
-    max-height: calc(100vh - 60px - 500px);
-    overflow: auto;
-    overflow-x: hidden;
-    min-width: 0;
-    flex: 1;
-  }
+.bottom {
+  min-height: calc(100vh - 60px - 50vh);
+}
+
+.card {
+  margin: 0 4px;
 
   > * {
     word-break: break-word;

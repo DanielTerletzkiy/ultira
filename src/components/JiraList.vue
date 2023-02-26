@@ -2,7 +2,7 @@
   <d-column
     no-padding
     block
-    elevation="n1"
+    elevation="n2"
     height="100%"
     class="wrapper pa-0"
     :wrap="false"
