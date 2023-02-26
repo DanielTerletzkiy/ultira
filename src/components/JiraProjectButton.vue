@@ -22,7 +22,7 @@
       />
     </d-card>
     <template v-slot:tooltip-wrapper>
-      <d-card>
+      <d-card elevation="n1" outlined outline-width="2px">
         <d-row>
           <d-column no-padding>
             <d-row gap>
@@ -48,8 +48,8 @@
                 <d-divider
                   vertical
                   block
-                  class="my-3"
-                  size="4px"
+                  class="my-1"
+                  size="2px"
                   v-if="hasChanges"
                 />
                 <d-column v-if="hasChanges">

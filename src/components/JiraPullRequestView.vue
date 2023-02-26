@@ -40,7 +40,7 @@
           ?.pullRequests.sort((a,b)=>new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime())"
         :key="pullRequest.id"
         width="100%"
-        elevation="4"
+        elevation="2"
         class="request"
       >
         <d-row

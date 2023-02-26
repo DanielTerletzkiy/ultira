@@ -1,7 +1,7 @@
 <template>
-  <d-card width="100%" elevation="4">
+  <d-card width="100%" elevation="2">
     <JiraMarkup :body="comment.body" />
-    <d-divider class="mx-3" elevation="6" />
+    <d-divider class="mx-3" elevation="4" />
     <d-card-subtitle>
       <JiraUserItem :user="comment.author">
         {{ new Date(comment.created).toLocaleString(undefined) }}

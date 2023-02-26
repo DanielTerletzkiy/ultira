@@ -1,5 +1,5 @@
 <template>
-  <d-accordion header-color="primary" elevation="4" :disabled="!hasChanges">
+  <d-accordion header-color="primary" elevation="3" :disabled="!hasChanges">
     <template v-slot:header>
       <d-row class="px-3 pr-1" gap>
         <d-column class="project">

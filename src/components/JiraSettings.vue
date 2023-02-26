@@ -6,7 +6,7 @@
     <d-card width="700px">
       <d-card class="pa-2 pt-1 pb-0" block>
         <d-card-title> Ultira Settings</d-card-title>
-        <d-tab-list v-model="currentSetting" color="primary" elevation="2">
+        <d-tab-list v-model="currentSetting" color="primary" elevation="4" class="pa-2" filled gap>
           <d-list-item v-for="item in settingsList" center :key="item.name">
             <d-icon :name="item.icon" />
             {{ item.name }}
@@ -17,9 +17,9 @@
         class="pa-4 pt-0"
         gap
         :wrap="false"
-        style="min-height: 300px; max-height: 800px; overflow: overlay"
+        style="min-height: 800px; max-height: 800px; overflow: overlay"
       >
-        <component :is="currentComponent"/>
+        <component :is="currentComponent" />
       </d-column>
     </d-card>
   </d-dialog>
@@ -34,7 +34,7 @@ import { useZoomFactor } from "@vueuse/electron";
 
 defineEmits(["submit"]);
 defineProps({
-  open: Boolean,
+  open: Boolean
 });
 
 const currentSetting = ref("General");
@@ -42,13 +42,13 @@ const settingsList = [
   {
     name: "General",
     icon: "setting",
-    component: JiraSettingsTabGeneral,
+    component: JiraSettingsTabGeneral
   },
   {
     name: "Projects",
     icon: "folder-open",
-    component: JiraSettingsTabProjects,
-  },
+    component: JiraSettingsTabProjects
+  }
 ];
 const currentComponent = computed(() =>
   (currentSetting.value && settingsList.length > 0
@@ -56,10 +56,10 @@ const currentComponent = computed(() =>
     : settingsList[0])?.component
 );
 
-onBeforeMount(()=>{
+onBeforeMount(() => {
   const factor = useZoomFactor();
   factor.value = zoomFactor.value;
-})
+});
 </script>
 
 <style scoped lang="scss">
