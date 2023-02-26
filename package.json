@@ -84,7 +84,7 @@
     "@vue/eslint-config-typescript": "^11.0.0",
     "@vueuse/components": "^8.5.0",
     "@vueuse/core": "^8.7.4",
-    "@vueuse/electron": "^8.6.0",
+    "@vueuse/electron": "^9.13.0",
     "chalk": "^4.1.2",
     "chokidar": "^3.5.3",
     "concurrently": "^7.2.1",
