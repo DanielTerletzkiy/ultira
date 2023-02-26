@@ -72,7 +72,7 @@ import jiraStore, {
   selectedJiraConfig,
   currentIssue,
   changeSteps,
-  scrapeTime
+  scrapeTime, loading
 } from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -171,6 +171,12 @@ onMounted(() => {
   ProjectController.subscribeChangeStep((resChangeSteps) => {
     console.log("changeSteps: ", resChangeSteps);
     changeSteps.value = resChangeSteps;
+  });
+
+  ProjectController.subscribeLoading((load) => {
+    console.log( load );
+    //@ts-ignore
+    loading.value = load;
   });
 
   setInterval(() => {

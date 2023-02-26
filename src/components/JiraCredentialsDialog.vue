@@ -4,14 +4,14 @@
     style="position:fixed;"
     @update:modelValue="(e) => $emit('update:open', e)"
   >
-    <d-card class="pa-2 pt-1" min-width="400px">
+    <d-card class="pa-2 pt-0" min-width="400px">
       <d-card-title>
         {{ name }}
       </d-card-title>
       <d-card-subtitle> Jira Credentials </d-card-subtitle>
-      <d-divider />
+      <d-divider/>
       <form @submit.prevent="onSubmit">
-        <d-column gap>
+        <d-column gap class="pa-4">
           <d-textfield
             v-model="username"
             color="primary"

@@ -17,14 +17,12 @@
         label="Url"
         type="url"
       />
-      <d-card-subtitle>
-        ID: <strong>{{ config.id }}</strong>
-      </d-card-subtitle>
       <d-tab-list
         v-model="config.applicationType"
         color="primary"
         elevation="1"
         class="ma-1"
+        outlined
       >
         <d-list-item
           v-for="app in AppTypes"

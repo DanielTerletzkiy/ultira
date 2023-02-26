@@ -12,6 +12,7 @@
       :model-value="modelValue"
       @update:modelValue="onChange"
       mandatory
+      gap
       width="100%"
       class="list font-weight-bold"
       style="max-height: calc(100% - 48px); height: 100%; overflow: hidden auto"

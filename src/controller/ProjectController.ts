@@ -8,6 +8,11 @@ const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 export default class ProjectController extends ApiController {
+
+  static subscribeLoading(callback: (data: { loading: boolean, type: string }) => void) {
+    ipcRenderer.on("loading", (event, arg) => callback(arg));
+  }
+
   static subscribe(callback: (data: Array<Project>) => void) {
     ipcRenderer.on("result/scrape/directory", (event, arg) => callback(arg));
   }

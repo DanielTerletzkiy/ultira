@@ -17,7 +17,7 @@
         icon="code-branch"
         color="primary"
         askColor="primary"
-        :disabled="!project || !hasIDE"
+        :disabled="!project || !hasIDE || isLoading"
         @confirm="onClick"
       />
     </d-card>
@@ -36,8 +36,8 @@
                 <d-column>
                   <d-card-subtitle>
                     <strong v-if="project">{{
-                      project.branch.toUpperCase()
-                    }}</strong>
+                        project.branch.toUpperCase()
+                      }}</strong>
                     <span v-else>Project not installed</span>
                   </d-card-subtitle>
                   <d-divider />
@@ -76,11 +76,11 @@
               elevation="3"
               justify="center"
             >
-              <JiraChangeStep :project="project"/>
+              <JiraChangeStep :project="project" />
             </d-row>
           </d-column>
-          <d-divider vertical block/>
-          <JiraProjectActions :project="project" />
+          <d-divider vertical block />
+          <JiraProjectActions :disabled="isLoading" :project="project" />
         </d-row>
       </d-card>
     </template>
@@ -91,7 +91,7 @@
 import {
   currentIssueKey,
   changeSteps,
-  fullProjects,
+  fullProjects, loading
 } from "../store/jira.store";
 import { computed, PropType } from "vue";
 import ProjectController from "../controller/ProjectController";
@@ -103,7 +103,7 @@ import JiraProjectActions from "./JiraProjectActions.vue";
 
 const props = defineProps({
   repository: { type: String, required: true },
-  tooltipPosition: { type: String as PropType<Position>, default: "left" },
+  tooltipPosition: { type: String as PropType<Position>, default: "left" }
 });
 
 const project = computed<Project>(
@@ -127,7 +127,11 @@ const hasChangeSteps = computed<boolean>(
     changeSteps.value.findIndex((step) => step.path === project.value.path) >= 0
 );
 
-const hasIDE = computed(()=>!!project.value.ideId)
+const hasIDE = computed(() => !!project.value.ideId);
+
+const isLoading = computed(() => {
+  return loading.value.project?.includes(project.value.path);
+});
 
 function onClick() {
   ProjectController.clearChangeSteps();

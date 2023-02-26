@@ -20,15 +20,15 @@ const store = createStore({
         id: "remove this",
         name: "don't use this",
         url: "https://only-a-sample.com",
-        applicationType: ApplicationType.Bitbucket,
-      },
+        applicationType: ApplicationType.Bitbucket
+      }
     ],
     ides: [
       {
         id: v4(),
         path: "",
-        name: "",
-      },
+        name: ""
+      }
     ],
     projects: [
       {
@@ -36,15 +36,15 @@ const store = createStore({
         project: "",
         branch: "",
         changes: [""],
-        ideId: "",
-      },
+        ideId: ""
+      }
     ],
     changeSteps: [
       {
         step: -1,
         success: false,
-        path: "",
-      },
+        path: ""
+      }
     ],
     searchDialogOpen: false,
     historyDialogOpen: false,
@@ -57,9 +57,14 @@ const store = createStore({
       isDark: true,
       primary: {
         light: "#A8B2FF",
-        dark: "#A8B2FF",
-      },
+        dark: "#A8B2FF"
+      }
     },
+    loading: {
+      issues: false,
+      projects: false,
+      project: ""
+    }
   },
   getters: {
     currentIssueKey(state): Task["key"] | undefined {
@@ -86,22 +91,22 @@ const store = createStore({
       return state.projects.map((project) =>
         project.ideId
           ? {
-              ...project,
-              ide: state.ides.find((ide) => ide.id === project.ideId),
-            }
+            ...project,
+            ide: state.ides.find((ide) => ide.id === project.ideId)
+          }
           : project
       );
     },
-    singleFullProject: (state) => (path: Project['path']): Project => {
+    singleFullProject: (state) => (path: Project["path"]): Project => {
       // @ts-ignore
-      const project: Project = state.projects.find(project => project.path === path)
-      project.ide = state.ides.find((ide) => ide.id === project.ideId)
+      const project: Project = state.projects.find(project => project.path === path);
+      project.ide = state.ides.find((ide) => ide.id === project.ideId);
       return project;
     },
-    singleFullProjectByName: (state) => (name: Project['project']): Project => {
+    singleFullProjectByName: (state) => (name: Project["project"]): Project => {
       // @ts-ignore
-      const project: Project = state.projects.find(project => project.project === name)
-      project.ide = state.ides.find((ide) => ide.id === project.ideId)
+      const project: Project = state.projects.find(project => project.project === name);
+      project.ide = state.ides.find((ide) => ide.id === project.ideId);
       return project;
     },
     changeSteps(state): Array<ChangeStep> {
@@ -132,6 +137,9 @@ const store = createStore({
     theme(state): object {
       return state.theme;
     },
+    loading(state): object {
+      return state.loading;
+    }
   },
   mutations: {
     setCurrentIssueKey(state, payload: Task["key"]) {
@@ -185,6 +193,9 @@ const store = createStore({
     setTheme(state, payload) {
       Object.assign(state.theme, payload);
     },
+    setLoading(state, payload) {
+      Object.assign(state.loading, payload);
+    }
   },
   actions: {
     setCurrentIssueKey(context, payload: Task["key"]) {
@@ -252,7 +263,10 @@ const store = createStore({
     setTheme(context, payload: object) {
       context.commit("setTheme", payload);
     },
-  },
+    setLoading(context, payload: object) {
+      context.commit("setLoading", payload);
+    }
+  }
 });
 
 export default store;
@@ -271,7 +285,7 @@ export const currentIssueKey = computed<Task["key"]>({
   },
   set(value: Task["key"]) {
     store.dispatch("setCurrentIssueKey", value);
-  },
+  }
 });
 
 export const currentSort = computed({
@@ -280,7 +294,7 @@ export const currentSort = computed({
   },
   set(value: SortNames) {
     store.dispatch("setCurrentSort", value);
-  },
+  }
 });
 
 export const selectedJiraConfig = computed({
@@ -289,7 +303,7 @@ export const selectedJiraConfig = computed({
   },
   set(value) {
     store.dispatch("setCurrentJiraConfig", value);
-  },
+  }
 });
 
 export const jiraConfigs = computed<Array<JiraConfig>>({
@@ -298,7 +312,7 @@ export const jiraConfigs = computed<Array<JiraConfig>>({
   },
   set(value) {
     store.dispatch("setJiraConfigs", value);
-  },
+  }
 });
 
 export const ides = computed<Array<IDE>>({
@@ -307,7 +321,7 @@ export const ides = computed<Array<IDE>>({
   },
   set(value) {
     store.dispatch("setIdes", value);
-  },
+  }
 });
 
 export const projects = computed<Array<Project>>({
@@ -316,7 +330,7 @@ export const projects = computed<Array<Project>>({
   },
   set(value) {
     store.dispatch("setRawProjects", value);
-  },
+  }
 });
 
 export const fullProjects = computed<Array<Project>>(
@@ -328,7 +342,7 @@ export const changeSteps = computed<Array<ChangeStep>>({
   },
   set(value) {
     store.dispatch("setChangeSteps", value);
-  },
+  }
 });
 
 export const searchOpen = computed<boolean>({
@@ -337,7 +351,7 @@ export const searchOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setSearchDialogOpen", value);
-  },
+  }
 });
 
 export const historyOpen = computed<boolean>({
@@ -346,7 +360,7 @@ export const historyOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setHistoryDialogOpen", value);
-  },
+  }
 });
 
 export const credentialsOpen = computed<boolean>({
@@ -355,7 +369,7 @@ export const credentialsOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setCredentialsDialogOpen", value);
-  },
+  }
 });
 
 export const refreshTime = computed<number>({
@@ -364,7 +378,7 @@ export const refreshTime = computed<number>({
   },
   set(value: number) {
     store.dispatch("setRefreshTime", value);
-  },
+  }
 });
 
 export const scrapeTime = computed<number>({
@@ -373,7 +387,7 @@ export const scrapeTime = computed<number>({
   },
   set(value: number) {
     store.dispatch("setScrapeTime", value);
-  },
+  }
 });
 
 export const zoomFactor = computed<number>({
@@ -382,7 +396,7 @@ export const zoomFactor = computed<number>({
   },
   set(value: number) {
     store.dispatch("setZoomFactor", value);
-  },
+  }
 });
 
 export const maxResults = computed<number>({
@@ -391,7 +405,7 @@ export const maxResults = computed<number>({
   },
   set(value: number) {
     store.dispatch("setMaxResults", value);
-  },
+  }
 });
 
 export const theme = computed<Partial<{ isDark: boolean, primary: { dark: string, light: string } }>>({
@@ -400,5 +414,14 @@ export const theme = computed<Partial<{ isDark: boolean, primary: { dark: string
   },
   set(value: Partial<{ isDark: boolean, primary: { dark: string, light: string } }>) {
     store.dispatch("setTheme", value);
+  }
+});
+
+export const loading = computed<Partial<{ issues: boolean, projects: boolean, project: string | null }>>({
+  get() {
+    return store.getters.loading;
+  },
+  set(value: Partial<{ issues: boolean, projects: boolean, project: string | null }>) {
+    store.dispatch("setLoading", value);
   }
 });

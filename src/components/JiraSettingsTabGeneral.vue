@@ -52,7 +52,9 @@
       label="Max Results"
       type="number"
       min="5"
-    />
+    >
+      <template v-slot:suffix> items</template>
+    </d-textfield>
     <d-card-subtitle class="pl-0 pb-0 font-weight-bold">
       Zoom
     </d-card-subtitle>

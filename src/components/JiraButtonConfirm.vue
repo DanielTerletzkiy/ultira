@@ -41,7 +41,7 @@ const props = defineProps({
   askColor: { type: String, default: "primary" },
   icon: { type: String },
   disabled: { type: Boolean },
-  size: { type: Number },
+  size: { type: Number }
 });
 
 const state = ref(false);

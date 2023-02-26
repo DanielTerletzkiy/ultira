@@ -22,7 +22,7 @@
             {{ item.value }}
           </d-card-subtitle>
         </d-row>
-        <d-divider v-if="i < customVariables.length -1 "/>
+        <d-divider v-if="i < customVariables.length -1 " />
       </d-column>
     </d-card>
   </JiraViewWrapper>
@@ -38,7 +38,8 @@ const customVariables = computed(() => {
     return null;
   }
   const customVarKeys = Object.keys(currentIssue.value.task.fields)
-    .filter(key => key.includes("customfield"));
+    // @ts-ignore
+    .filter(key => key.includes("customfield") && currentIssue.value.task.fields[key]);
 
   const customVariables = customVarKeys.map(key => {
     return {

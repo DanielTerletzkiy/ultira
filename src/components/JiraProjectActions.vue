@@ -1,15 +1,15 @@
 <template>
   <d-column>
     <d-tooltip position="left">
-      <JiraButtonConfirm color="primary" icon="import" :size="30" @confirm="onUpdate" />
+      <JiraButtonConfirm :disabled="disabled" color="primary" icon="import" :size="30" @confirm="onUpdate" />
       <template v-slot:tooltip>Update from <b>{{ project.defaultBranch }}</b></template>
     </d-tooltip>
     <d-tooltip position="left">
-      <JiraButtonConfirm color="primary" icon="folder-open" :size="30" @confirm="onOpen" />
+      <JiraButtonConfirm :disabled="disabled" color="primary" icon="folder-open" :size="30" @confirm="onOpen" />
       <template v-slot:tooltip>Open</template>
     </d-tooltip>
     <d-tooltip position="left" :disabled="!hasDefaultBranch">
-      <JiraButtonConfirm color="primary" icon="cloud-database-tree" :size="30" @confirm="onChangeDefault" />
+      <JiraButtonConfirm :disabled="disabled" color="primary" icon="cloud-database-tree" :size="30" @confirm="onChangeDefault" />
       <template v-slot:tooltip>Change to <b>{{ project.defaultBranch }}</b></template>
     </d-tooltip>
   </d-column>
@@ -22,7 +22,8 @@ import { Project } from "../../types/Jira";
 import ProjectController from "../controller/ProjectController";
 
 const props = defineProps({
-  project: { type: Object as PropType<Project>, required: true }
+  project: { type: Object as PropType<Project>, required: true },
+  disabled: { type: Boolean }
 });
 
 function onUpdate() {

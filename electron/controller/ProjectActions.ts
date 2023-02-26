@@ -28,6 +28,14 @@ const projectActions = class ProjectActions {
     ]);
   }
 
+  public setLoading(loading: boolean | string, type: string) {
+    //TODO add proper types
+    this.event.sender.send("loading", {
+        [type]: loading
+      }
+    );
+  }
+
   private createGitInstance() {
     this.changeStep(1, ChangeState.Started);
     this.git = SimpleGit(this.project.path);
@@ -72,7 +80,6 @@ const projectActions = class ProjectActions {
     try {
       await this.git.fetch();
       await this.git.pull("origin", master);
-      this.scrapeProject();
     } catch (e) {
       console.error("fetch:", e);
       this.changeStep(2, ChangeState.Failed);
@@ -119,15 +126,26 @@ const projectActions = class ProjectActions {
   }
 
   public async changeBranchSequence(branch: string) {
+    this.setLoading(this.project.path, "project");
     await this.pullMaster();
     await this.changeBranch(branch);
     this.scrapeProject();
     this.openWithIDE();
+    this.setLoading("", "project");
   }
 
   public async changeDefault() {
+    this.setLoading(this.project.path, "project");
     await this.pullMaster();
     this.scrapeProject();
+    this.setLoading("", "project");
+  }
+
+  public async update() {
+    this.setLoading(this.project.path, "project");
+    await this.updateWithDefault();
+    this.scrapeProject();
+    this.setLoading("", "project");
   }
 };
 

@@ -3,7 +3,7 @@
     <JiraCredentialsDialog
       class="dialog"
       v-model:open="credentialsOpen"
-      :name="selectedJiraConfig"
+      :name="jiraConfigs.find((config)=>config.id === selectedJiraConfig).name"
       @submit="onCredentialsSubmit"
     />
     <d-tab-list

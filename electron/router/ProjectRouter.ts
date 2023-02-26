@@ -6,14 +6,6 @@ const { ipcMain } = require("electron");
 
 const ProjectScraper = require("../controller/ProjectScraper");
 
-/*! TODO: file watcher for auto project scraping
-const { watch } = require("chokidar");
-
-const watcher = watch("."); // test
-watcher.on("ready", () => console.log("Watching dir..."));
-watcher.on("change", (path: string) => console.log(`File ${path} has been changed`));
-!*/
-
 ipcMain.on(
   "project/change",
   async (event: any, arg: { project: string; issue: Task["key"] }) => {
@@ -41,7 +33,7 @@ ipcMain.on(
   async (event: any, arg: { project: string; }) => {
     const project: Project = JSON.parse(arg.project);
     const controller = new ProjectActions(project, event);
-    await controller.updateWithDefault().catch();
+    await controller.update().catch();
 
     event.sender.send("result/project/update", true);
   }
@@ -77,6 +69,7 @@ ipcMain.on("scrape/directory", async (event: any, arg: { path: string }) => {
 ipcMain.on(
   "scrape/branches",
   async (event: any, arg: { projectPaths: Array<Project["path"]> }) => {
+    event.sender.send("loading", {projects: true});
     let result = await ProjectScraper.scrapeBranches(arg.projectPaths);
     result = result.map((result: Partial<Project>) => {
       // @ts-ignore
@@ -84,5 +77,6 @@ ipcMain.on(
       return result;
     });
     event.sender.send("result/scrape/branches", result);
+    event.sender.send("loading", {projects: false});
   }
 );

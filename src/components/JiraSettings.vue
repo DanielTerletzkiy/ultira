@@ -7,7 +7,7 @@
       <d-card class="pa-2 pt-1 pb-0" block>
         <d-card-title> Ultira Settings</d-card-title>
         <d-tab-list v-model="currentSetting" color="primary" elevation="4" class="pa-2" filled gap>
-          <d-list-item v-for="item in settingsList" center :key="item.name">
+          <d-list-item v-for="item in settingsList" center :key="item.name" class="font-weight-bold">
             <d-icon :name="item.icon" />
             {{ item.name }}
           </d-list-item>
