@@ -1,6 +1,6 @@
 {
   "name": "ultira",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "private": true,
   "description": "ultimate jira tool",
   "author": {
@@ -107,7 +107,7 @@
     "vite-plugin-electron-renderer": "^0.12.1",
     "vue": "^3.2.37",
     "vue-ellipse-progress": "^2.1.1",
-    "vue3-carousel": "^0.2.11",
+    "vue3-carousel": "^0.1.46",
     "vuelize": "^0.1.55",
     "vuex": "^4.0.2",
     "vuex-persist": "^3.1.3"

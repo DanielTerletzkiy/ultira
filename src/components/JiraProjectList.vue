@@ -1,5 +1,5 @@
 <template>
-  <d-card v-if="projects.length > 0" block class="ma-3">
+  <d-card v-if="projects.length > 0" block class="ma-2">
     <d-textfield
       v-model="search"
       class="search sticky"

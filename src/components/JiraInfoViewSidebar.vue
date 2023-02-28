@@ -6,10 +6,6 @@
     height="100%"
     style="min-width: 250px"
   >
-    <d-row>
-      <d-card-subtitle class="pa-0 font-weight-bold">Sidebar</d-card-subtitle>
-      <d-divider class="mx-3" block elevation="8" />
-    </d-row>
     <d-column gap class="px-2">
       <JiraUserItem :user="currentIssue.task.fields.reporter">
         Reporter

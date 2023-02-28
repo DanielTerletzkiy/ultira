@@ -1,14 +1,16 @@
 <template>
-  <JiraViewWrapper class="jira-comments">
+  <JiraViewWrapper class="jira-comments" :canHide="canHide"
+                   @long="() => currentDialogComponent = JiraCommentsView">
     <template v-slot:icon="{hidden}">
-      <d-badge :value="hidden && currentIssue?.task.fields.comment?.comments.length > 0" color="primary" background-color="primary">
+      <d-badge :value="hidden && currentIssue?.task.fields.comment?.comments.length > 0" color="primary"
+               background-color="primary">
         <d-icon
           name="comment-message"
           :size="30"
           icon-style="monochrome"
           color="primary"
         />
-        <template v-slot:content>{{currentIssue?.task.fields.comment?.comments.length}}</template>
+        <template v-slot:content>{{ currentIssue?.task.fields.comment?.comments.length }}</template>
       </d-badge>
     </template>
     <template v-slot:title> Comments</template>
@@ -73,7 +75,12 @@ import { inject, ref } from "vue";
 import JiraCommentsViewItem from "./JiraCommentsViewItem.vue";
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraLoader from "./JiraLoader.vue";
-import { currentIssue } from "../store/jira.store";
+import { currentDialogComponent, currentIssue } from "../store/jira.store";
+import JiraCommentsView from "./JiraCommentsView.vue";
+
+defineProps({
+  canHide: { type: Boolean }
+});
 
 // eslint-disable-next-line no-undef,no-unused-vars
 const vuelize: Vuelize = inject("vuelize") as Vuelize;

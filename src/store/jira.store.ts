@@ -49,6 +49,7 @@ const store = createStore({
     searchDialogOpen: false,
     historyDialogOpen: false,
     credentialsDialogOpen: false,
+    currentDialogComponent: null,
     refreshTime: 60,
     scrapeTime: 30,
     zoomFactor: 1,
@@ -100,13 +101,17 @@ const store = createStore({
     singleFullProject: (state) => (path: Project["path"]): Project => {
       // @ts-ignore
       const project: Project = state.projects.find(project => project.path === path);
-      project.ide = state.ides.find((ide) => ide.id === project.ideId);
+      if (project && project.ideId) {
+        project.ide = state.ides.find((ide) => ide.id === project.ideId);
+      }
       return project;
     },
     singleFullProjectByName: (state) => (name: Project["project"]): Project => {
       // @ts-ignore
       const project: Project = state.projects.find(project => project.project === name);
-      project.ide = state.ides.find((ide) => ide.id === project.ideId);
+      if (project && project.ideId) {
+        project.ide = state.ides.find((ide) => ide.id === project.ideId);
+      }
       return project;
     },
     changeSteps(state): Array<ChangeStep> {
@@ -121,6 +126,9 @@ const store = createStore({
     },
     credentialsDialogOpen(state): boolean {
       return state.credentialsDialogOpen;
+    },
+    currentDialogComponent(state): unknown | null {
+      return state.currentDialogComponent;
     },
     refreshTime(state): number {
       return state.refreshTime;
@@ -177,6 +185,9 @@ const store = createStore({
     },
     setCredentialsDialogOpen(state, payload: boolean) {
       state.credentialsDialogOpen = payload;
+    },
+    setCurrentDialogComponent(state, payload: any | null) {
+      state.currentDialogComponent = payload;
     },
     setRefreshTime(state, payload: number) {
       state.refreshTime = payload;
@@ -247,6 +258,9 @@ const store = createStore({
     },
     setCredentialsDialogOpen(context, payload: boolean) {
       context.commit("setCredentialsDialogOpen", payload);
+    },
+    setCurrentDialogComponent(context, payload: boolean) {
+      context.commit("setCurrentDialogComponent", payload);
     },
     setRefreshTime(context, payload: number) {
       context.commit("setRefreshTime", payload);
@@ -369,6 +383,15 @@ export const credentialsOpen = computed<boolean>({
   },
   set(value: boolean) {
     store.dispatch("setCredentialsDialogOpen", value);
+  }
+});
+
+export const currentDialogComponent = computed<unknown | null>({
+  get() {
+    return store.getters.currentDialogComponent;
+  },
+  set(value: unknown | null) {
+    store.dispatch("setCurrentDialogComponent", value);
   }
 });
 

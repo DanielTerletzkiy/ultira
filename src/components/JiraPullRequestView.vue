@@ -1,5 +1,6 @@
 <template>
-  <JiraViewWrapper class="jira-pull-request-view">
+  <JiraViewWrapper class="jira-pull-request-view" :canHide="canHide"
+                   @long="() => currentDialogComponent = JiraPullRequestView">
     <template v-slot:icon>
       <d-icon
         name="download-alt"
@@ -160,7 +161,12 @@
 <script setup lang="ts">
 import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraLoader from "./JiraLoader.vue";
-import { currentIssue } from "../store/jira.store";
+import { currentDialogComponent, currentIssue } from "../store/jira.store";
+import JiraPullRequestView from "./JiraPullRequestView.vue";
+
+defineProps({
+  canHide: { type: Boolean }
+});
 
 function getApprovals(reviewers: any) /*TODO export namespace bs*/ {
   return reviewers.filter(

@@ -1,7 +1,7 @@
 <template>
   <d-accordion header-color="primary" elevation="3" :disabled="!hasChanges">
     <template v-slot:header>
-      <d-row class="px-3 pr-1" gap>
+      <d-row class="header px-3 pr-0" gap>
         <d-column class="project">
           <d-card-title class="title">
             {{ project.project }}
@@ -198,18 +198,22 @@ const changeGroups = computed(() => {
 const hasChanges = computed(() => props.project?.changes.files.length > 0);
 </script>
 <style scoped lang="scss">
-.project {
-  height: 54px;
+.header {
+  padding-right: 2px !important;
 
-  .title {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
+  .project {
+    height: 54px;
 
-  .path {
-    padding-left: 0;
-    margin-top: -8px;
-    padding-bottom: 0;
+    .title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .path {
+      padding-left: 0;
+      margin-top: -8px;
+      padding-bottom: 0;
+    }
   }
 }
 

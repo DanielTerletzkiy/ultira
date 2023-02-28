@@ -1,5 +1,6 @@
 <template>
-  <JiraViewWrapper hide-divider>
+  <JiraViewWrapper hide-divider :canHide="canHide"
+                   @long="() => currentDialogComponent = JiraBranchView">
     <template v-slot:icon>
       <d-icon
         name="layer-group"
@@ -21,7 +22,7 @@
           :key="option"
           height="40px"
           style="font-size: 1.2rem"
-          >{{ option }}
+        >{{ option }}
         </d-list-item>
       </d-tab-list>
       <JiraProjectBranchRefreshButton />
@@ -58,7 +59,7 @@
                   {{ repository.name }}
                 </d-card-title>
                 <d-card-subtitle
-                  >Repository
+                >Repository
                   <JiraLinkIconButton
                     v-if="repository.url"
                     :url="repository.url"
@@ -196,7 +197,7 @@
         <JiraProjectList />
       </d-column>
       <d-row v-else block justify="center">
-        <JiraLoader/>
+        <JiraLoader />
       </d-row>
     </d-card>
   </JiraViewWrapper>
@@ -208,7 +209,7 @@ import JiraViewWrapper from "./JiraViewWrapper.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraProjectButton from "./JiraProjectButton.vue";
 import JiraProjectList from "./JiraProjectList.vue";
-import { currentIssue } from "../store/jira.store";
+import { currentDialogComponent, currentIssue } from "../store/jira.store";
 import JiraLoader from "./JiraLoader.vue";
 import JiraProjectBranchRefreshButton from "./JiraProjectBranchRefreshButton.vue";
 import { ref } from "vue";
@@ -216,6 +217,11 @@ import JiraLinkIconButton from "./JiraLinkIconButton.vue";
 import JiraPRButton from "./JiraPRButton.vue";
 import { ChangeType } from "../../types/ChangeType";
 import { ViewSwitch } from "../../types/ViewSwitch";
+import JiraBranchView from "./JiraBranchView.vue";
+
+defineProps({
+  canHide: { type: Boolean }
+});
 
 function changeTypeColor(type: ChangeType) {
   switch (type) {

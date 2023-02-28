@@ -4,12 +4,13 @@
       <JiraButtonConfirm :disabled="disabled" color="primary" icon="import" :size="30" @confirm="onUpdate" />
       <template v-slot:tooltip>Update from <b>{{ project.defaultBranch }}</b></template>
     </d-tooltip>
-    <d-tooltip position="left">
+    <d-tooltip position="left" :disabled="!hasIDE">
       <JiraButtonConfirm :disabled="disabled" color="primary" icon="folder-open" :size="30" @confirm="onOpen" />
-      <template v-slot:tooltip>Open</template>
+      <template v-slot:tooltip>Open <b>{{ hasIDE ? project.ide.name : "" }}</b></template>
     </d-tooltip>
     <d-tooltip position="left" :disabled="!hasDefaultBranch">
-      <JiraButtonConfirm :disabled="disabled" color="primary" icon="cloud-database-tree" :size="30" @confirm="onChangeDefault" />
+      <JiraButtonConfirm :disabled="disabled" color="primary" icon="cloud-database-tree" :size="30"
+                         @confirm="onChangeDefault" />
       <template v-slot:tooltip>Change to <b>{{ project.defaultBranch }}</b></template>
     </d-tooltip>
   </d-column>
@@ -31,7 +32,9 @@ function onUpdate() {
 }
 
 function onOpen() {
-  ProjectController.open(props.project);
+  if (hasIDE.value) {
+    ProjectController.open(props.project);
+  }
 }
 
 function onChangeDefault() {
@@ -41,6 +44,7 @@ function onChangeDefault() {
 }
 
 const hasDefaultBranch = computed(() => !!props.project.defaultBranch);
+const hasIDE = computed(() => !!props.project?.ideId);
 
 </script>
 

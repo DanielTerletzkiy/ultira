@@ -1,50 +1,53 @@
 <template>
-  <d-card class="jira-info" block>
-    <d-column no-padding gap block :wrap="false">
-      <d-row class="px-1" gap :wrap="false">
-        <d-tooltip position="right" filled color="primary">
-          <JiraImage
-            :url="currentIssue?.task.fields.project.avatarUrls['48x48']"
-            :key="currentIssue?.task.fields.project.key"
-          >
-            <template v-slot:default="{ base64 }">
-              <d-card width="64px" height="64px" elevation-light>
-                <d-avatar
-                  v-if="base64"
-                  key="image"
-                  color="transparent"
-                  size="64"
-                  :style="{
+  <JiraViewWrapper class="jira-info" headerHeight="80px" hideDivider
+                   @long="() => currentDialogComponent = JiraInfoView">
+    <template v-slot:button>
+      <d-tooltip class="ma-2 mr-0" position="right" filled color="primary">
+        <JiraImage
+          :url="currentIssue?.task.fields.project.avatarUrls['48x48']"
+          :key="currentIssue?.task.fields.project.key"
+        >
+          <template v-slot:default="{ base64 }">
+            <d-card width="64px" height="64px" elevation-light v-ripple>
+              <d-avatar
+                v-if="base64"
+                key="image"
+                color="transparent"
+                size="64"
+                :style="{
                       backgroundImage: `url(${base64})`,
                       backgroundPosition: 'center',
                       backgroundSize: 'cover',
                     }"
-                >
-                  <div />
-                </d-avatar>
-                <d-elevation-loader
-                  v-else
-                  key="loader"
-                  :default-size="16"
-                  :amount="16"
-                  :columns="4"
-                />
-              </d-card>
-            </template>
-          </JiraImage>
-          <template v-slot:tooltip>
-            <d-column>
-              <d-card-subtitle class="pa-0" color="inherit">
-                <d-icon name="transaction" :size="20" />
-                {{ currentIssue.task.fields.project.name }}
-              </d-card-subtitle>
-              <d-card-subtitle class="pa-0" color="inherit">
-                <d-icon name="key-skeleton" :size="20" />
-                {{ currentIssue.task.fields.project.key }}
-              </d-card-subtitle>
-            </d-column>
+              >
+                <div />
+              </d-avatar>
+              <d-elevation-loader
+                v-else
+                key="loader"
+                :default-size="16"
+                :amount="16"
+                :columns="4"
+              />
+            </d-card>
           </template>
-        </d-tooltip>
+        </JiraImage>
+        <template v-slot:tooltip>
+          <d-column>
+            <d-card-subtitle class="pa-0" color="inherit">
+              <d-icon name="transaction" :size="20" />
+              {{ currentIssue.task.fields.project.name }}
+            </d-card-subtitle>
+            <d-card-subtitle class="pa-0" color="inherit">
+              <d-icon name="key-skeleton" :size="20" />
+              {{ currentIssue.task.fields.project.key }}
+            </d-card-subtitle>
+          </d-column>
+        </template>
+      </d-tooltip>
+    </template>
+    <template v-slot:title>
+      <d-row gap :wrap="false">
         <d-column block>
           <d-card-title class="pt-0 font-size-medium" style="text-align: start">
             {{ currentIssue.task.fields.summary }}
@@ -85,6 +88,13 @@
           </d-card-subtitle>
         </d-column>
       </d-row>
+    </template>
+    <d-column
+      gap no-padding
+      style="max-height: 100%; overflow: overlay"
+      height="100%"
+      :wrap="false"
+    >
       <d-row class="info-row" gap block :wrap="false" align="start">
         <d-column class="description-column" :wrap="false" no-padding block height="100%">
           <d-column
@@ -93,12 +103,6 @@
             block
             no-padding
           >
-            <d-row>
-              <d-card-subtitle class="pa-0 font-weight-bold">
-                Description
-              </d-card-subtitle>
-              <d-divider class="mx-3" block elevation="6" />
-            </d-row>
             <JiraMarkup :body="currentIssue.task.fields.description" />
           </d-column>
           <d-spacer />
@@ -113,10 +117,10 @@
           </d-button>
           <JiraAttachmentDialog v-model="attachmentDialog" />
         </d-column>
-        <JiraInfoViewSidebar />
+        <JiraInfoViewSidebar class="side-bar" />
       </d-row>
     </d-column>
-  </d-card>
+  </JiraViewWrapper>
 </template>
 
 <script setup lang="ts">
@@ -127,8 +131,10 @@ import JiraInfoViewSidebar from "./JiraInfoViewSidebar.vue";
 import JiraMarkup from "./JiraMarkup.vue";
 import JiraImage from "./JiraImage.vue";
 import JiraTransitionButtons from "./JiraTransitionButtons.vue";
-import { currentIssue } from "../store/jira.store";
+import { currentDialogComponent, currentIssue } from "../store/jira.store";
 import JiraAttachmentDialog from "./JiraAttachmentDialog.vue";
+import JiraViewWrapper from "./JiraViewWrapper.vue";
+import JiraInfoView from "./JiraInfoView.vue";
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
@@ -162,12 +168,9 @@ function toggleAttachmentDialog() {
 
 <style lang="scss">
 .jira-info {
-  display: flex;
-  max-height: inherit;
-  overflow: hidden;
 
   .info-row {
-    max-height: calc(100% - 78px - 6px);
+    max-height: calc(100%);
 
     .description-column {
       max-height: 100%;

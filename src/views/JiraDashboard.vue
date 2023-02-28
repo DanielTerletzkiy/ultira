@@ -8,16 +8,15 @@
           align="stretch"
         >
           <JiraInfoView
-            v-on-long-press.prevent="() => setDialog(JiraInfoView)"
             v-if="currentIssue"
             class="card"
             style="flex: 1;"
           />
           <JiraBranchView
-            v-on-long-press.prevent="() => setDialog(JiraBranchView)"
             v-if="currentIssue"
             class="card"
             style="flex: 1;"
+            canHide
           />
         </d-row>
         <d-row
@@ -33,16 +32,16 @@
             :issue-list="JiraController.issues.value"
           />
           <JiraCommentsView
-            v-on-long-press.prevent="() => setDialog(JiraCommentsView)"
             class="card"
             style="flex: 1"
             v-if="currentIssue"
+            canHide
           />
           <JiraPullRequestView
-            v-on-long-press.prevent="() => setDialog(JiraPullRequestView)"
             class="card"
             style="flex: 3"
             v-if="currentIssue"
+            canHide
           />
         </d-row>
       </d-column>
@@ -72,7 +71,7 @@ import jiraStore, {
   selectedJiraConfig,
   currentIssue,
   changeSteps,
-  scrapeTime, loading
+  scrapeTime, loading, currentDialogComponent
 } from "../store/jira.store";
 import JiraBaseController from "../controller/JiraBaseController";
 import JiraController from "../controller/JiraController";
@@ -84,7 +83,6 @@ import JiraCommentsView from "../components/JiraCommentsView.vue";
 import ProjectController from "../controller/ProjectController";
 import { State } from "vuelize/src/types/Vuelize";
 import { JiraConfig } from "../../types/Jira";
-import { vOnLongPress } from "@vueuse/components";
 
 // eslint-disable-next-line no-undef
 const vuelize: Vuelize = inject("vuelize") as Vuelize;
@@ -141,8 +139,6 @@ function connectCurrentData() {
     currentIssue.value.getConnectedData();
   }
 }
-
-const currentDialogComponent = ref<unknown | null>(null);
 
 function setDialog(component: unknown) {
   console.log({ component });
