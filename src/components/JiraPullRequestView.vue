@@ -32,8 +32,9 @@
     <d-column
       v-if="currentIssue?.hasPullRequests"
       gap
-      style="max-height: 100%; overflow: overlay"
+      style="max-height: 100%; overflow: auto"
       height="100%"
+      class="px-2"
       :wrap="false"
     >
       <d-card
