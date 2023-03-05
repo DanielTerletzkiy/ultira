@@ -4,7 +4,7 @@
       Look & Feel
     </d-card-subtitle>
     <d-checkbox color="primary" v-model="$vuelize.theme.dark">
-      Dark mode
+      Dark mode <d-spacer/> <small>(Developed for Dark)</small>
     </d-checkbox>
     <d-card-subtitle
       root-tag="label"

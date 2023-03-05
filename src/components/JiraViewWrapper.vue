@@ -20,7 +20,7 @@
           </slot>
         </span>
         <d-column v-if="!hidden" no-padding class="pa-0" block>
-          <d-card-title class="title font-size-medium" :height="headerHeight">
+          <d-card-title class="title font-size-medium pr-0" :height="headerHeight">
             <slot name="title" :hidden="hidden" />
           </d-card-title>
         </d-column>

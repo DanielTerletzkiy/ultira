@@ -18,14 +18,15 @@
         color="primary"
       >
         <d-list-item
-          v-for="option in viewSwitchKeys"
-          :key="option"
+          v-for="option in viewSwitchTabs"
+          :key="option.type"
           height="40px"
-          style="font-size: 1.2rem"
-        >{{ option }}
+          style="font-size: 1.2rem">
+          <d-icon :name="option.icon" />
+          {{ option.type }}
         </d-list-item>
       </d-tab-list>
-      <JiraProjectBranchRefreshButton />
+      <JiraProjectBranchRefreshButton class="mr-2" />
     </template>
     <d-card
       block
@@ -218,6 +219,7 @@ import JiraPRButton from "./JiraPRButton.vue";
 import { ChangeType } from "../../types/ChangeType";
 import { ViewSwitch } from "../../types/ViewSwitch";
 import JiraBranchView from "./JiraBranchView.vue";
+import { viewSwitchTabs } from "../constants/ViewSwitchTabs";
 
 defineProps({
   canHide: { type: Boolean }
@@ -244,7 +246,6 @@ function changeTypeColor(type: ChangeType) {
   }
 }
 
-const viewSwitchKeys = Object.keys(ViewSwitch);
 const currentViewSwitch = ref<ViewSwitch>(ViewSwitch.Server);
 </script>
 

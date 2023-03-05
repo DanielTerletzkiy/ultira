@@ -39,8 +39,16 @@ export default class ProjectController extends ApiController {
     return ipcRenderer.send("project/change/default", { project: JSON.stringify(project) });
   }
 
-  static update(project: Project) {
+  static pull(project: Project) {
     return ipcRenderer.send("project/update", { project: JSON.stringify(project) });
+  }
+
+  static pullCurrent(project: Project) {
+    return ipcRenderer.send("project/update/current", { project: JSON.stringify(project) });
+  }
+
+  static pushCurrent(project: Project) {
+    return ipcRenderer.send("project/push/current", { project: JSON.stringify(project) });
   }
 
   static open(project: Project) {
@@ -57,6 +65,5 @@ export default class ProjectController extends ApiController {
 
   static async scrapeBranches(projectPaths: Array<Project["path"]>) {
     return ipcRenderer.send("scrape/branches", { projectPaths });
-
   }
 }

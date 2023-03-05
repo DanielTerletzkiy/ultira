@@ -12,7 +12,7 @@
     <template v-slot:title="{hidden}">
       Pull Requests
       <d-spacer />
-      <d-row width="max-content" v-if="currentIssue?.hasPullRequests && !hidden" gap>
+      <d-row width="max-content" v-if="currentIssue?.hasPullRequests && !hidden" gap class="mr-2">
         <d-card-title v-for="pullRequest in currentIssue?.pullRequestData.detail[0]
           ?.pullRequests.sort((a,b)=>new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime())"
                       :color="pullRequest.reviewers.some((reviewer => reviewer.approved))?'success':'error'"

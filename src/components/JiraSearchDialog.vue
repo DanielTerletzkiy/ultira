@@ -3,51 +3,60 @@
     :modelValue="open"
     @update:modelValue="(e) => $emit('update:open', e)"
   >
-    <d-card class="pa-2 pt-1 pb-0" width="700px" height="600px">
-      <d-column style="height: 90px">
-        <d-card-title> Search...</d-card-title>
-        <d-card-subtitle> Issue Keys</d-card-subtitle>
-        <d-divider />
-      </d-column>
-      <d-textfield
-        v-model="searchKey"
-        class="font-size-medium"
-        color="primary"
-        full-width
-        filled
-        solo
-        label="Key"
-        placeholder="KEY-1..."
-        outlined
-        ref="searchField"
-      >
-        <template v-slot:prefix>
-          <d-icon name="search-alt" />
-        </template>
-        <template v-slot:suffix>
-          <d-icon-button name="times" :size="30" @click="clearSearchKey" />
-        </template>
-      </d-textfield>
+    <JiraViewWrapper>
+      <template v-slot:icon>
+        <d-icon name="search-alt" color="primary" :size="30" />
+      </template>
+      <template v-slot:title>
+        Search
+        <d-spacer />
+        <d-textfield
+          v-model="searchKey"
+          class="font-size-medium"
+          color="primary"
+          filled
+          solo
+          label="Key"
+          placeholder="KEY-1..."
+          ref="searchField"
+          elevation="n1"
+        >
+          <template v-slot:prefix>
+            <d-icon name="search-alt" />
+          </template>
+          <template v-slot:suffix>
+            <d-icon-button name="times" :size="30" @click="clearSearchKey" />
+          </template>
+        </d-textfield>
+      </template>
       <d-column
-        outlined
-        gap
-        class="pa-0 my-2"
-        style="max-height: calc(100% - 90px - 64px); overflow: hidden auto"
+        style="max-height: 100%; overflow: overlay"
+        height="60vh" width="40vw"
+        :wrap="false"
+        no-padding
       >
-        <JiraList
-          v-if="searchResults.length > 0"
-          v-model="currentIssueKey"
-          hide-sorter
-          :issue-list="searchResults"
-        />
-        <d-column v-else style="user-select: none">
-          <d-card-title color="primary" class="mx-3">
-            <d-icon name="file-question-alt" :size="30" />
-            Empty
-          </d-card-title>
-        </d-column>
+        <d-card elevation="n2" block class="pa-2">
+          <d-column
+            outlined
+            gap
+            class="pa-0 my-2"
+          >
+            <JiraList
+              v-if="searchResults.length > 0"
+              v-model="currentIssueKey"
+              hide-sorter
+              :issue-list="searchResults"
+            />
+            <d-column v-else style="user-select: none" elevation="1">
+              <d-card-title color="primary" class="mx-3">
+                <d-icon name="file-question-alt" :size="30" />
+                Empty
+              </d-card-title>
+            </d-column>
+          </d-column>
+        </d-card>
       </d-column>
-    </d-card>
+    </JiraViewWrapper>
   </d-dialog>
 </template>
 
@@ -59,9 +68,10 @@ import { currentIssueKey } from "../store/jira.store";
 import JiraTask from "../model/JiraTask";
 import { watchDebounced } from "@vueuse/core";
 import { useFocus } from "@vueuse/core";
+import JiraViewWrapper from "./JiraViewWrapper.vue";
 
 const props = defineProps({
-  open: Boolean,
+  open: Boolean
 });
 
 const searchField = ref();
@@ -75,7 +85,6 @@ function search() {
     searchResults.value = [];
     return;
   }
-  searchKey.value = searchKey.value?.toUpperCase();
   console.log(searchKey.value);
   const result = JiraController.issues.value.filter((issue: JiraTask) => {
     for (const key of Object.keys(issue.task)) {
@@ -130,7 +139,7 @@ watch(() => props.open, init);
 
 watchDebounced([searchKey], search, {
   debounce: 200,
-  maxWait: 1000,
+  maxWait: 1000
 });
 
 onMounted(init);

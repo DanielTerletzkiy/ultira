@@ -40,6 +40,28 @@ ipcMain.on(
 );
 
 ipcMain.on(
+  "project/update/current",
+  async (event: any, arg: { project: string; }) => {
+    const project: Project = JSON.parse(arg.project);
+    const controller = new ProjectActions(project, event);
+    await controller.updateCurrent().catch();
+
+    event.sender.send("result/project/update", true);
+  }
+);
+
+ipcMain.on(
+  "project/push/current",
+  async (event: any, arg: { project: string; }) => {
+    const project: Project = JSON.parse(arg.project);
+    const controller = new ProjectActions(project, event);
+    await controller.pushCurrent().catch();
+
+    event.sender.send("result/project/update", true);
+  }
+);
+
+ipcMain.on(
   "project/open",
   async (event: any, arg: { project: string; }) => {
     const project: Project = JSON.parse(arg.project);

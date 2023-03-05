@@ -12,7 +12,7 @@
         <d-icon name="search" />
       </template>
       <template v-slot:suffix>
-        <d-icon-button v-if="!!search" name="times" :size="30" @click="clearSearch"/>
+        <d-icon-button v-if="!!search" name="times" :size="30" @click="clearSearch" />
       </template>
     </d-textfield>
     <d-column
@@ -29,8 +29,11 @@
       >
         {{ list.title }}
       </d-card-subtitle>
-      <JiraProjectListItem v-for="(project, p) in list.projects" :key="p" :project="project" />
+      <JiraProjectListItem v-for="(project, p) in list.projects" :key="p" :project="project"
+                           @contextmenu.native="()=>selectProject(project.path)" />
     </d-column>
+    <JiraProjectAdvancedGitActionsDialog v-model:open="currentProjectPath" :repository="currentProjectPath"
+                                         :key="currentProjectPath" />
   </d-card>
 </template>
 
@@ -39,11 +42,19 @@ import { currentIssueKey, projects } from "../store/jira.store";
 import { computed, ref } from "vue";
 import { Project } from "../../types/Jira";
 import JiraProjectListItem from "./JiraProjectListItem.vue";
+import JiraProjectAdvancedGitActionsDialog from "./JiraProjectAdvancedGitActionsDialog.vue";
 
 const search = ref("");
 
-function clearSearch(){
+
+function clearSearch() {
   search.value = "";
+}
+
+const currentProjectPath = ref<Project["path"] | boolean>(false);
+
+function selectProject(project: Project["path"]) {
+  currentProjectPath.value = project;
 }
 
 const lists = computed<Array<{ title: string; projects: Array<Project> }>>(
@@ -51,23 +62,23 @@ const lists = computed<Array<{ title: string; projects: Array<Project> }>>(
     return [
       {
         title: "Recommended",
-        projects: recommendedProjects.value,
+        projects: recommendedProjects.value
       },
       {
         title: "All",
         projects: !search.value
           ? projects.value
           : projects.value.filter(
-              (project) =>
-                project.project
-                  .toLowerCase()
-                  .includes(search.value.toLowerCase()) ||
-                project.branch
-                  .toLowerCase()
-                  .includes(search.value.toLowerCase()) ||
-                project.path.toLowerCase().includes(search.value.toLowerCase())
-            ),
-      },
+            (project) =>
+              project.project
+                .toLowerCase()
+                .includes(search.value.toLowerCase()) ||
+              project.branch
+                .toLowerCase()
+                .includes(search.value.toLowerCase()) ||
+              project.path.toLowerCase().includes(search.value.toLowerCase())
+          )
+      }
     ];
   }
 );

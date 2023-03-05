@@ -1,12 +1,12 @@
 <template>
   <component :is="parentComponent" width="max-content">
     <d-tooltip :position="tooltipPosition">
-      <JiraButtonConfirm :disabled="disabled" color="primary" icon="import" :size="buttonSize" @confirm="onUpdate" />
+      <JiraButtonConfirm :disabled="disabled" color="primary" icon="import" :size="buttonSize" @confirm="onPull" />
       <template v-slot:tooltip>Update from <b>{{ project.defaultBranch }}</b></template>
     </d-tooltip>
     <d-tooltip :position="tooltipPosition" :disabled="!hasIDE">
       <JiraButtonConfirm :disabled="disabled" color="primary" icon="folder-open" :size="buttonSize" @confirm="onOpen" />
-      <template v-slot:tooltip>Open in <b>{{ hasIDE ? project.ide.name : "" }}</b></template>
+      <template v-slot:tooltip>Open in <b>{{ hasIDE ? project.ide?.name : "" }}</b></template>
     </d-tooltip>
     <d-tooltip :position="tooltipPosition" :disabled="!hasDefaultBranch">
       <JiraButtonConfirm :disabled="disabled" color="primary" icon="cloud-database-tree" :size="buttonSize"
@@ -34,8 +34,8 @@ const buttonSize = computed(() => props.horizontal ? 50 : 30);
 const tooltipPosition = computed<Position>(() => props.horizontal ? Position.Bottom : Position.Left);
 
 
-function onUpdate() {
-  ProjectController.update(props.project);
+function onPull() {
+  ProjectController.pull(props.project);
 }
 
 function onOpen() {

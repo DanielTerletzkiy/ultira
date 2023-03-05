@@ -1,5 +1,5 @@
 <template>
-  <JiraViewWrapper hide-divider>
+  <JiraViewWrapper>
     <template v-slot:icon>
       <d-icon
         name="list-ui-alt"
@@ -11,7 +11,7 @@
     <template v-slot:title>
       Custom Variables
     </template>
-    <d-card style="max-height: 100%; max-width: 100%; overflow: auto;">
+    <d-card height="100%" style="max-height: 100%; max-width: 100%; overflow: auto;" elevation="n2">
       <d-column v-for="(item,i) in customVariables" :key="item.key" no-padding>
         <d-row>
           <d-card-subtitle class="font-size-medium font-weight-bold">

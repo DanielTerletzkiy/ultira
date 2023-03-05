@@ -10,7 +10,7 @@ export const changeStepsInfo = [
     color: "inherit"
   },
   {
-    description: "Update master branch",
+    description: "Update branch",
     icon: "cloud-download",
     color: "inherit"
   },
