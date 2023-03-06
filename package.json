@@ -118,7 +118,7 @@
     "@types/uuid": "^9.0.0",
     "@vitejs/plugin-vue": "^3.2.0",
     "cross-env": "^7.0.3",
-    "electron": "^19.1.8",
+    "electron": "^23.1.2",
     "electron-builder": "latest",
     "electron-packager": "^15.5.1",
     "node-sass": "^7.0.3",
