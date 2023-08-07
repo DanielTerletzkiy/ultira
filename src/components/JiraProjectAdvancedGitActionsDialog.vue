@@ -33,7 +33,7 @@
             </d-tab-list>
             <d-divider elevation-dark="2" />
           </d-column>
-          <d-row height="calc(100% - 41px)" align="stretch">
+          <d-row style="max-height: calc(100% - 41px); height: 100%" align="stretch">
             <component :is="currentActionComponent" :project="project" />
           </d-row>
         </d-card>

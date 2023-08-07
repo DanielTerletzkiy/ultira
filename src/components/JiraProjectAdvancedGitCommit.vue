@@ -1,6 +1,6 @@
 <template>
   <d-column gap block no-padding>
-    <d-card block background-color="transparent" class="pa-1">
+    <d-card block background-color="transparent" class="pa-1 pb-0">
       <JiraProjectChangesExplorer :project="project" selectable />
     </d-card>
     <d-textfield v-model="message" elevation="n1" class="sticky" color="primary" placeholder="Commit message" rounded="none" filled solo

@@ -54,8 +54,10 @@ const projectActions = class ProjectActions {
   }
 
   private scrapeProject() {
+    console.time('scrape')
     ProjectScraper.scrapeBranches([this.project.path]).then(
       (projects: Project[]) => {
+        console.timeEnd("scrape");
         const project = projects[0];
         // @ts-ignore
         delete project.changes?.isClean;
